@@ -1454,6 +1454,7 @@ function renderQuiz() {
                 </div>
                 <div class="quiz-feedback" id="qfb"></div>
                 <div class="quiz-nav">
+                    <button class="btn btn-ghost btn-sm" onclick="exitQuiz()">✕ 退出</button>
                     <button class="btn btn-ghost btn-sm" id="prevBtn" onclick="prevQ()" disabled>◀ 上一题</button>
                     <button class="btn btn-ghost btn-sm" onclick="saveProgressAndQuit()">💾 保存进度</button>
                     <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none;">下一题 →</button>
@@ -1500,6 +1501,13 @@ function prevQ() {
     }
 }
 
+function exitQuiz() {
+    if (confirm("确定要退出吗？当前进度已保存。")) {
+        clearInterval(QZ.timerIntervalId||null);
+        clearQuizProgress(QZ.id||'');
+        showView('dashboard');
+    }
+}
 function showResult() {
     clearInterval(QZ.timerIntervalId||null);
     clearQuizProgress(QZ.id);
