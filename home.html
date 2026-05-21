@@ -1,0 +1,2602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 习题平台 - 共享学习站</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --purple: #8B5CF6;
+            --bg: #F0F4F8;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Header */
+        .header { background: linear-gradient(135deg, #1E40AF, #3B82F6); color: white; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .header-brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; cursor: pointer; }
+        .header-brand .logo { background: white; color: var(--primary); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; }
+        .header-user { display: flex; align-items: center; gap: 10px; }
+        .user-badge { background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+        .admin-badge { background: var(--accent); color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+        .guest-badge { background: rgba(255,255,255,0.25); color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+
+        /* Nav */
+        .nav { background: white; border-bottom: 1px solid var(--border); display: flex; padding: 0 24px; gap: 2px; overflow-x: auto; }
+        .nav-btn { padding: 12px 16px; border: none; background: none; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-light); border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; }
+        .nav-btn:hover { color: var(--primary); }
+        .nav-btn.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+        .nav-btn.admin-only { display: none; }
+
+        /* Main */
+        .main { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Page header */
+        .page-header { margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .page-title { font-size: 22px; font-weight: 800; }
+        .page-desc { color: var(--text-light); font-size: 14px; margin-top: 4px; }
+        .page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        /* Buttons */
+        .btn { padding: 9px 18px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: white; color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: var(--bg); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-purple:hover { background: #7C3AED; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-ghost { background: transparent; color: var(--text-light); border: none; }
+        .btn-ghost:hover { background: var(--bg); }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Stats */
+        .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .stat-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; flex: 1; min-width: 130px; box-shadow: var(--shadow); text-align: center; }
+        .stat-num { font-size: 26px; font-weight: 900; color: var(--primary); }
+        .stat-num.purple { color: var(--purple); }
+        .stat-num.success { color: var(--success); }
+        .stat-label { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+
+        /* Cards */
+        .card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: var(--shadow); transition: all 0.2s; }
+        .card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
+        .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .card-badge { padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .card-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+        .card-meta { font-size: 13px; color: var(--text-light); display: flex; gap: 12px; flex-wrap: wrap; }
+        .card-desc { font-size: 13px; color: var(--text-light); margin: 8px 0; line-height: 1.5; }
+        .card-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .shared-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #DBEAFE; color: #1D4ED8; }
+        .my-tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; background: #F3E8FF; color: #7C3AED; }
+
+        /* Question card */
+        .q-item { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+        .q-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .q-num { font-weight: 800; color: var(--primary); font-size: 14px; }
+        .q-text { font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
+        .q-choices { display: flex; flex-direction: column; gap: 6px; }
+        .q-choice { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 12px; border-radius: 8px; background: var(--bg); }
+        .q-choice.letter { font-weight: 800; min-width: 22px; color: var(--primary); }
+        .q-choice.correct { background: rgba(16,185,129,0.12); }
+        .q-choice.correct .letter { color: var(--success); }
+        .q-ans { font-size: 13px; color: var(--success); font-weight: 700; margin-top: 8px; }
+        .q-exp { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+        /* Form */
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; background: white; color: var(--text); transition: border-color 0.2s; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .form-textarea { min-height: 100px; resize: vertical; }
+        .form-hint { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: white; border-radius: 16px; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .modal-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .modal-title { font-size: 17px; font-weight: 800; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-light); padding: 0; line-height: 1; }
+        .modal-body { padding: 20px 22px; }
+        .modal-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+        /* Quiz mode */
+        .quiz-box { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 28px; box-shadow: var(--shadow); }
+        .quiz-progress { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+        .prog-bar { flex: 1; height: 8px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+        .prog-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #60A5FA); border-radius: 4px; transition: width 0.4s; }
+        .quiz-score-display { font-size: 18px; font-weight: 900; color: var(--primary); }
+        .quiz-q-text { font-size: 16px; line-height: 1.7; margin-bottom: 20px; font-weight: 500; }
+        .quiz-choices { display: flex; flex-direction: column; gap: 10px; }
+        .quiz-choice { padding: 14px 18px; border: 2px solid var(--border); border-radius: 12px; cursor: pointer; transition: all 0.2s; font-size: 14px; display: flex; align-items: center; gap: 12px; }
+        .quiz-choice:hover { border-color: var(--primary); background: rgba(37,99,235,0.05); }
+        .quiz-choice .letter { width: 28px; height: 28px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+        .quiz-choice.selected { border-color: var(--primary); background: rgba(37,99,235,0.1); }
+        .quiz-choice.selected .letter { background: var(--primary); color: white; }
+        .quiz-choice.correct { border-color: var(--success); background: rgba(16,185,129,0.1); }
+        .quiz-choice.correct .letter { background: var(--success); color: white; }
+        .quiz-choice.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+        .quiz-choice.wrong .letter { background: var(--danger); color: white; }
+        .quiz-feedback { margin-top: 16px; padding: 14px; border-radius: 10px; font-size: 14px; display: none; }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.right { background: rgba(16,185,129,0.1); border: 1px solid var(--success); color: #065F46; }
+        .quiz-feedback.wrong { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: #991B1B; }
+        .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        /* Timer */
+        .timer-bar { display: flex; align-items: center; gap: 10px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+        .timer-icon { font-size: 20px; }
+        .timer-display { font-size: 22px; font-weight: 900; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 72px; text-align: center; }
+        .timer-display.urgent { color: var(--danger); animation: timerpulse 0.6s ease-in-out infinite alternate; }
+        @keyframes timerpulse { from { opacity: 1; } to { opacity: 0.4; } }
+        .timer-fill-wrap { flex: 1; }
+        .timer-fill { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+        .timer-fill-inner { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s linear; }
+        .timer-fill-inner.urgent { background: var(--danger); }
+        .timer-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 4px 6px; border-radius: 6px; }
+        .timer-btn:hover { background: var(--bg); }
+        /* Timer setup modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 300; }
+        .modal-overlay.hide { display: none; }
+        .modal-overlay.show { display: flex; }
+        .modal-box { background: white; border-radius: 18px; padding: 30px; width: 400px; max-width: 95vw; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
+        .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+        .modal-desc { font-size: 13px; color: var(--text-light); margin-bottom: 20px; line-height: 1.5; }
+        .timer-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+        .timer-preset { padding: 10px 6px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all 0.15s; }
+        .timer-preset:hover { border-color: var(--primary); color: var(--primary); }
+        .timer-preset.sel { border-color: var(--primary); background: rgba(37,99,235,0.08); color: var(--primary); }
+        .timer-custom { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 13px; color: var(--text-light); flex-wrap: wrap; }
+        .timer-custom input { width: 60px; padding: 7px 8px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; text-align: center; }
+        .timer-custom input:focus { outline: none; border-color: var(--primary); }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .progress-resume { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; display: flex; align-items: center; gap: 12px; }
+        .progress-resume-icon { font-size: 22px; }
+        .progress-resume-text { flex: 1; color: #047857; font-weight: 700; }
+        .no-timer-note { font-size: 12px; color: var(--text-light); text-align: center; margin-top: 8px; }
+
+        /* Quiz result */
+        .result-page { text-align: center; padding: 50px 20px; }
+        .result-emoji { font-size: 72px; margin-bottom: 16px; }
+        .result-big { font-size: 52px; font-weight: 900; color: var(--primary); }
+        .result-detail { font-size: 16px; color: var(--text-light); margin: 8px 0 28px; }
+        .result-stats { display: flex; gap: 16px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+        .result-stat { background: var(--bg); border-radius: 12px; padding: 18px 28px; text-align: center; }
+        .result-stat .n { font-size: 28px; font-weight: 900; }
+        .result-stat .l { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+        .result-stat.correct .n { color: var(--success); }
+        .result-stat.wrong .n { color: var(--danger); }
+
+        /* Detail header */
+        .detail-header { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); }
+
+        /* Guide content */
+        .guide-section { margin-bottom: 28px; }
+        .guide-h2 { font-size: 17px; font-weight: 800; color: var(--purple); padding-bottom: 6px; border-bottom: 2px solid var(--purple); margin-bottom: 12px; }
+        .guide-h3 { font-size: 15px; font-weight: 700; margin: 14px 0 6px; }
+        .guide-body { font-size: 14px; line-height: 1.85; }
+        .guide-body p { margin-bottom: 8px; }
+        .guide-body ul { margin: 6px 0 10px 22px; }
+        .guide-body li { margin-bottom: 4px; }
+        .guide-body table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+        .guide-body th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; }
+        .guide-body td { padding: 8px 12px; border: 1px solid var(--border); }
+        .guide-body tr:nth-child(even) td { background: var(--bg); }
+        .guide-tip { background: #FEF9C3; border: 1px solid #FDE047; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin: 10px 0; }
+        .guide-tip strong { color: #92400E; }
+        .guide-block { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 12px 16px; font-size: 13px; margin: 10px 0; }
+
+        /* Login */
+        .login-box { max-width: 400px; margin: 80px auto; background: white; border-radius: 20px; padding: 40px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center; }
+        .login-icon { font-size: 56px; margin-bottom: 16px; }
+        .login-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .login-desc { color: var(--text-light); font-size: 14px; margin-bottom: 28px; }
+        .login-form { text-align: left; }
+        .login-hint { text-align: center; font-size: 13px; color: var(--text-light); margin-top: 16px; }
+        .login-error { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: #991B1B; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; text-align: center; display: none; }
+
+        /* Empty state */
+        .empty { text-align: center; padding: 60px 20px; color: var(--text-light); }
+        .empty-icon { font-size: 60px; margin-bottom: 12px; }
+        .empty-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+        .empty-desc { font-size: 14px; margin-bottom: 20px; }
+
+        /* Shared banner */
+        .shared-banner { background: linear-gradient(135deg, #EFF6FF, #DBEAFE); border: 1px solid #BFDBFE; border-radius: 12px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #1E40AF; }
+        .shared-banner-icon { font-size: 20px; }
+
+        /* Subject colors */
+        .s-physics { background: #EEF2FF; color: #4338CA; }
+        .s-biology { background: #ECFDF5; color: #047857; }
+        .s-chemistry { background: #FFF7ED; color: #C2410C; }
+        .s-math { background: #FFFBEB; color: #B45309; }
+        .s-english { background: #FDF2F8; color: #BE185D; }
+        .s-chinese { background: #FEF2F2; color: #B91C1C; }
+        .s-economics { background: #F0FDF4; color: #15803D; }
+        .s-history { background: #FFFBEB; color: #92400E; }
+        .s-default { background: var(--bg); color: var(--text-light); }
+        .s-purple { background: #F5F3FF; color: #6D28D9; }
+
+        /* Import tabs */
+        .tabs { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; margin-bottom: 20px; }
+        .tab { flex: 1; padding: 8px 16px; border: none; background: transparent; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text-light); transition: all 0.2s; }
+        .tab.active { background: white; color: var(--text); box-shadow: var(--shadow); }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 300; opacity: 0; transform: translateY(16px); transition: all 0.3s; pointer-events: none; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.ok { background: var(--success); }
+        .toast.err { background: var(--danger); }
+
+        /* Toast for guest */
+        .guest-toast { position: fixed; top: 80px; right: 16px; background: #1E40AF; color: white; padding: 14px 18px; border-radius: 10px; font-size: 14px; font-weight: 600; z-index: 300; box-shadow: 0 4px 16px rgba(0,0,0,0.2); max-width: 280px; line-height: 1.5; display: none; }
+        .guest-toast.show { display: block; }
+
+        @media (max-width: 600px) {
+            .form-row, .form-row3 { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .nav { padding: 0 8px; }
+            .header { padding: 0 12px; }
+            .main { padding: 16px 12px; }
+        }
+    
+/* ===== LIST LAYOUT v6 ===== */
+.sets-list{display:flex;flex-direction:column;gap:8px;}
+.card-list{display:flex!important;align-items:center;padding:12px 16px!important;gap:14px;border-radius:12px!important;}
+.card-list-left{flex-shrink:0;}
+.card-list-body{flex:1;min-width:0;}
+.card-list-actions{flex-shrink:0;display:flex;gap:4px;align-items:center;}
+@media(max-width:600px){.card-list{flex-wrap:wrap;gap:10px;}.card-list-left,.card-list-actions{order:2;width:100%;display:flex;justify-content:space-between;}.card-list-body{order:1;width:100%;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-brand" onclick="goHome()">
+        <div class="logo">01</div>
+        <span>AI 习题平台</span>
+    </div>
+    <div class="header-user" id="header-user"></div>
+</div>
+
+<!-- NAV -->
+<div class="nav" id="main-nav">
+    <button class="nav-btn active" id="nav-sets" onclick="showPage('sets')">📚 习题集</button>
+    <button class="nav-btn" id="nav-guides" onclick="showPage('guides')">📖 学习资料</button>
+    <button class="nav-btn admin-only" id="nav-create" onclick="showPage('create')">➕ 创建</button>
+    <button class="nav-btn admin-only" id="nav-import" onclick="showPage('import')">📥 导入</button>
+    <button class="nav-btn" id="nav-stats" onclick="showPage('stats')">📊 统计</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- SETS PAGE -->
+    <div class="page active" id="page-sets">
+        <div class="page-header">
+            <div>
+                <div class="page-title">📚 共享习题集</div>
+                <div class="page-desc">所有人均可使用这些习题集进行练习</div>
+            </div>
+            <div class="page-actions" id="sets-actions"></div>
+        </div>
+        <div id="sets-stats"></div>
+        <div class="shared-banner">
+            <span class="shared-banner-icon">🌐</span>
+            <span><strong>共享模式：</strong>这些习题集由管理员（01）创建，向所有用户开放。点击卡片开始练习！</span>
+        </div>
+        <div id="sets-grid"></div>
+    </div>
+
+    <!-- GUIDES PAGE -->
+    <div class="page" id="page-guides">
+        <div class="page-header">
+            <div>
+                <div class="page-title">📖 学习资料库</div>
+                <div class="page-desc">学习指南、知识点总结、重点笔记</div>
+            </div>
+            <div class="page-actions" id="guides-actions"></div>
+        </div>
+        <div id="guides-stats"></div>
+        <div id="guides-grid"></div>
+    </div>
+
+    <!-- CREATE PAGE (ADMIN ONLY) -->
+    <div class="page" id="page-create">
+        <div class="page-header">
+            <div>
+                <div class="page-title">➕ 创建习题集</div>
+                <div class="page-desc">添加新的练习题（仅管理员可用）</div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="showPage('sets')">← 返回</button>
+            </div>
+        </div>
+        <div class="detail-header">
+            <div class="form-row">
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">习题集名称 *</label>
+                    <input class="form-input" id="f-name" placeholder="例如：物理光学练习">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">科目</label>
+                    <select class="form-select" id="f-subject">
+                        <option value="">选择科目</option>
+                        <option value="物理">🔬 物理</option>
+                        <option value="生物">🧬 生物</option>
+                        <option value="化学">⚗️ 化学</option>
+                        <option value="数学">📐 数学</option>
+                        <option value="英语">📖 英语</option>
+                        <option value="中文">📝 中文</option>
+                        <option value="经济">💹 经济</option>
+                        <option value="历史">🏛️ 历史</option>
+                        <option value="其他">📁 其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row" style="margin-top:14px;">
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">年级</label>
+                    <select class="form-select" id="f-grade">
+                        <option value="">选择年级</option>
+                        <option value="G6">Grade 6</option>
+                        <option value="G7">Grade 7</option>
+                        <option value="G8">Grade 8</option>
+                        <option value="G9">Grade 9</option>
+                        <option value="G10">Grade 10</option>
+                        <option value="G11">Grade 11</option>
+                        <option value="G12">Grade 12</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">标签（逗号分隔）</label>
+                    <input class="form-input" id="f-tags" placeholder="例如：光学, 单元测验">
+                </div>
+            </div>
+            <div class="form-group" style="margin-top:14px; margin-bottom:0">
+                <label class="form-label">描述</label>
+                <input class="form-input" id="f-desc" placeholder="简要描述（可选）">
+            </div>
+            <button class="btn btn-primary" onclick="saveSet()" style="margin-top:16px;" id="btn-save-set">✅ 创建习题集</button>
+        </div>
+        <div id="q-list"></div>
+        <div class="card" style="text-align:center;border:2px dashed var(--border);cursor:pointer;" onclick="openAddQ()">
+            <div style="font-size:32px;margin-bottom:8px;">➕</div>
+            <div style="font-weight:600;">添加新题目</div>
+            <div style="font-size:13px;color:var(--text-light);margin-top:4px;">选择题或简答题</div>
+        </div>
+    </div>
+
+    <!-- IMPORT PAGE (ADMIN ONLY) -->
+    <div class="page" id="page-import">
+        <div class="page-header">
+            <div>
+                <div class="page-title">📥 导入题目</div>
+                <div class="page-desc">从文本批量导入或使用 AI 生成（仅管理员）</div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="showPage('sets')">← 返回</button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('paste',event)">📋 粘贴文本</button>
+            <button class="tab" onclick="switchTab('gen',event)">🤖 AI 生成</button>
+        </div>
+        <div id="tab-paste">
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">粘贴题目（每题用空行分隔）</label>
+                    <textarea class="form-textarea" id="import-text" placeholder="格式示例：
+
+1. What is photosynthesis?
+A) Respiration
+B) Food-making process in plants
+C) Water absorption
+D) Growth hormone
+
+Answer: B
+Explanation: Photosynthesis converts sunlight, CO2, and water into glucose and oxygen.
+
+2. 第二题内容...
+A) ...
+B) ...
+C) ...
+D) ...
+
+Answer: A" style="min-height:220px;font-family:'Consolas',monospace;font-size:13px;"></textarea>
+                    <div class="form-hint">支持：题号. 题目 / A) B) C) D) / Answer: X / Explanation: ...</div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">习题集名称 *</label>
+                        <input class="form-input" id="imp-name" placeholder="例如：生物第一单元">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">科目</label>
+                        <select class="form-select" id="imp-subject">
+                            <option value="">选择科目</option>
+                            <option value="物理">🔬 物理</option>
+                            <option value="生物">🧬 生物</option>
+                            <option value="化学">⚗️ 化学</option>
+                            <option value="数学">📐 数学</option>
+                            <option value="英语">📖 英语</option>
+                            <option value="中文">📝 中文</option>
+                            <option value="经济">💹 经济</option>
+                            <option value="历史">🏛️ 历史</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="doImport()">📥 导入题目</button>
+            </div>
+        </div>
+        <div id="tab-gen" style="display:none;">
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">描述你想要的题目</label>
+                    <textarea class="form-textarea" id="gen-prompt" placeholder="例如：给我出20道关于光的反射和折射的选择题，难度中等，适合Grade 8" style="min-height:100px;"></textarea>
+                </div>
+                <div class="form-row3">
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">题目数量</label>
+                        <input class="form-input" id="gen-count" type="number" value="10" min="1" max="50">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">科目</label>
+                        <select class="form-select" id="gen-subject">
+                            <option value="生物">🧬 生物</option>
+                            <option value="物理">🔬 物理</option>
+                            <option value="化学">⚗️ 化学</option>
+                            <option value="数学">📐 数学</option>
+                            <option value="英语">📖 英语</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0">
+                        <label class="form-label">题目类型</label>
+                        <select class="form-select" id="gen-type">
+                            <option value="MCQ">单选题</option>
+                            <option value="FRQ">简答题</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="doGenLocal()" style="margin-top:14px;">🤖 生成题目</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS PAGE -->
+    <div class="page" id="page-stats">
+        <div class="page-header">
+            <div>
+                <div class="page-title">📊 学习统计</div>
+                <div class="page-desc">练习历史和进度追踪</div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="showPage('sets')">← 返回</button>
+            </div>
+        </div>
+        <div id="stats-content"></div>
+    </div>
+
+    <!-- SET DETAIL PAGE -->
+    <div class="page" id="page-detail">
+        <div class="page-header">
+            <div>
+                <div class="page-title" id="detail-title">习题集详情</div>
+                <div class="page-desc" id="detail-meta"></div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="showPage('sets')">← 返回</button>
+            </div>
+        </div>
+        <div id="detail-content"></div>
+    </div>
+
+    <!-- GUIDE DETAIL PAGE -->
+    <div class="page" id="page-guide">
+        <div class="page-header">
+            <div>
+                <div class="page-title" id="guide-title">学习资料</div>
+                <div class="page-desc" id="guide-meta"></div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="showPage('guides')">← 返回</button>
+            </div>
+        </div>
+        <div id="guide-body"></div>
+    </div>
+
+    <!-- QUIZ PAGE -->
+    <div class="page" id="page-quiz">
+        <div class="page-header">
+            <div>
+                <div class="page-title" id="quiz-title">🎯 练习模式</div>
+                <div class="page-desc" id="quiz-meta"></div>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-secondary" onclick="quitQuiz()">✕ 退出</button>
+            </div>
+        </div>
+        <div id="quiz-body"></div>
+    </div>
+
+    <!-- TIMER SETUP MODAL -->
+    <div class="modal-overlay hide" id="modal-timer">
+        <div class="modal-box">
+            <div class="modal-title">⏱️ 设置练习计时器</div>
+            <div class="modal-desc">设置答题时限，到时自动提交。也可以跳过计时器自由练习。</div>
+            <div class="progress-resume hide" id="resume-bar">
+                <div class="progress-resume-icon">📌</div>
+                <div class="progress-resume-text" id="resume-text"></div>
+                <button class="btn btn-success btn-sm" onclick="resumeFromSaved()">继续</button>
+            </div>
+            <div class="timer-presets">
+                <button class="timer-preset sel" onclick="setPreset(5, this)">5 分钟</button>
+                <button class="timer-preset" onclick="setPreset(10, this)">10 分钟</button>
+                <button class="timer-preset" onclick="setPreset(15, this)">15 分钟</button>
+                <button class="timer-preset" onclick="setPreset(30, this)">30 分钟</button>
+                <button class="timer-preset" onclick="setPreset(60, this)">1 小时</button>
+                <button class="timer-preset" onclick="setPreset(120, this)">2 小时</button>
+            </div>
+            <div class="timer-custom">
+                <span>自定义：</span>
+                <input type="number" id="timer-custom-min" min="1" max="120" placeholder="分钟" value="" oninput="clearPresets()">
+                <span>分钟（1-120）</span>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="startNoTimer()">⏭️ 跳过计时器</button>
+                <button class="btn btn-primary" onclick="confirmTimer()">▶️ 开始练习</button>
+            </div>
+            <div class="no-timer-note">提示：关闭计时器后可随时暂停，不会自动提交</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay hide" id="modal-login">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">🔐 管理员登录</div>
+            <button class="modal-close" onclick="closeLogin()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="login-error" id="login-error">密码错误，请重试</div>
+            <div class="form-group">
+                <label class="form-label">管理员密码</label>
+                <input class="form-input" id="login-pwd" type="password" placeholder="请输入管理员密码" onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="doLogin()">登录</button>
+            <div class="login-hint">普通用户无需登录，直接使用习题集</div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD QUESTION MODAL -->
+<div class="modal-overlay hide" id="modal-q">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">➕ 添加题目</div>
+            <button class="modal-close" onclick="closeQModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">题目类型</label>
+                <select class="form-select" id="q-type" onchange="toggleQType()">
+                    <option value="MCQ">📋 单选题</option>
+                    <option value="FRQ">✍️ 简答题</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">题目内容 *</label>
+                <textarea class="form-textarea" id="q-text" style="min-height:80px;"></textarea>
+            </div>
+            <div id="mcq-f">
+                <div class="form-group"><label class="form-label">选项 A *</label><input class="form-input" id="q-a" placeholder="选项 A"></div>
+                <div class="form-group"><label class="form-label">选项 B *</label><input class="form-input" id="q-b" placeholder="选项 B"></div>
+                <div class="form-group"><label class="form-label">选项 C（可选）</label><input class="form-input" id="q-c" placeholder="选项 C"></div>
+                <div class="form-group"><label class="form-label">选项 D（可选）</label><input class="form-input" id="q-d" placeholder="选项 D"></div>
+                <div class="form-group">
+                    <label class="form-label">正确答案 *</label>
+                    <select class="form-select" id="q-ans" style="max-width:160px">
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                    </select>
+                </div>
+            </div>
+            <div id="frq-f" style="display:none;">
+                <div class="form-group"><label class="form-label">参考答案</label><textarea class="form-textarea" id="q-frq-ans" style="min-height:70px;"></textarea></div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">解析（可选）</label>
+                <textarea class="form-textarea" id="q-exp" style="min-height:60px;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeQModal()">取消</button>
+            <button class="btn btn-primary" onclick="addQuestion()">✅ 添加</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADD GUIDE MODAL -->
+<div class="modal-overlay hide" id="modal-guide">
+    <div class="modal" style="max-width:600px;">
+        <div class="modal-header">
+            <div class="modal-title">📝 新建学习资料</div>
+            <button class="modal-close" onclick="closeGuideModal()">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">资料名称 *</label>
+                    <input class="form-input" id="g-name" placeholder="例如：生物知识点总结">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">科目</label>
+                    <select class="form-select" id="g-subject">
+                        <option value="生物">🧬 生物</option>
+                        <option value="物理">🔬 物理</option>
+                        <option value="化学">⚗️ 化学</option>
+                        <option value="数学">📐 数学</option>
+                        <option value="英语">📖 英语</option>
+                        <option value="中文">📝 中文</option>
+                        <option value="经济">💹 经济</option>
+                        <option value="历史">🏛️ 历史</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-top:14px">
+                <label class="form-label">内容（支持 Markdown）</label>
+                <textarea class="form-textarea" id="g-content" placeholder="## 标题
+### 小节
+
+**加粗文字**
+
+- 列表项
+| 表头 | 表头 |
+|------|------|
+| 内容 | 内容 |
+
+💡 提示：用 emoji 让内容更生动！" style="min-height:260px;font-family:'Consolas',monospace;font-size:13px;"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeGuideModal()">取消</button>
+            <button class="btn btn-purple" onclick="addGuide()">💾 保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay hide" id="modal-del">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-title">⚠️ 确认删除</div>
+            <button class="modal-close" onclick="closeDel()">×</button>
+        </div>
+        <div class="modal-body">
+            <p id="del-msg">确定要删除吗？此操作无法撤销。</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeDel()">取消</button>
+            <button class="btn btn-danger" onclick="confirmDel()">🗑️ 删除</button>
+        </div>
+    </div>
+</div>
+
+<!-- GUEST TOAST -->
+<div class="guest-toast" id="guest-toast"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ====================
+// DATA KEYS
+// ====================
+const K_SHARED = '01_shared_sets';
+const K_MY = '01_my_sets';
+const K_GUIDES = '01_guides';
+const K_STATS = '01_stats_v2';
+const K_ROLE = '01_role';
+const ADMIN_PWD = '01admin2026'; // 01's admin password
+
+let isAdmin = false;
+let curSetId = null;
+let curGuideId = null;
+let delId = null, delType = null;
+let editingSet = false;
+
+// ====================
+// ROLE
+// ====================
+function checkRole() {
+    isAdmin = localStorage.getItem(K_ROLE) === 'admin';
+    updateHeader();
+    updateNav();
+}
+
+function updateHeader() {
+    const el = document.getElementById('header-user');
+    if (isAdmin) {
+        el.innerHTML = `<span class="admin-badge">👑 管理员 01</span><button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="logout()">退出</button>`;
+    } else {
+        el.innerHTML = `<span class="guest-badge">👤 访客用户</span><button class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border:none;" onclick="openLogin()">🔐 管理员</button>`;
+    }
+}
+
+function updateNav() {
+    const adminOnly = ['nav-create','nav-import'];
+    adminOnly.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = isAdmin ? '' : 'none';
+    });
+}
+
+function openLogin() { document.getElementById('modal-login').classList.add('show'); document.getElementById('login-pwd').value=''; document.getElementById('login-error').style.display='none'; document.getElementById('login-pwd').focus(); }
+function closeLogin() { document.getElementById('modal-login').classList.remove('show'); }
+function doLogin() {
+    const pwd = document.getElementById('login-pwd').value;
+    if (pwd === ADMIN_PWD) {
+        localStorage.setItem(K_ROLE, 'admin');
+        isAdmin = true;
+        updateHeader(); updateNav();
+        closeLogin();
+        showPage(isAdmin ? 'sets' : 'sets');
+        toast('👑 管理员登录成功！可以创建和导入习题集了');
+    } else {
+        document.getElementById('login-error').style.display = 'block';
+    }
+}
+function logout() {
+    localStorage.removeItem(K_ROLE);
+    isAdmin = false;
+    updateHeader(); updateNav();
+    showPage('sets');
+    toast('已退出管理员模式');
+}
+
+// ====================
+// STORAGE
+// ====================
+function getShared() { return JSON.parse(localStorage.getItem(K_SHARED) || '[]'); }
+function saveShared(s) { localStorage.setItem(K_SHARED, JSON.stringify(s)); }
+function getMy() { return JSON.parse(localStorage.getItem(K_MY) || '[]'); }
+function saveMy(s) { localStorage.setItem(K_MY, JSON.stringify(s)); }
+function getGuides() { return JSON.parse(localStorage.getItem(K_GUIDES) || '[]'); }
+function saveGuides(g) { localStorage.setItem(K_GUIDES, JSON.stringify(g)); }
+function getStats() { return JSON.parse(localStorage.getItem(K_STATS) || '{"taken":0,"sessions":[]}'); }
+function saveStats(s) { localStorage.setItem(K_STATS, JSON.stringify(s)); }
+function genId() { return Date.now().toString(36)+Math.random().toString(36).substr(2,9); }
+
+// ====================
+// NAVIGATION
+// ====================
+function showPage(p) {
+    if (!isAdmin && (p==='create'||p==='import')) { showGuestToast('只有管理员（01）可以创建和导入习题集'); return; }
+    document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('page-'+p).classList.add('active');
+    const nb = document.getElementById('nav-'+p);
+    if (nb) nb.classList.add('active');
+    if (p==='sets') renderSets();
+    if (p==='guides') renderGuides();
+    if (p==='stats') renderStats();
+    if (p==='create') initCreate();
+    if (p==='detail'&&curSetId) renderDetail();
+    if (p==='guide'&&curGuideId) renderGuideDetail();
+}
+
+function goHome() { showPage('sets'); }
+
+// ====================
+// SUBJECT HELPERS
+// ====================
+const SE = {'物理':'🔬','生物':'🧬','化学':'⚗️','数学':'📐','英语':'📖','中文':'📝','经济':'💹','历史':'🏛️','其他':'📁'};
+const SC = {'物理':'s-physics','生物':'s-biology','化学':'s-chemistry','数学':'s-math','英语':'s-english','中文':'s-chinese','经济':'s-economics','历史':'s-history','其他':'s-default','其他':'s-default'};
+function subjE(s){return SE[s]||'📁';}
+function subjCls(s){return SC[s]||'s-default';}
+
+// ====================
+// RENDER SETS
+// ====================
+function renderSets() {
+    const shared = getShared();
+    const my = isAdmin ? getMy() : [];
+    const total = shared.reduce((s,x)=>s+(x.qs||[]).length,0) + my.reduce((s,x)=>s+(x.qs||[]).length,0);
+    document.getElementById('sets-stats').innerHTML = `<div class="stats-row">
+        <div class="stat-card"><div class="stat-num">${shared.length+my.length}</div><div class="stat-label">习题集</div></div>
+        <div class="stat-card"><div class="stat-num purple">${total}</div><div class="stat-label">总题目</div></div>
+        ${isAdmin?`<div class="stat-card"><div class="stat-num success">${my.length}</div><div class="stat-label">我的习题集</div></div>`:''}
+    </div>`;
+    document.getElementById('sets-actions').innerHTML = isAdmin
+        ? `<button class="btn btn-primary" onclick="showPage('create')">➕ 新建</button><button class="btn btn-secondary" onclick="showPage('import')">📥 导入</button>`
+        : `<button class="btn btn-secondary" onclick="openLogin()" style="font-size:13px">🔐 我是 01</button>`;
+
+    let all = [];
+    shared.forEach(s => all.push({...s, _type:'shared'}));
+    if (isAdmin) my.forEach(s => all.push({...s, _type:'my'}));
+    all.sort((a,b)=>{
+        const ta = new Date(a.updated||a.created||0).getTime();
+        const tb = new Date(b.updated||b.created||0).getTime();
+        return tb-ta;
+    });
+
+    const el = document.getElementById('sets-grid');
+    if (all.length===0) {
+        el.innerHTML=`<div class="empty"><div class="empty-icon">📚</div><div class="empty-title">还没有习题集</div>${isAdmin?'<button class="btn btn-primary" onclick="showPage(\'create\')">➕ 创建</button>':''}</div>`;
+        return;
+    }
+    el.innerHTML = `<div class="sets-list">${all.map(s=>makeSetCard(s,s._type==='my')).join('')}</div>`;
+}
+
+function makeSetCard(s, isMy) {
+    const count = (s.qs||[]).length;
+    const tags = (s.tags||[]).map(t=>`<span style="background:var(--bg);padding:2px 7px;border-radius:10px;font-size:11px;">${t}</span>`).join('');
+    const upd = s.updated||s.created||'';
+    let updStr='';
+    if(upd){const d=new Date(upd);updStr=d.toLocaleDateString('zh-CN',{month:'numeric',day:'numeric'});}
+    return `<div class="card card-list">
+        <div class="card-list-left">
+            <div class="card-icon ${subjCls(s.subject)}" style="width:42px;height:42px;font-size:18px;border-radius:10px;display:flex;align-items:center;justify-content:center;">${subjE(s.subject)}</div>
+        </div>
+        <div class="card-list-body">
+            <div style="display:flex;align-items:center;gap:6px;">
+                <span class="card-title" style="font-size:14px;font-weight:600;">${s.name}</span>
+                ${isMy?'<span class="my-tag">🗂️</span>':'<span class="shared-tag">🌐</span>'}
+            </div>
+            <div class="card-meta" style="margin-top:2px;">
+                <span>📝 ${count}题</span>
+                ${s.grade?`<span>· ${s.grade}</span>`:''}
+                ${updStr?`<span>· 更新 ${updStr}</span>`:''}
+            </div>
+            ${tags?`<div style="margin-top:4px;">${tags}</div>`:''}
+        </div>
+        <div class="card-list-actions">
+            <button class="btn btn-success btn-sm" onclick="startQuiz('${s.id}','${isMy?'my':'shared'}')" title="练习">🎯</button>
+            <button class="btn btn-secondary btn-sm" onclick="viewSet('${s.id}','${isMy?'my':'shared'}')" title="查看">📖</button>
+            ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="editSetById('${s.id}','${isMy?'my':'shared'}')" title="编辑">✏️</button><button class="btn btn-ghost btn-sm" onclick="delSetByType('${s.id}','${isMy?'my':'shared'}')" title="删除">🗑️</button>`:''}
+        </div>
+    </div>`;
+}
+
+// ====================
+// SET DETAIL
+// ====================
+function viewSet(id, type) {
+    curSetId = id; curSetType = type;
+    const sets = type==='shared'?getShared():getMy();
+    const s = sets.find(x=>x.id===id);
+    if (!s) return;
+    document.getElementById('detail-title').textContent = s.name;
+    document.getElementById('detail-meta').textContent = `${subjE(s.subject)} ${s.subject||''} · ${(s.qs||[]).length} 题 · ${type==='shared'?'🌐 共享':'🗂️ 我的'}`;
+    let qHtml = '';
+    if (s.qs&&s.qs.length>0) {
+        qHtml = s.qs.map((q,i)=>{
+            if (q.type==='MCQ') {
+                const chs = ['A','B','C','D'].filter(l=>q['c'+l]).map(l=>`<div class="q-choice ${q.ans===l?'correct':''}"><span class="letter">${l}</span><span>${q['c'+l]}</span>${q.ans===l?'<span style="color:var(--success);margin-left:auto;font-weight:700;">✓</span>':''}</div>`).join('');
+                return `<div class="q-item"><div class="q-header"><span class="q-num">Q${i+1}</span><span class="card-badge s-default">📋</span></div><div class="q-text">${q.text}</div><div class="q-choices">${chs}</div>${q.exp?`<div class="q-exp">💡 ${q.exp}</div>`:''}</div>`;
+            } else {
+                return `<div class="q-item"><div class="q-header"><span class="q-num">Q${i+1}</span><span class="card-badge s-default">✍️</span></div><div class="q-text">${q.text}</div>${q.ans?`<div class="q-ans">📝 ${q.ans}</div>`:''}${q.exp?`<div class="q-exp">💡 ${q.exp}</div>`:''}</div>`;
+            }
+        }).join('');
+    } else {
+        qHtml = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-title">暂无题目</div></div>';
+    }
+    document.getElementById('detail-content').innerHTML = `
+        <div class="detail-header">
+            <div class="card-actions">
+                <button class="btn btn-success" onclick="startQuiz('${id}','${type}')">🎯 开始练习</button>
+                ${isAdmin?`<button class="btn btn-secondary" onclick="editSetById('${id}','${type}')">✏️ 编辑</button><button class="btn btn-ghost" onclick="delSetByType('${id}','${type}')">🗑️ 删除</button>`:''}
+            </div>
+        </div>
+        ${qHtml}`;
+    showPage('detail');
+}
+
+// ====================
+// RENDER GUIDES
+// ====================
+function renderGuides() {
+    const guides = getGuides();
+    document.getElementById('guides-stats').innerHTML = `<div class="stats-row"><div class="stat-card"><div class="stat-num purple">${guides.length}</div><div class="stat-label">份学习资料</div></div></div>`;
+    document.getElementById('guides-actions').innerHTML = isAdmin ? `<button class="btn btn-purple" onclick="openAddGuide()">📝 新建学习资料</button>` : '';
+    const el = document.getElementById('guides-grid');
+    if (guides.length===0) {
+        el.innerHTML=`<div class="empty"><div class="empty-icon">📖</div><div class="empty-title">学习资料库是空的</div><div class="empty-desc">管理员登录后可添加</div>${isAdmin?'<button class="btn btn-purple" onclick="openAddGuide()">📝 新建</button>':''}</div>`;
+        return;
+    }
+    el.innerHTML = `<div class="grid-2">${guides.map(g=>`<div class="card">
+        <div class="card-top"><div class="card-icon s-purple">📖</div>${isAdmin&&true?`<span class="my-tag">🗂️</span>`:''}</div>
+        <div class="card-title">${g.name}</div>
+        <div class="card-meta"><span>${subjE(g.subject)} ${g.subject||'其他'}</span></div>
+        <div class="card-desc">${(g.content||'').substring(0,120)}${(g.content||'').length>120?'...':''}</div>
+        <div class="card-actions">
+            <button class="btn btn-purple btn-sm" onclick="viewGuide('${g.id}')">📖 查看</button>
+            ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="editGuide('${g.id}')">✏️</button><button class="btn btn-ghost btn-sm" onclick="delGuide('${g.id}')">🗑️</button>`:''}
+        </div>
+    </div>`).join('')}</div>`;
+}
+
+let curGuideId2 = null;
+function viewGuide(id) {
+    curGuideId2 = id;
+    const guides = getGuides();
+    const g = guides.find(x=>x.id===id);
+    if (!g) return;
+    document.getElementById('guide-title').textContent = g.name;
+    document.getElementById('guide-meta').textContent = `${subjE(g.subject)} ${g.subject||'其他'}`;
+    document.getElementById('guide-body').innerHTML = `
+        <div class="detail-header" style="display:flex;justify-content:flex-end;">
+            ${isAdmin?`<button class="btn btn-secondary btn-sm" onclick="editGuide('${g.id}');openAddGuide()">✏️ 编辑</button><button class="btn btn-ghost btn-sm" onclick="delGuide('${g.id}')">🗑️ 删除</button>`:''}
+        </div>
+        <div class="card" style="padding:28px;">${renderMd(g.content||'')}</div>`;
+    showPage('guide');
+}
+
+function renderMd(text) {
+    if (!text) return '<div style="color:var(--text-light);text-align:center;padding:40px;">暂无内容</div>';
+    let html = text
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/^## (.+)$/gm,'<div class="guide-h2">$1</div>')
+        .replace(/^### (.+)$/gm,'<div class="guide-h3">$1</div>')
+        .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g,'<em>$1</em>')
+        .replace(/^---$/gm,'<hr style="border:none;border-top:1px solid var(--border);margin:16px 0;">')
+        .replace(/^- (.+)$/gm,'<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/gs,'<ul>$1</ul>')
+        .replace(/^(\d+)\. (.+)$/gm,'<li>$2</li>')
+        .replace(/\n\n/g,'</p><p style="margin:8px 0;">')
+        .replace(/\n/g,'<br>');
+    const tableRe = /\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)+)/g;
+    html = html.replace(tableRe,(m,h,rows)=>{
+        const ths = h.split('|').filter(c=>c.trim()).map(c=>`<th>${c.trim()}</th>`).join('');
+        const body = rows.trim().split('\n').map(r=>'<tr>'+r.split('|').filter(c=>c.trim()).map(c=>`<td>${c.trim()}</td>`).join('')+'</tr>').join('');
+        return `<table><thead><tr>${ths}</tr></thead><tbody>${body}</tbody></table>`;
+    });
+    return `<div class="guide-body"><p>${html}</p></div>`;
+}
+
+// ====================
+// CREATE / EDIT SET
+// ====================
+let curSetType = null;
+function initCreate() {
+    curSetId = null; editingSet = false; curSetType = null; editingQId = null;
+    document.getElementById('f-name').value='';
+    document.getElementById('f-subject').value='';
+    document.getElementById('f-grade').value='';
+    document.getElementById('f-tags').value='';
+    document.getElementById('f-desc').value='';
+    document.getElementById('btn-save-set').textContent='✅ 创建习题集';
+    document.getElementById('q-list').innerHTML='';
+}
+
+function editSet(id) {
+    editSetById(id,'my');
+}
+function editSetById(id, type) {
+    const sets = type==='shared'?getShared():getMy();
+    const s = sets.find(x=>x.id===id);
+    if (!s) return;
+    curSetId=id; editingSet=true; curSetType=type;
+    document.getElementById('f-name').value=s.name;
+    document.getElementById('f-subject').value=s.subject||'';
+    document.getElementById('f-grade').value=s.grade||'';
+    document.getElementById('f-tags').value=(s.tags||[]).join(', ');
+    document.getElementById('f-desc').value=s.desc||'';
+    document.getElementById('btn-save-set').textContent='💾 保存修改';
+    renderQLocal(s.qs||[]);
+    showPage('create');
+}
+function delSetByType(id, type) {
+    delId=id; delType=type;
+    document.getElementById('del-msg').textContent='确定要删除这个习题集吗？此操作无法撤销。';
+    document.getElementById('modal-del').classList.add('show');
+}
+
+function saveSet() {
+    const name = document.getElementById('f-name').value.trim();
+    if (!name) { toast('请输入习题集名称','err'); return; }
+    if (editingSet && curSetId) {
+        const sets = curSetType==='shared'?getShared():getMy();
+        const s = sets.find(x=>x.id===curSetId);
+        if (s) {
+            Object.assign(s,{name,subject:document.getElementById('f-subject').value,grade:document.getElementById('f-grade').value,tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:document.getElementById('f-desc').value,updated:new Date().toISOString()});
+            if (curSetType==='shared') saveShared(sets); else saveMy(sets);
+            toast('习题集已更新');
+        }
+    } else {
+        const my = getMy();
+        const id = genId();
+        my.unshift({id,name,subject:document.getElementById('f-subject').value,grade:document.getElementById('f-grade').value,tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:document.getElementById('f-desc').value,qs:[],isMy:true,created:new Date().toISOString(),updated:new Date().toISOString()});
+        saveMy(my);
+        curSetId=id; editingSet=true; curSetType='my';
+        document.getElementById('btn-save-set').textContent='💾 保存修改';
+        toast('习题集已创建！现在添加题目');
+    }
+    renderQLocal(curSetId ? ((curSetType==='shared'?getShared():getMy()).find(x=>x.id===curSetId)||{qs:[]}).qs||[] : []);
+}
+
+function renderQLocal(qs) {
+    const el = document.getElementById('q-list');
+    if (!qs||qs.length===0) { el.innerHTML=''; return; }
+    el.innerHTML = '<div style="font-weight:700;margin-bottom:12px;">已添加题目：</div>' +
+        qs.map((q,i)=>{
+            let detail = q.text.substring(0,80)+(q.text.length>80?'...':'');
+            if(q.type==='MCQ') detail += `<div style="font-size:12px;color:var(--text-light);margin-top:4px;">${['A','B','C','D'].filter(l=>q['c'+l]).map(l=>l+(q.ans===l?'✓':'')+': '+q['c'+l]).join(' | ')}</div>`;
+            else if(q.ans) detail += `<div style="font-size:12px;color:var(--text-light);margin-top:4px;">答: ${q.ans}</div>`;
+            return `<div class="q-item"><div class="q-header"><span class="q-num">Q${i+1}</span><span class="card-badge s-default">${q.type==='MCQ'?'📋':'✍️'}</span></div><div class="q-text">${detail}</div>${q.exp?`<div class="q-exp">💡 ${q.exp}</div>`:''}<div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="editQLocal('${q.id}')">✏️ 编辑</button><button class="btn btn-danger btn-sm" onclick="delQLocal('${q.id}')">🗑️ 删除</button></div></div>`;
+        }).join('');
+}
+
+function delQLocal(qId) {
+    const sets = curSetType==='shared'?getShared():getMy();
+    const s=sets.find(x=>x.id===curSetId);
+    if (!s) return;
+    s.qs=(s.qs||[]).filter(q=>q.id!==qId);
+    if (curSetType==='shared') saveShared(sets); else saveMy(sets);
+    renderQLocal(s.qs);
+}
+
+// ====================
+// ADD QUESTION
+// ====================
+function openAddQ() {
+    editingQId=null;
+    if (!curSetId) {
+        saveSet();
+        if (!curSetId) { toast('请先保存习题集名称','err'); return; }
+    }
+    ['q-text','q-a','q-b','q-c','q-d','q-frq-ans','q-exp'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('q-ans').value='A';
+    document.getElementById('q-type').value='MCQ';
+    toggleQType();
+    document.querySelector('#modal-q .modal-title').textContent='➕ 添加题目';
+    document.getElementById('modal-q').classList.add('show');
+}
+
+function closeQModal() { editingQId=null; document.querySelector('#modal-q .modal-title').textContent='➕ 添加题目'; document.getElementById('modal-q').classList.remove('show'); }
+function toggleQType() {
+    const t=document.getElementById('q-type').value;
+    document.getElementById('mcq-f').style.display=t==='MCQ'?'block':'none';
+    document.getElementById('frq-f').style.display=t==='FRQ'?'block':'none';
+}
+
+function addQuestion() {
+    const text=document.getElementById('q-text').value.trim();
+    if (!text) { toast('请输入题目','err'); return; }
+    const type=document.getElementById('q-type').value;
+    const my=getMy(); const s=my.find(x=>x.id===curSetId);
+    if (!s) return;
+    if (!s.qs) s.qs=[];
+    if (type==='MCQ') {
+        const a=document.getElementById('q-a').value.trim(),b=document.getElementById('q-b').value.trim();
+        if (!a||!b) { toast('请至少填写 A 和 B 选项','err'); return; }
+        s.qs.push({id:genId(),type:'MCQ',text,cA:a,cB:b,cC:document.getElementById('q-c').value.trim(),cD:document.getElementById('q-d').value.trim(),ans:document.getElementById('q-ans').value,exp:document.getElementById('q-exp').value.trim()});
+    } else {
+        s.qs.push({id:genId(),type:'FRQ',text,ans:document.getElementById('q-frq-ans').value.trim(),exp:document.getElementById('q-exp').value.trim()});
+    }
+    saveMy(my);
+    closeQModal();
+    renderQLocal(s.qs);
+    toast('题目已添加');
+}
+
+// ====================
+// IMPORT
+// ====================
+function switchTab(tab, e) {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('tab-paste').style.display=tab==='paste'?'block':'none';
+    document.getElementById('tab-gen').style.display=tab==='gen'?'block':'none';
+}
+
+function parseQs(text) {
+    const qs=[];
+    const blocks=text.split(/\n\s*\n/);
+    for (const blk of blocks) {
+        if (!blk.trim()) continue;
+        const lines=blk.trim().split('\n');
+        let qT='',chs={},ans='',exp='';
+        for (const ln of lines) {
+            const t=ln.trim();
+            const am=t.match(/^Answer:\s*([A-D])\s*$/i);
+            if (am&&qT){ans=am.group(1).toUpperCase();continue;}
+            if (t.startsWith('Explanation:')&&qT){exp=t.replace(/^Explanation:\s*/i,'');continue;}
+            const cm=t.match(/^([A-D])\s*[\.\)]\s*(.+)$/i);
+            if (cm&&qT){chs[cm.group(1).toUpperCase()]=cm.group(2).trim();continue;}
+            const qm=t.match(/^(\d+)[\.\)]\s*(.+)$/);
+            if (qm){qT=qm.group(2).trim();continue;}
+            if (t&&!qT) qT=t;
+        }
+        if (qT) {
+            if (Object.keys(chs).length>=2) qs.push({id:genId(),type:'MCQ',text:qT,cA:chs.A||'',cB:chs.B||'',cC:chs.C||'',cD:chs.D||'',ans,exp});
+            else qs.push({id:genId(),type:'FRQ',text:qT,ans,exp});
+        }
+    }
+    return qs;
+}
+
+function doImport() {
+    const text=document.getElementById('import-text').value.trim();
+    const name=document.getElementById('imp-name').value.trim();
+    const subject=document.getElementById('imp-subject').value;
+    if (!text){toast('请粘贴题目','err');return;}
+    if (!name){toast('请输入习题集名称','err');return;}
+    const qs=parseQs(text);
+    if (qs.length===0){toast('未能识别题目','err');return;}
+    const shared=getShared();
+    shared.unshift({id:genId(),name,subject,qs,created:new Date().toISOString()});
+    saveShared(shared);
+    toast(`成功导入 ${qs.length} 道题目到「${name}」！`);
+    document.getElementById('import-text').value='';
+    document.getElementById('imp-name').value='';
+    showPage('sets');
+}
+
+function doGenLocal() {
+    const subject=document.getElementById('gen-subject').value;
+    const count=Math.min(parseInt(document.getElementById('gen-count').value)||5,20);
+    const temps={
+        '生物':["Which of the following is an abiotic factor?","What type of relationship benefits both organisms?","What is the role of decomposers?","What does natural selection mean?","Which structure provides evidence for common ancestry?","What is the source of genetic variation?","Which selection favors average phenotypes?","What is the difference between habitat and niche?","Which is an example of coevolution?","What does the fossil record show?"],
+        '物理':["What is Newton's second law?","Which law states equal and opposite reaction?","What happens when distance doubles?","What type of lens corrects nearsightedness?","What is the unit of resistance?"]
+    };
+    const opts=[
+        ['A) Living organisms','B) Temperature','C) Fungus','D) Plants'],
+        ['A) Parasitism','B) Mutualism','C) Commensalism','D) Predation'],
+        ['A) Produce oxygen','B) Break down matter','C) Provide shelter','D) Create food'],
+        ['A) Survival of fittest','B) Random change','C) Creation','D) Use/disuse'],
+        ['A) Homologous','B) Analogous','C) Vestigial','D) Embryology'],
+        ['A) Mutation','B) Selection','C) Migration','D) Drift'],
+        ['A) Directional','B) Disruptive','C) Stabilizing','D) Artificial'],
+        ['A) Location/role','B) Habitat/niche','C) Both same','D) Ecosystem'],
+        ['A) Flowers/pollinators','B) Wolves/deer','C) Mules','D) Bacteria'],
+        ['A) Simple→complex','B) No change','C) Never extinct','D) Earth is young'],
+    ];
+    const answers=['A','B','B','A','A','A','C','B','A','A'];
+    const ts=temps[subject]||temps['生物'];
+    const qs=[];
+    for (let i=0;i<Math.min(count,ts.length);i++) {
+        const o=opts[i%opts.length];
+        qs.push({id:genId(),type:'MCQ',text:ts[i],cA:o[0].slice(3),cB:o[1].slice(3),cC:o[2].slice(3),cD:o[3].slice(3),ans:answers[i%answers.length],exp:'Generated for practice.'});
+    }
+    const shared=getShared();
+    shared.unshift({id:genId(),name:`${subject} 自动生成题`,subject,qs,created:new Date().toISOString()});
+    saveShared(shared);
+    toast(`生成 ${qs.length} 道示例题目！`);
+    showPage('sets');
+}
+
+// ====================
+// GUIDE CRUD
+// ====================
+let editingGuideId=null;
+function openAddGuide() {
+    editingGuideId=null;
+    document.getElementById('g-name').value='';
+    document.getElementById('g-subject').value='生物';
+    document.getElementById('g-content').value='';
+    document.querySelector('#modal-guide .modal-title').textContent='📝 新建学习资料';
+    document.getElementById('modal-guide').classList.add('show');
+}
+function editGuide(id) {
+    const guides=getGuides(); const g=guides.find(x=>x.id===id);
+    if (!g) return;
+    editingGuideId=id;
+    document.getElementById('g-name').value=g.name;
+    document.getElementById('g-subject').value=g.subject||'生物';
+    document.getElementById('g-content').value=g.content||'';
+    document.querySelector('#modal-guide .modal-title').textContent='✏️ 编辑学习资料';
+    document.getElementById('modal-guide').classList.add('show');
+}
+function closeGuideModal() { document.querySelector('#modal-guide .modal-title').textContent='📝 新建学习资料'; document.getElementById('modal-guide').classList.remove('show'); }
+function addGuide() {
+    const name=document.getElementById('g-name').value.trim();
+    if (!name){toast('请输入资料名称','err');return;}
+    const guides=getGuides();
+    if (editingGuideId) {
+        const g=guides.find(x=>x.id===editingGuideId);
+        if (g){Object.assign(g,{name,subject:document.getElementById('g-subject').value,content:document.getElementById('g-content').value});}
+    } else {
+        guides.unshift({id:genId(),name,subject:document.getElementById('g-subject').value,content:document.getElementById('g-content').value,created:new Date().toISOString()});
+    }
+    saveGuides(guides);
+    closeGuideModal();
+    toast(editingGuideId?'资料已更新':'学习资料已保存');
+    if (curGuideId2) viewGuide(curGuideId2);
+    else renderGuides();
+}
+function delGuide(id) {
+    delId=id; delType='guide';
+    document.getElementById('del-msg').textContent='确定要删除这份学习资料吗？此操作无法撤销。';
+    document.getElementById('modal-del').classList.add('show');
+}
+
+// ====================
+// DELETE
+// ====================
+function delSet(id) {
+    delId=id; delType='set';
+    document.getElementById('del-msg').textContent='确定要删除这个习题集吗？所有题目将一并删除。';
+    document.getElementById('modal-del').classList.add('show');
+}
+function closeDel() { document.getElementById('modal-del').classList.remove('show'); }
+function confirmDel() {
+    if (!delId) return;
+    if (delType==='set') {
+        let my=getMy(); my=my.filter(x=>x.id!==delId); saveMy(my);
+        toast('习题集已删除');
+        showPage('sets');
+    } else if (delType==='guide') {
+        let guides=getGuides(); guides=guides.filter(x=>x.id!==delId); saveGuides(guides);
+        toast('学习资料已删除');
+        renderGuides();
+    }
+    closeDel();
+}
+
+// ====================
+// QUIZ MODE
+// ====================
+let QZ={};
+let timerInterval=null;
+let pendingQuiz={};
+let selectedTimerMin=15;
+
+function startQuiz(id, type) {
+    const sets=type==='shared'?getShared():getMy();
+    const s=sets.find(x=>x.id===id);
+    if (!s||!(s.qs&&s.qs.length>0)){toast('此习题集暂无题目','err');return;}
+    pendingQuiz={id,type,name:s.name,subject:s.subject,qs:s.qs,total:s.qs.length};
+
+    // Check for saved progress
+    const savedProg=getQuizProgress(id);
+    const resumeBar=document.getElementById('resume-bar');
+    if (savedProg && savedProg.idx < s.qs.length) {
+        document.getElementById('resume-text').textContent=`上次练习到第 ${savedProg.idx+1}/${s.qs.length} 题，正确率 ${savedProg.score} 分`;
+        resumeBar.classList.remove('hide');
+    } else {
+        resumeBar.classList.add('hide');
+    }
+
+    // Reset preset selection
+    selectedTimerMin=15;
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    document.querySelector('.timer-preset')&&document.querySelector('.timer-preset').classList.add('sel');
+    document.getElementById('timer-custom-min').value='';
+    document.getElementById('modal-timer').classList.remove('hide');
+}
+
+function setPreset(min, btn) {
+    selectedTimerMin=min;
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    document.getElementById('timer-custom-min').value='';
+}
+function clearPresets() {
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    const val=parseInt(document.getElementById('timer-custom-min').value)||0;
+    if (val>0&&val<=120) selectedTimerMin=val;
+}
+
+function resumeFromSaved() {
+    const saved=getQuizProgress(pendingQuiz.id);
+    if (!saved) { confirmTimer(); return; }
+    // Restore saved progress
+    pendingQuiz.shuffledOrder=saved.shuffledOrder;
+    pendingQuiz.savedIdx=saved.idx;
+    pendingQuiz.savedScore=saved.score;
+    pendingQuiz.savedWrong=saved.wrong;
+    pendingQuiz.savedTimerLeft=saved.timerLeft||null;
+    confirmTimer();
+}
+
+function confirmTimer() {
+    document.getElementById('modal-timer').classList.add('hide');
+    const s=pendingQuiz;
+    const total=s.qs.length;
+
+    let shuffled;
+    if (s.shuffledOrder) {
+        // Restore from saved order
+        shuffled=s.shuffledOrder.map(i=>s.qs[i]);
+    } else {
+        shuffled=[...s.qs].sort(()=>Math.random()-0.5);
+    }
+
+    QZ={
+        id:s.id, type:s.type,
+        title:s.name, subject:s.subject,
+        qs:s.qs, shuffled,
+        idx:s.savedIdx||0,
+        score:s.savedScore||0,
+        wrong:s.savedWrong||0,
+        done:false, answered:false,
+        timerMin:selectedTimerMin,
+        timerLeft:selectedTimerMin*60,
+        timerIntervalId:null
+    };
+
+    document.getElementById('quiz-title').textContent='🎯 '+s.name;
+    document.getElementById('quiz-meta').textContent=`${subjE(s.subject)} ${s.subject||''} · ${total} 题`;
+    showPage('quiz');
+    renderQuiz();
+    if (selectedTimerMin>0) startTimer();
+}
+
+function startNoTimer() {
+    document.getElementById('modal-timer').classList.add('hide');
+    selectedTimerMin=0;
+    confirmTimer();
+}
+
+function startTimer() {
+    clearInterval(QZ.timerIntervalId||null);
+    QZ.timerIntervalId=null;
+    if (!QZ.timerLeft||QZ.timerLeft<=0) return;
+    QZ.timerIntervalId=setInterval(()=>{
+        if (!QZ||!QZ.timerLeft) { clearInterval(QZ.timerIntervalId); return; }
+        QZ.timerLeft--;
+        updateTimerDisplay();
+        saveQuizProgress();
+        if (QZ.timerLeft<=0) {
+            clearInterval(QZ.timerIntervalId);
+            QZ.done=true;
+            showResult();
+            toast('⏱️ 时间到！自动提交');
+        }
+    },1000);
+}
+
+function updateTimerDisplay() {
+    const el=document.getElementById('timer-disp');
+    const fill=document.getElementById('timer-fill-inner');
+    if (!el||!QZ) return;
+    const m=Math.floor(QZ.timerLeft/60);
+    const s=QZ.timerLeft%60;
+    el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    const urgent=QZ.timerLeft<=60;
+    el.className='timer-display'+(urgent?' urgent':'');
+    if (fill) {
+        const pct=(QZ.timerLeft/(QZ.timerMin*60))*100;
+        fill.style.width=pct+'%';
+        fill.className='timer-fill-inner'+(urgent?' urgent':'');
+    }
+    const bar=document.getElementById('timer-bar-wrap');
+    if (bar) bar.style.display=QZ.timerLeft>0?'block':'none';
+}
+
+function toggleTimer() {
+    if (!QZ) return;
+    if (QZ.timerIntervalId) {
+        // Pause
+        clearInterval(QZ.timerIntervalId);
+        QZ.timerIntervalId=null;
+        document.getElementById('timer-pause-btn').textContent='▶';
+        document.getElementById('timer-pause-btn').title='继续计时';
+        toast('计时已暂停');
+    } else {
+        if (QZ.timerLeft>0) {
+            startTimer();
+            document.getElementById('timer-pause-btn').textContent='⏸';
+            document.getElementById('timer-pause-btn').title='暂停计时';
+            toast('计时继续');
+        }
+    }
+}
+
+function renderQuiz() {
+    const {shuffled,idx,score,timerMin,timerLeft}=QZ;
+    if (idx>=shuffled.length){showResult();return;}
+    const q=shuffled[idx];
+    const total=shuffled.length;
+
+    const timerBar=QZ.timerMin>0?`
+        <div class="timer-bar" id="timer-bar-wrap">
+            <div class="timer-icon">⏱️</div>
+            <div class="timer-display" id="timer-disp">${Math.floor((timerLeft||0)/60)}:${((timerLeft||0)%60).toString().padStart(2,'0')}</div>
+            <div class="timer-fill-wrap">
+                <div class="timer-fill"><div class="timer-fill-inner" id="timer-fill-inner" style="width:${((timerLeft||0)/(timerMin*60))*100}%"></div></div>
+            </div>
+            <button class="timer-btn" id="timer-pause-btn" onclick="toggleTimer()" title="暂停计时">⏸</button>
+        </div>`:'';
+
+    document.getElementById('quiz-body').innerHTML=`
+        <div class="quiz-box">
+            ${timerBar}
+            <div class="quiz-progress">
+                <div class="prog-bar"><div class="prog-fill" style="width:${(idx/total)*100}%"></div></div>
+                <span style="font-size:14px;color:var(--text-light);">${idx+1}/${total}</span>
+                <span class="quiz-score-display">${score} 分</span>
+            </div>
+            <div class="quiz-q-text">${idx+1}. ${q.text}</div>
+            ${q.type==='MCQ'&&['A','B','C','D'].some(l=>q['c'+l])?`
+                <div class="quiz-choices">
+                    ${['A','B','C','D'].filter(l=>q['c'+l]).map(l=>`<div class="quiz-choice" onclick="selAns('${l}')" id="ch-${l}"><div class="letter">${l}</div><div>${q['c'+l]}</div></div>`).join('')}
+                </div>
+                <div class="quiz-feedback" id="qfb"></div>
+                <div class="quiz-nav">
+                    <button class="btn btn-ghost btn-sm" onclick="saveProgressAndQuit()">💾 保存进度</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none;">下一题 →</button>
+                </div>
+            `:`<div class="quiz-nav">
+                <button class="btn btn-ghost btn-sm" onclick="saveProgressAndQuit()">💾 保存进度</button>
+                <button class="btn btn-primary" onclick="nextQ()">下一题 →</button>
+            </div>`}
+        </div>`;
+    updateTimerDisplay();
+}
+
+function selAns(l) {
+    if (QZ.answered) return;
+    QZ.answered=true;
+    const q=QZ.shuffled[QZ.idx];
+    const ok=l===q.ans;
+    if (ok) QZ.score++; else QZ.wrong++;
+    document.getElementById('ch-'+l).classList.add(ok?'correct':'wrong');
+    if (!ok&&q.ans) document.getElementById('ch-'+q.ans).classList.add('correct');
+    const fb=document.getElementById('qfb');
+    fb.className='quiz-feedback show '+(ok?'right':'wrong');
+    fb.innerHTML=ok?`✅ 正确！${q.exp?`<br><br>💡 ${q.exp}`:''}`:`❌ 错误！正确答案是 ${q.ans}<br>${q.exp?`<br>💡 ${q.exp}`:''}`;
+    document.getElementById('nextBtn').style.display='inline-flex';
+    document.querySelector('.quiz-score-display').textContent=QZ.score+' 分';
+    saveQuizProgress();
+}
+
+function nextQ() {
+    QZ.idx++; QZ.answered=false;
+    saveQuizProgress();
+    renderQuiz();
+}
+
+function showResult() {
+    clearInterval(QZ.timerIntervalId||null);
+    clearQuizProgress(QZ.id);
+    const {score,shuffled}=QZ;
+    const total=shuffled.length;
+    const pct=Math.round((score/total)*100);
+    document.getElementById('quiz-body').innerHTML=`
+        <div class="result-page">
+            <div class="result-emoji">${pct>=90?'🏆':pct>=70?'🎉':pct>=60?'👍':'📚'}</div>
+            <div class="result-big">${score} / ${total}</div>
+            <div class="result-detail">正确率 ${pct}%</div>
+            <div class="result-stats">
+                <div class="result-stat correct"><div class="n">${score}</div><div class="l">正确</div></div>
+                <div class="result-stat wrong"><div class="n">${total-score}</div><div class="l">错误</div></div>
+                <div class="result-stat"><div class="n" style="color:var(--accent)">${pct}%</div><div class="l">正确率</div></div>
+            </div>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                <button class="btn btn-primary" onclick="startQuiz(QZ.id,QZ.type)">🔄 再练一次</button>
+                <button class="btn btn-secondary" onclick="showPage('sets')">📚 返回</button>
+            </div>
+        </div>`;
+    const st=getStats();
+    st.taken++;
+    st.sessions.push({id:QZ.id,title:QZ.title,score,total,pct,date:new Date().toISOString()});
+    if(st.sessions.length>50) st.sessions=st.sessions.slice(-50);
+    saveStats(st);
+}
+
+function quitQuiz() {
+    if (QZ&&QZ.idx>0&&QZ.idx<QZ.shuffled.length&&!confirm('确定要退出吗？当前进度已自动保存。')) return;
+    if (QZ&&QZ.idx>0) saveQuizProgress();
+    clearInterval(QZ&&QZ.timerIntervalId||null);
+    showPage('sets');
+}
+function saveProgressAndQuit() {
+    if (QZ&&QZ.idx>=0) {
+        saveQuizProgress();
+        clearInterval(QZ.timerIntervalId||null);
+        toast('进度已保存！下次打开可继续');
+    }
+    showPage('sets');
+}
+
+// ====================
+// PROGRESS SAVE/LOAD
+// ====================
+function getQuizProgress(setId) {
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        return all[setId]||null;
+    } catch(e) { return null; }
+}
+function saveQuizProgress() {
+    if (!QZ||QZ.idx===undefined) return;
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        all[QZ.id]={};
+        const prog=all[QZ.id];
+        prog.idx=QZ.idx;
+        prog.score=QZ.score;
+        prog.wrong=QZ.wrong||0;
+        prog.timerLeft=QZ.timerLeft||null;
+        prog.savedAt=Date.now();
+        // Save which questions are answered (by index in original qs)
+        prog.shuffledOrder=QZ.shuffled.map((q,i)=>({q,i})).map(({q,i})=>QZ.qs.findIndex(qq=>qq.id===q.id));
+        localStorage.setItem('quiz_progress',JSON.stringify(all));
+    } catch(e) {}
+}
+function clearQuizProgress(setId) {
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        delete all[setId];
+        localStorage.setItem('quiz_progress',JSON.stringify(all));
+    } catch(e) {}
+}
+
+// ====================
+// STATS
+// ====================
+function renderStats() {
+    const st=getStats();
+    const shared=getShared();
+    const my=getMy();
+    const totalQ=(shared||[]).reduce((s,x)=>s+(x.qs||[]).length,0)+(my||[]).reduce((s,x)=>s+(x.qs||[]).length,0);
+    const recent=(st.sessions||[]).slice(-10).reverse();
+    let histHtml=recent.length===0?'<div class="empty"><div class="empty-title">暂无练习记录</div></div>'
+        :recent.map(s=>`<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+            <div><div style="font-weight:600;">${s.title}</div><div style="font-size:12px;color:var(--text-light);">${new Date(s.date).toLocaleString('zh-CN')}</div></div>
+            <div style="text-align:right;"><div style="font-weight:700;color:var(--primary);">${s.score}/${s.total}</div><div style="font-size:12px;color:var(--text-light);">${s.pct}%</div></div>
+        </div>`).join('');
+    document.getElementById('stats-content').innerHTML=`
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-num">${shared.length}</div><div class="stat-label">共享习题集</div></div>
+            <div class="stat-card"><div class="stat-num purple">${totalQ}</div><div class="stat-label">总题目</div></div>
+            <div class="stat-card"><div class="stat-num success">${st.taken}</div><div class="stat-label">练习次数</div></div>
+        </div>
+        <div class="card"><div style="font-weight:700;margin-bottom:16px;">最近练习记录</div>${histHtml}</div>`;
+}
+
+// ====================
+// TOAST
+// ====================
+function toast(msg,type='ok') {
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast show '+type;
+    setTimeout(()=>t.classList.remove('show'),2500);
+}
+function showGuestToast(msg) {
+    const t=document.getElementById('guest-toast');
+    t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ====================
+// PRELOAD DATA
+// ====================
+function preload() {
+    const shared=getShared();
+    // Only preload if no shared sets exist
+    if (shared.length>0) return;
+    
+    const ecoQs=__INJECTED_SET1__;
+    const evoQs=__INJECTED_SET2__;
+    
+    if (ecoQs&&ecoQs.length>0) {
+        const qs=ecoQs.map(q=>({id:genId(),type:'MCQ',text:q.text,cA:q.choiceA,cB:q.choiceB,cC:q.choiceC,cD:q.choiceD,ans:q.answer,exp:q.explanation}));
+        shared.push({id:genId(),name:'🌍 Ecology — 生态学',subject:'生物',qs:ecoQs,created:new Date().toISOString(),updated:new Date().toISOString()});
+    }
+    if (evoQs&&evoQs.length>0) {
+        const qs=evoQs.map(q=>({id:genId(),type:'MCQ',text:q.text,cA:q.choiceA,cB:q.choiceB,cC:q.choiceC,cD:q.choiceD,ans:q.answer,exp:q.explanation}));
+        shared.push({id:genId(),name:'🧬 Evolution — 进化论',subject:'生物',qs:evoQs,created:new Date().toISOString(),updated:new Date().toISOString()});
+    }
+    
+    // Ecology study guide
+    const guides=getGuides();
+    guides.push({id:genId(),name:'🌍 Ecology Study Guide',subject:'生物',content:`## 🌍 ECOLOGY
+
+### Biotic vs Abiotic Factors
+- **Biotic**: Living factors (plants, animals, bacteria, fungi)
+- **Abiotic**: Non-living factors (temperature, sunlight, water, minerals)
+- 💡 **Tip**: "Biotic = Bi-o-s (alive), Abiotic = A (not) + biotic"
+
+### Habitat vs Niche
+- **Habitat**: Where an organism LIVES ("address")
+- **Niche**: What an organism DOES ("profession")
+- Example: Coral reef = habitat; what it eats, how it reproduces = niche
+
+### Types of Species Interactions
+
+| Relationship | Species A | Species B | Example |
+|---|---|---|---|
+| **Mutualism** | + | + | Bees + flowers |
+| **Commensalism** | + | 0 | Barnacle on whale |
+| **Parasitism** | + | - | Tick on dog |
+| **Predation** | + | - | Wolf + deer |
+| **Competition** | - | - | Two birds eating seeds |
+
+### Mimicry
+- **Batesian mimicry**: Harmless mimics HARMFUL species
+- **Mullerian mimicry**: Two or more HARMFUL species look similar
+
+### Coevolution
+- Two species evolve in RESPONSE to each other
+- Example: Flowers evolve tube length → pollinators evolve longer tongues`,
+created:new Date().toISOString()});
+
+    // Evolution study guide
+    guides.push({id:genId(),name:'🧬 Evolution Study Guide',subject:'生物',content:`## 🧬 EVOLUTION
+
+### Darwin's Key Insights
+1. **Descent with modification**: Organisms share common ancestors but accumulate changes
+2. **Natural selection**: Individuals with favorable traits survive & reproduce more
+3. **Fitness**: Ability to survive AND reproduce (not just strength!)
+
+### The 4 Observations of Natural Selection
+1. Traits are often heritable
+2. Offspring vary in their heritable traits
+3. Species produce more offspring than environment can support
+4. Individuals with favorable traits survive & reproduce more
+
+### Evidence for Evolution
+
+| Evidence | What it shows |
+|---|---|
+| **Homologous structures** | Same bones, different functions → common ancestor |
+| **Analogous structures** | Same function, different bones → convergent evolution |
+| **Vestigial structures** | Remnants of ancestor (coccyx, appendix) |
+| **Embryology** | Early vertebrate embryos look very similar |
+| **Fossil record** | Simple → complex life over time |
+| **Biogeography** | Species on islands resemble nearest mainland |
+| **Genetics** | Conserved genes similar across species |
+
+### Key People
+
+| Person | Contribution |
+|---|---|
+| **James Hutton** | Earth is very old — gradualism |
+| **Charles Lyell** | Uniformitarianism — same processes over time |
+| **Thomas Malthus** | Population > resources → struggle for existence |
+| **Jean-Baptiste Lamarck** | WRONG: inheritance of acquired traits |
+| **Charles Darwin** | Natural selection (1859) |
+
+### Mechanisms of Evolution
+- **Mutation**: Creates NEW alleles (only source of new genetic variation!)
+- **Natural selection**: Changes allele frequencies based on fitness
+- **Gene flow**: Transfers alleles between populations
+- **Genetic drift**: Random changes — stronger in SMALL populations
+
+### Types of Natural Selection
+
+| Type | Effect |
+|---|---|
+| **Stabilizing** | Favors AVERAGE phenotype |
+| **Directional** | Favors ONE extreme |
+| **Disruptive** | Favors BOTH extremes, eliminates average |
+
+💡 **Remember**: Evolution = change in **allele frequencies** in a population over time. Individuals don't evolve — populations do!`,
+created:new Date().toISOString()});
+
+    saveShared(shared);
+    saveGuides(guides);
+    console.log('Preloaded biology data');
+}
+
+const __INJECTED_SET1__ = [{"text": "Mimicry is:", "type": "MCQ", "id": "", "choiceA": "Blending in with the environment", "choiceB": "Resembling another species for protection", "choiceC": "Changing color with temperature", "choiceD": "Looking like a rock", "answer": "B", "explanation": "Mimicry = copying another species. Viceroy butterflies mimic Monarchs (both are toxic)."}, {"text": "Camouflage is essentially a form of:", "type": "MCQ", "id": "", "choiceA": "Mutualism", "choiceB": "Visual mimicry", "choiceC": "Parasitism", "choiceD": "Commensalism", "answer": "B", "explanation": "Camouflage = blending in with surroundings. It's visual mimicry of the environment (e.g., stone plants look like rocks)."}, {"text": "Darwin's voyage on the HMS Beagle took place in what year?", "type": "MCQ", "id": "", "choiceA": "1831", "choiceB": "1859", "choiceC": "1809", "choiceD": "1871", "answer": "A", "explanation": ""}, {"text": "Which is NOT one of Darwin's observations for natural selection?", "type": "MCQ", "id": "", "choiceA": "Traits are often heritable", "choiceB": "Offspring vary in their heritable traits", "choiceC": "Species produce more offspring than environment can support", "choiceD": "Poorly adapted individuals never produce offspring", "answer": "D", "explanation": "'Never' is too absolute. Poorly adapted individuals CAN produce some offspring, just fewer than well-adapted individuals."}, {"text": "According to natural selection, which individuals survive and reproduce most?", "type": "MCQ", "id": "", "choiceA": "The strongest", "choiceB": "The fastest", "choiceC": "Individuals with favorable heritable traits for their environment", "choiceD": "The oldest", "answer": "C", "explanation": "Fitness = survive AND reproduce. It's about having traits that work in YOUR specific environment."}, {"text": "What is a species?", "type": "MCQ", "id": "", "choiceA": "A group that lives in the same area", "choiceB": "A group that can interbreed and produce viable, fertile offspring", "choiceC": "A group that looks similar", "choiceD": "A group that eats the same food", "answer": "B", "explanation": "Species definition: can produce VIABLE (alive) + FERTILE (can reproduce) offspring. Mules are sterile → donkey + horse are different species."}, {"text": "Why are mules sterile?", "type": "MCQ", "id": "", "choiceA": "They have too many chromosomes", "choiceB": "They are hybrids of two different species", "choiceC": "They are genetically defective", "choiceD": "They don't live long enough", "answer": "B", "explanation": "Mule = male donkey + female horse. Different species → hybrid is sterile (can't produce offspring of its own)."}, {"text": "Which is an example of a homologous structure?", "type": "MCQ", "id": "", "choiceA": "Bird wing and insect wing", "choiceB": "Whale flipper and human arm", "choiceC": "Fish fin and dolphin flipper", "choiceD": "Eagle wing and bat wing", "answer": "B", "explanation": "Homologous = same bones, different function, common ancestor. Whale flipper & human arm have same bone structure (humerus, radius, ulna)."}, {"text": "Analogous structures:", "type": "MCQ", "id": "", "choiceA": "Have same structure but different functions", "choiceB": "Have same function but different structures", "choiceC": "Are vestigial", "choiceD": "Are found only in fossils", "answer": "B", "explanation": "Analogous = same function, different structure, NO common ancestor. Bird wings (bones) vs. insect wings (chitin) both fly but different structure."}, {"text": "Which is a vestigial structure in humans?", "type": "MCQ", "id": "", "choiceA": "Heart", "choiceB": "Tail bone (coccyx)", "choiceC": "Liver", "choiceD": "Brain", "answer": "B", "explanation": "Coccyx (tail bone) is vestigial — remnant of ancestral tail. We don't have tails anymore, but still have the bone."}, {"text": "The principle of superposition states that:", "type": "MCQ", "id": "", "choiceA": "Older rock layers are on the bottom", "choiceB": "Newer rock layers are on the bottom", "choiceC": "All rock layers are the same age", "choiceD": "Fossils can't be dated", "answer": "A", "explanation": "Superposition: bottom = oldest (deposited first). More primitive creatures in older (bottom) rock layers."}, {"text": "Which mechanism of evolution adds NEW alleles to the gene pool?", "type": "MCQ", "id": "", "choiceA": "Natural selection", "choiceB": "Migration", "choiceC": "Genetic drift", "choiceD": "Mutation", "answer": "D", "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, migration, drift only change frequencies of EXISTING alleles."}, {"text": "Stabilizing selection favors:", "type": "MCQ", "id": "", "choiceA": "Extreme phenotypes", "choiceB": "Intermediate phenotypes", "choiceC": "Both extremes", "choiceD": "All phenotypes equally", "answer": "B", "explanation": "Stabilizing = 'keeps the status quo.' Favors AVERAGE. Example: human birth weight (not too small, not too big)."}, {"text": "Peppered moths during Industrial Revolution are an example of:", "type": "MCQ", "id": "", "choiceA": "Stabilizing selection", "choiceB": "Directional selection", "choiceC": "Disruptive selection", "choiceD": "Artificial selection", "answer": "B", "explanation": "Directional = shifts population toward one extreme. Pollution darkened trees → dark moths had advantage → population shifted toward dark."}, {"text": "Biogeography is the study of:", "type": "MCQ", "id": "", "choiceA": "Fossils", "choiceB": "Embryos", "choiceC": "Geographic distribution of species", "choiceD": "Homologous structures", "answer": "C", "explanation": "Biogeography = where species live. Explains why similar environments (Antarctic vs. Arctic) have different species (penguins vs. polar bears)."}, {"text": "What does 'descent with modification' mean?", "type": "MCQ", "id": "", "choiceA": "Offspring are identical to parents", "choiceB": "Offspring share characteristics with ancestors but accumulate modifications", "choiceC": "Only the strongest survive", "choiceD": "", "answer": "B", "explanation": "Darwin's definition of evolution: organisms share common ancestor, but accumulate changes (adaptations) over generations."}, {"text": "The modern definition of evolution is:", "type": "MCQ", "id": "", "choiceA": "Survival of the fittest", "choiceB": "Change in relative frequency of alleles in a population over time", "choiceC": "Descent with modification", "choiceD": "Inheritance of acquired traits", "answer": "B", "explanation": ""}, {"text": "A gene pool is:", "type": "MCQ", "id": "", "choiceA": "A swimming pool for genes", "choiceB": "All alleles present in a population", "choiceC": "Only the dominant alleles", "choiceD": "The DNA of one individual", "answer": "B", "explanation": "Gene pool = all alleles in a population. Example: in a population of 100 flowers, gene pool includes all alleles for petal color."}, {"text": "Who proposed that Earth is very old (gradualism)?", "type": "MCQ", "id": "", "choiceA": "Georges Cuvier", "choiceB": "James Hutton", "choiceC": "Charles Lyell", "choiceD": "Thomas Malthus", "answer": "B", "explanation": "Hutton: geological forces operate SLOWLY over millions of years = gradualism. Earth must be very old for evolution to occur."}, {"text": "Who proposed uniformitarianism?", "type": "MCQ", "id": "", "choiceA": "Georges Cuvier", "choiceB": "James Hutton", "choiceC": "Charles Lyell", "choiceD": "Thomas Malthus", "answer": "C", "explanation": "Lyell: mechanisms of change are CONSTANT over time (same processes today as in past). Incorporated Hutton's gradualism."}, {"text": "Thomas Malthus influenced Darwin with his idea that:", "type": "MCQ", "id": "", "choiceA": "Population grows faster than food supply", "choiceB": "Earth is very old", "choiceC": "Species are fixed", "choiceD": "Fossils are important", "answer": "A", "explanation": "Malthus: population grows exponentially, but food grows linearly. Limited by war, famine, disease → 'struggle for existence' in Darwin."}, {"text": "Lamarck's theory of evolution was based on:", "type": "MCQ", "id": "", "choiceA": "Natural selection", "choiceB": "Inheritance of acquired characteristics", "choiceC": "Mutation", "choiceD": "Genetic drift", "answer": "B", "explanation": "Lamarck was WRONG: he thought stretching your neck (acquired trait) would be passed to offspring. Acquired traits are NOT inherited."}, {"text": "Why was Lamarck wrong?", "type": "MCQ", "id": "", "choiceA": "1831", "choiceB": "1859", "choiceC": "1809", "choiceD": "1871", "answer": "B", "explanation": "1859 — 28 years after his Beagle voyage. He delayed publishing because he didn't have enough evidence (no genetics yet)."}, {"text": "What are adaptations?", "type": "MCQ", "id": "", "choiceA": "Characteristics that harm survival", "choiceB": "Inherited characteristics that increase chance of survival", "choiceC": "Acquired traits", "choiceD": "Random mutations only", "answer": "B", "explanation": "Adaptation = inherited trait that increases fitness (survive + reproduce). Example: camouflage helps avoid predators."}, {"text": "Fossils are:", "type": "MCQ", "id": "", "choiceA": "Living organisms", "choiceB": "Remains or imprints of once-living organisms", "choiceC": "Only dinosaur bones", "choiceD": "Rocks that look like organisms", "answer": "B", "explanation": "Fossils = remains (bones, shells) or imprints (footprints, leaves) of once-living organisms found in rock layers."}, {"text": "Darwin's finches on Galapagos had different:", "type": "MCQ", "id": "", "choiceA": "Feather colors", "choiceB": "Beak sizes and shapes", "choiceC": "Wing spans", "choiceD": "Leg lengths", "answer": "B", "explanation": "Finch beaks varied by island → associated with diet. Different food sources → different beak adaptations."}, {"text": "What did Darwin conclude about finch evolution?", "type": "MCQ", "id": "", "choiceA": "Finches were created separately on each island", "choiceB": "Original finches reached islands and changed over generations", "choiceC": "Finches flew from Europe", "choiceD": "Finches don't evolve", "answer": "B", "explanation": "Descent with modification: original finches from mainland dispersed to different islands, accumulated adaptations over generations."}, {"text": "Which of the following is direct evidence for evolution?", "type": "MCQ", "id": "", "choiceA": "Peppered moths", "choiceB": "Soapberry bugs", "choiceC": "Drug-resistant bacteria", "choiceD": "All of the above", "answer": "D", "explanation": "All are direct observations of evolution happening NOW. Bacteria evolve quickly (fast reproduction + mutation) → drug resistance."}, {"text": "Homology provides evidence for:", "type": "MCQ", "id": "", "choiceA": "Convergent evolution", "choiceB": "Divergent evolution (common ancestry)", "choiceC": "Spontaneous generation", "choiceD": "Creationism", "answer": "B", "explanation": "Homologous structures = divergent evolution from common ancestor. Different species adapted same bones for different functions."}, {"text": "Vestigial structures provide evidence for evolution because:", "type": "MCQ", "id": "", "choiceA": "They are useful", "choiceB": "They show common ancestry with reduced function", "choiceC": "They are brand new", "choiceD": "They prove Lamarck was right", "answer": "B", "explanation": "Vestigial = reduced/nonfunctional structures from ancestor. Whale pelvic bones = ancestor had legs, whales don't need them anymore."}, {"text": "Embryology provides evidence for evolution because:", "type": "MCQ", "id": "", "choiceA": "Embryos of vertebrates look similar", "choiceB": "Embryos are completely different", "choiceC": "Embryos don't matter", "choiceD": "Only mammals have embryos", "answer": "A", "explanation": "Early embryos of fish, chickens, humans look very similar → evidence of common ancestry (vertebrate ancestor)."}, {"text": "Conserved genes (like cytochrome c) provide evidence for evolution because:", "type": "MCQ", "id": "", "choiceA": "They change rapidly", "choiceB": "They are highly similar across species", "choiceC": "They don't exist", "choiceD": "They only exist in bacteria", "answer": "B", "explanation": "Important genes DON'T change much over time (conserved). Similar cytochrome c across species → common ancestry."}, {"text": "The fossil record provides evidence for evolution by showing:", "type": "MCQ", "id": "", "choiceA": "No change over time", "choiceB": "Simple to complex over millions of years", "choiceC": "Only extinct species", "choiceD": "Fossils are fake", "answer": "B", "explanation": "Fossil record: older layers (bottom) have simpler organisms; newer layers (top) have more complex organisms → evolution over time."}, {"text": "Biogeography explains why:", "type": "MCQ", "id": "", "choiceA": "Similar environments have similar species", "choiceB": "Similar environments can have different species", "choiceC": "All islands have the same species", "choiceD": "Continents don't move", "answer": "B", "explanation": "Penguins (Antarctic) vs. polar bears (Arctic) — similar cold environments, but different species because of different ancestors + continental drift."}, {"text": "Continental drift (Pangaea) explains:", "type": "MCQ", "id": "", "choiceA": "Why all species are the same everywhere", "choiceB": "Why species on islands resemble those on nearest mainland", "choiceC": "Why fossils are fake", "choiceD": "Why evolution doesn't happen", "answer": "B", "explanation": "Island biogeography: species on islands resemble nearest mainland because ancestors migrated from mainland."}, {"text": "Which is an example of convergent evolution?", "type": "MCQ", "id": "", "choiceA": "Whale flipper and human arm", "choiceB": "Bird wings and insect wings", "choiceC": "Fish fins and dolphin flippers", "choiceD": "All of the above", "answer": "B", "explanation": "Convergent = unrelated species evolve similar traits. Bird wings + insect wings both for flying, but different structure (no common ancestor for wings)."}, {"text": "Which is an example of divergent evolution?", "type": "MCQ", "id": "", "choiceA": "Bird wings and insect wings", "choiceB": "Whale flipper and human arm", "choiceC": "Fish fins and dolphin flippers", "choiceD": "All of the above", "answer": "B", "explanation": "Divergent = related species evolve different traits. Whale flipper + human arm have same bones (common ancestor), different function."}, {"text": "Mutation is the ultimate source of genetic variation because:", "type": "MCQ", "id": "", "choiceA": "It creates new alleles", "choiceB": "It removes alleles", "choiceC": "It doesn't do anything", "choiceD": "It only happens in plants", "answer": "A", "explanation": "Mutation = only mechanism that creates NEW alleles. Other mechanisms (selection, drift, migration) only change frequencies of existing alleles."}, {"text": "Migration (gene flow) changes allele frequencies by:", "type": "MCQ", "id": "", "choiceA": "Creating new alleles", "choiceB": "Transferring genes from one population to another", "choiceC": "Removing alleles", "choiceD": "Not doing anything", "answer": "B", "explanation": "Gene flow = movement of genes between populations. Example: pollen blows from one flower population to another → transfers alleles."}, {"text": "Genetic drift is:", "type": "MCQ", "id": "", "choiceA": "Selection based on fitness", "choiceB": "Change in allele frequency due to chance events", "choiceC": "Mutation", "choiceD": "Migration", "answer": "B", "explanation": "Genetic drift = random chance. Important in SMALL populations. Example: natural disaster kills randomly → allele frequencies change by chance."}, {"text": "In directional selection, the population shifts toward:", "type": "MCQ", "id": "", "choiceA": "Intermediate phenotypes", "choiceB": "Both extremes", "choiceC": "One extreme", "choiceD": "No change", "answer": "C", "explanation": "Directional = shifts toward ONE extreme. Example: large beaks favored during drought (large seeds) → population shifts toward large beaks."}, {"text": "In disruptive selection, the population favors:", "type": "MCQ", "id": "", "choiceA": "Intermediate phenotypes", "choiceB": "Both extremes (NOT intermediate)", "choiceC": "One extreme", "choiceD": "No change", "answer": "B", "explanation": "Disruptive = favors BOTH extremes, eliminates intermediate. Example: small beaks for small seeds, large beaks for large seeds, medium beaks can't do either well."}, {"text": "Which of the following is NOT a mechanism of evolution?", "type": "MCQ", "id": "", "choiceA": "Mutation", "choiceB": "Natural selection", "choiceC": "Acquired characteristics", "choiceD": "Genetic drift", "answer": "C", "explanation": "Acquired characteristics (Lamarck) are NOT inherited → NOT a mechanism of evolution. Only genetic changes matter."}, {"text": "An ecologist studies how wolves (predators) affect deer populations in a forest. This is a study of:", "type": "MCQ", "id": "", "choiceA": "Abiotic factors", "choiceB": "Community interactions", "choiceC": "Nutrient cycles only", "choiceD": "Biogeography", "answer": "B", "explanation": "Predator-prey relationships are community interactions — how different species in a community affect each other."}, {"text": "Batesian mimicry occurs when:", "type": "MCQ", "id": "", "choiceA": "A harmful species mimics a harmless one", "choiceB": "A harmless species mimics a harmful one", "choiceC": "Two harmful species look like each other", "choiceD": "An organism blends in with the environment", "answer": "B", "explanation": "Batesian mimicry: HARMLESS species mimics HARMFUL one for protection. Example: harmless flies that look like wasps."}, {"text": "Mullerian mimicry occurs when:", "type": "MCQ", "id": "", "choiceA": "A harmless species mimics a harmful one", "choiceB": "Two or more harmful species resemble each other", "choiceC": "An organism blends in with environment", "choiceD": "A parasite mimics its host", "answer": "B", "explanation": "Mullerian: MULTIPLE harmful species evolve to look similar. Predators learn faster (one bad experience = avoid all of them)."}, {"text": "A walking stick insect looks like a twig. This is an example of:", "type": "MCQ", "id": "", "choiceA": "Mimicry", "choiceB": "Camouflage", "choiceC": "Mutualism", "choiceD": "Batesian mimicry", "answer": "B", "explanation": "Camouflage = resembling the ENVIRONMENT (twigs, leaves, rocks). Mimicry = resembling ANOTHER ORGANISM."}, {"text": "Coevolution occurs because:", "type": "MCQ", "id": "", "choiceA": "One species evolves in isolation", "choiceB": "Two species evolve in response to each other", "choiceC": "The environment changes randomly", "choiceD": "Mutations always happen in pairs", "answer": "B", "explanation": "Coevolution: two species evolve together, each responding to changes in the other. Example: flowers evolve tube length → pollinators evolve tongue length."}, {"text": "Darwin's concept of 'descent with modification' means that:", "type": "MCQ", "id": "", "choiceA": "Offspring are exact copies of parents", "choiceB": "Species are fixed and unchanging", "choiceC": "Offspring share characteristics with ancestors but accumulate changes", "choiceD": "Acquired traits are passed to offspring", "answer": "C", "explanation": "Descent with modification = common ancestry + accumulated changes over generations. Key insight: species change over time but share history."}, {"text": "The modern definition of evolution focuses on changes in:", "type": "MCQ", "id": "", "choiceA": "Individual organisms", "choiceB": "Physical environment only", "choiceC": "Allele frequencies in a population", "choiceD": "Number of species only", "answer": "C", "explanation": "Modern evolution = change in ALLELE FREQUENCIES in a population over time. NOT about individual change (individuals don't evolve, populations do)."}, {"text": "A gene pool includes:", "type": "MCQ", "id": "", "choiceA": "Only dominant alleles", "choiceB": "Only recessive alleles", "choiceC": "All alleles for all genes in a population", "choiceD": "Only mutations", "answer": "C", "explanation": "Gene pool = ALL alleles for ALL genes in a population. Includes dominant, recessive, and everything in between."}, {"text": "Which statement about species is CORRECT?", "type": "MCQ", "id": "", "choiceA": "All members of a species look identical", "choiceB": "A species can only live in one habitat", "choiceC": "Members of a species can interbreed and produce fertile offspring", "choiceD": "A species never changes over time", "answer": "C", "explanation": "Biological species concept: can interbreed AND produce VIABLE (alive) + FERTILE (can reproduce) offspring. Sterile = different species."}, {"text": "James Hutton's idea of GRADUALISM proposed that:", "type": "MCQ", "id": "", "choiceA": "Earth is young (few thousand years)", "choiceB": "Geological changes happen slowly over millions of years", "choiceC": "Catastrophes shape Earth's surface", "choiceD": "Fossils are fake", "answer": "B", "explanation": "Gradualism: slow, steady changes over LONG time. Implies Earth must be VERY OLD → important for Darwin (needs time for evolution)."}, {"text": "Charles Lyell's uniformitarianism built on Hutton's work by stating:", "type": "MCQ", "id": "", "choiceA": "Catastrophes are the only mechanism of change", "choiceB": "Mechanisms of change are CONSTANT over time", "choiceC": "Earth is only 6000 years old", "choiceD": "Fossils are irrelevant", "answer": "B", "explanation": "Uniformitarianism: SAME processes that shape Earth TODAY (erosion, volcanoes) also shaped Earth in the PAST. Mechanisms don't change."}, {"text": "Thomas Malthus influenced Darwin with his observation that:", "type": "MCQ", "id": "", "choiceA": "Populations grow faster than food supply", "choiceB": "All organisms survive equally", "choiceC": "Resources are unlimited", "choiceD": "Predator-prey relationships don't matter", "answer": "A", "explanation": "Malthus: population grows EXPONENTIALLY, but food grows LINEARLY → limited resources → 'struggle for existence' (Darwin's term)."}, {"text": "Lamarck proposed that evolution occurs through:", "type": "MCQ", "id": "", "choiceA": "Natural selection", "choiceB": "Mutation", "choiceC": "Inheritance of acquired characteristics", "choiceD": "Genetic drift", "answer": "C", "explanation": "Lamarck was WRONG: he thought using a body part more → bigger/stronger → passed to offspring. Acquired traits (muscles from gym) are NOT inherited."}, {"text": "Why is Lamarck's theory incorrect?", "type": "MCQ", "id": "", "choiceA": "He didn't collect enough data", "choiceB": "Acquired characteristics cannot be inherited", "choiceC": "He didn't study fossils", "choiceD": "He didn't travel enough", "answer": "B", "explanation": "Only GENETIC changes (in DNA/germline) are inherited. Body changes from use/disuse (acquired) don't affect DNA passed to offspring."}, {"text": "Darwin observed that finches on different Galapagos islands had different:", "type": "MCQ", "id": "", "choiceA": "Feather colors", "choiceB": "Beak sizes and shapes", "choiceC": "Wing spans", "choiceD": "Leg lengths", "answer": "B", "explanation": "Finch beaks = classic example. Different islands = different food sources → different beak adaptations (large for seeds, thin for insects, etc.)."}, {"text": "The number of finch species on the Galapagos Islands compared to the mainland is:", "type": "MCQ", "id": "", "choiceA": "He didn't have enough evidence", "choiceB": "He was afraid of backlash from the Church", "choiceC": "Both A and B", "choiceD": "He forgot about his theory", "answer": "C", "explanation": "Darwin knew his theory would be CONTROVERSIAL (conflicted with creationism). Also wanted MORE evidence before publishing."}, {"text": "Which of the following is NOT a line of evidence for evolution?", "type": "MCQ", "id": "", "choiceA": "Homologous structures", "choiceB": "The fossil record", "choiceC": "Astrology", "choiceD": "Biogeography", "answer": "C", "explanation": "Astrology is NOT science. Homologous structures, fossils, biogeography, embryology, genetics = all evidence for evolution."}, {"text": "Analogous structures provide evidence for evolution because they show:", "type": "MCQ", "id": "", "choiceA": "Common ancestry", "choiceB": "Convergent evolution (similar solutions to similar problems)", "choiceC": "Vestigial traits", "choiceD": "Fossil connections", "answer": "B", "explanation": "Analogous = same function, different structure, NO common ancestor. Shows CONVERGENT evolution: similar environmental pressures → similar adaptations."}, {"text": "Vestigial structures are evidence for evolution because they:", "type": "MCQ", "id": "", "choiceA": "Show how organisms will evolve in the future", "choiceB": "Are remnants of structures that were functional in ancestors", "choiceC": "Prove that evolution always leads to more complexity", "choiceD": "Are found only in plants", "answer": "B", "explanation": "Vestigial = reduced, nonfunctional structures from ancestors. Whale pelvic bones = ancestor had legs, whales don't need them anymore."}, {"text": "Which of the following is an example of a vestigial structure in humans?", "type": "MCQ", "id": "", "choiceA": "Heart", "choiceB": "Wisdom teeth", "choiceC": "Liver", "choiceD": "Kidney", "answer": "B", "explanation": "Wisdom teeth = vestigial. Our ancestors had larger jaws (needed all teeth). Modern humans have smaller jaws → wisdom teeth often impacted (useless + problematic)."}, {"text": "Cytochrome c is a conserved protein found in:", "type": "MCQ", "id": "", "choiceA": "Only humans", "choiceB": "Only animals", "choiceC": "Almost all living organisms", "choiceD": "Only plants", "answer": "C", "explanation": "Cytochrome c = electron transport chain protein. Found in almost ALL organisms (very important). Similar across species → common ancestry."}, {"text": "The fossil record shows that:", "type": "MCQ", "id": "", "choiceA": "Organisms have remained unchanged", "choiceB": "Life has become more complex over time", "choiceC": "Only large organisms fossilize", "choiceD": "Fossils are irrelevant", "answer": "B", "explanation": "Fossil record: older rocks (bottom) = simpler organisms; newer rocks (top) = more complex organisms. Shows progression of life over billions of years."}, {"text": "Pangaea explains biogeographic patterns because:", "type": "MCQ", "id": "", "choiceA": "Continents have always been in the same place", "choiceB": "All species evolved at the same time", "choiceC": "Continents were once connected, allowing species to disperse before drifting apart", "choiceD": "Fossils can't be explained by continental drift", "answer": "C", "explanation": "Pangaea: all continents connected → species could disperse. Then continents drifted apart → species isolated, evolved separately (biogeography evidence)."}, {"text": "Mutation is the ultimate source of genetic variation because it:", "type": "MCQ", "id": "", "choiceA": "Only removes alleles", "choiceB": "Creates NEW alleles", "choiceC": "Doesn't change DNA", "choiceD": "Only happens in plants", "answer": "B", "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, drift, migration = only change frequencies of EXISTING alleles."}, {"text": "Genetic drift has the strongest effect on:", "type": "MCQ", "id": "", "choiceA": "Large populations", "choiceB": "Small populations", "choiceC": "All populations equally", "choiceD": "Only plant populations", "answer": "B", "explanation": "Genetic drift = random change in allele frequencies. STRONGER in small populations (chance events have bigger impact). Example: natural disaster wipes out most of small population."}, {"text": "The founder effect is a type of:", "type": "MCQ", "id": "", "choiceA": "Natural selection", "choiceB": "Mutation", "choiceC": "Genetic drift", "choiceD": "Gene flow", "answer": "C", "explanation": "Founder effect = small group separates from main population → founds new population. Allele frequencies in new population = random (drift). Example: Amish populations (founder effect for certain genetic diseases)."}, {"text": "Stabilizing selection on human birth weight works because:", "type": "MCQ", "id": "", "choiceA": "Extremely large AND extremely small babies have higher mortality", "choiceB": "Only large babies survive", "choiceC": "Only small babies survive", "choiceD": "Birth weight doesn't matter", "answer": "A", "explanation": "Stabilizing = favors INTERMEDIATE. Very small babies (premature) and very large babies (difficult birth) both have higher death rates → intermediate = favored."}, {"text": "Directional selection on beak size in finches would occur if:", "type": "MCQ", "id": "", "choiceA": "All seed sizes are equally available", "choiceB": "Only large seeds are available (drought year)", "choiceC": "Only small seeds are available", "choiceD": "Beak size doesn't affect survival", "answer": "B", "explanation": "Directional = shifts population toward ONE extreme. Large beak = better at cracking large seeds. Drought → only large seeds available → large beak favored → population shifts toward large beaks."}, {"text": "Disruptive selection on beak size in finches would occur if:", "type": "MCQ", "id": "", "choiceA": "Only medium seeds are available", "choiceB": "Only large seeds AND only small seeds are available", "choiceC": "All seed sizes are available", "choiceD": "Beak size doesn't matter", "answer": "B", "explanation": "Disruptive = favors BOTH EXTREMES, eliminates intermediate. Large beaks for large seeds, small beaks for small seeds → medium beaks can't do either well → eliminated."}, {"text": "Peppered moth evolution during Industrial Revolution is an example of:", "type": "MCQ", "id": "", "choiceA": "Stabilizing selection", "choiceB": "Directional selection", "choiceC": "Disruptive selection", "choiceD": "No selection", "answer": "B", "explanation": "Directional: population shifted from mostly light → mostly dark. Pollution darkened tree bark → dark moths had camouflage advantage → population shifted toward dark."}, {"text": "Gene flow (migration) between populations tends to:", "type": "MCQ", "id": "", "choiceA": "Increase genetic differences between populations", "choiceB": "Decrease genetic differences between populations", "choiceC": "Have no effect", "choiceD": "Only affect plants", "answer": "B", "explanation": "Gene flow = transfer of alleles between populations. Makes populations MORE SIMILAR genetically. Without gene flow, populations diverge (become different)."}, {"text": "Which of the following is a requirement for natural selection to occur?", "type": "MCQ", "id": "", "choiceA": "All individuals must be identical", "choiceB": "Traits must be heritable", "choiceC": "Environment must never change", "choiceD": "Population must be very small", "answer": "B", "explanation": "Natural selection REQUIRES heritable variation. If traits aren't heritable, selection can't change allele frequencies across generations."}, {"text": "Fitness, in evolutionary terms, means:", "type": "MCQ", "id": "", "choiceA": "Being the strongest", "choiceB": "Being the fastest", "choiceC": "Surviving AND reproducing at a higher rate than others", "choiceD": "Living the longest", "answer": "C", "explanation": "Fitness = survive + reproduce. An organism that lives 100 years but has 0 offspring has ZERO fitness. An organism that lives 2 years but has 10 offspring has HIGH fitness."}, {"text": "Which of the following is NOT part of Darwin's theory of natural selection?", "type": "MCQ", "id": "", "choiceA": "Traits are heritable", "choiceB": "Offspring vary in their traits", "choiceC": "Species produce more offspring than the environment can support", "choiceD": "Acquired traits are inherited", "answer": "D", "explanation": "D = Lamarck (wrong). A, B, C = Darwin's observations. D is NOT part of Darwin's theory (acquired traits NOT inherited)."}, {"text": "The Hardy-Weinberg principle describes:", "type": "MCQ", "id": "", "choiceA": "How evolution always happens", "choiceB": "Conditions under which evolution does NOT happen (no change in allele frequencies)", "choiceC": "How to calculate mutation rates", "choiceD": "How fossils form", "answer": "B", "explanation": "Hardy-Weinberg: describes conditions where NO EVOLUTION occurs (no mutation, no selection, no drift, no gene flow, large population, random mating). Real populations usually violate these → evolution happens."}, {"text": "A population that is NOT evolving (Hardy-Weinberg equilibrium) must have:", "type": "MCQ", "id": "", "choiceA": "Small population size", "choiceB": "No mutations", "choiceC": "Strong selection", "choiceD": "Non-random mating", "answer": "B", "explanation": "Hardy-Weinberg equilibrium requires: no mutation, no selection, no drift (large pop), no gene flow, random mating. B is correct. A, C, D all violate equilibrium."}, {"text": "Which of the following is an example of artificial selection?", "type": "MCQ", "id": "", "choiceA": "Peppered moths evolving", "choiceB": "Darwin's finches", "choiceC": "Dog breeding (humans selecting for traits)", "choiceD": "Antibiotic resistance", "answer": "C", "explanation": "Artificial selection = humans choose which individuals reproduce. Dog breeds, crops, livestock = artificial selection. Natural selection = NATURE chooses (survival + reproduction)."}, {"text": "The main difference between artificial and natural selection is:", "type": "MCQ", "id": "", "choiceA": "Artificial selection is faster", "choiceB": "The SELECTING AGENT (humans vs. environment)", "choiceC": "Artificial selection doesn't work", "choiceD": "Natural selection only happens in the wild", "answer": "B", "explanation": "Artificial = humans decide who reproduces. Natural = environment (survival + reproduction) decides. Both change allele frequencies, but selecting agent is different."}];
+const __INJECTED_SET2__ = [
+  {
+    "text": "Mimicry is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Blending in with the environment",
+    "choiceB": "Resembling another species for protection",
+    "choiceC": "Changing color with temperature",
+    "choiceD": "Looking like a rock",
+    "answer": "B",
+    "explanation": "Mimicry = copying another species. Viceroy butterflies mimic Monarchs (both are toxic)."
+  },
+  {
+    "text": "Camouflage is essentially a form of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutualism",
+    "choiceB": "Visual mimicry",
+    "choiceC": "Parasitism",
+    "choiceD": "Commensalism",
+    "answer": "B",
+    "explanation": "Camouflage = blending in with surroundings. It's visual mimicry of the environment (e.g., stone plants look like rocks)."
+  },
+  {
+    "text": "Darwin's voyage on the HMS Beagle took place in what year?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "1831",
+    "choiceB": "1859",
+    "choiceC": "1809",
+    "choiceD": "1871",
+    "answer": "A",
+    "explanation": ""
+  },
+  {
+    "text": "Which is NOT one of Darwin's observations for natural selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Traits are often heritable",
+    "choiceB": "Offspring vary in their heritable traits",
+    "choiceC": "Species produce more offspring than environment can support",
+    "choiceD": "Poorly adapted individuals never produce offspring",
+    "answer": "D",
+    "explanation": "'Never' is too absolute. Poorly adapted individuals CAN produce some offspring, just fewer than well-adapted individuals."
+  },
+  {
+    "text": "According to natural selection, which individuals survive and reproduce most?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "The strongest",
+    "choiceB": "The fastest",
+    "choiceC": "Individuals with favorable heritable traits for their environment",
+    "choiceD": "The oldest",
+    "answer": "C",
+    "explanation": "Fitness = survive AND reproduce. It's about having traits that work in YOUR specific environment."
+  },
+  {
+    "text": "What is a species?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A group that lives in the same area",
+    "choiceB": "A group that can interbreed and produce viable, fertile offspring",
+    "choiceC": "A group that looks similar",
+    "choiceD": "A group that eats the same food",
+    "answer": "B",
+    "explanation": "Species definition: can produce VIABLE (alive) + FERTILE (can reproduce) offspring. Mules are sterile → donkey + horse are different species."
+  },
+  {
+    "text": "Why are mules sterile?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They have too many chromosomes",
+    "choiceB": "They are hybrids of two different species",
+    "choiceC": "They are genetically defective",
+    "choiceD": "They don't live long enough",
+    "answer": "B",
+    "explanation": "Mule = male donkey + female horse. Different species → hybrid is sterile (can't produce offspring of its own)."
+  },
+  {
+    "text": "Which is an example of a homologous structure?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Bird wing and insect wing",
+    "choiceB": "Whale flipper and human arm",
+    "choiceC": "Fish fin and dolphin flipper",
+    "choiceD": "Eagle wing and bat wing",
+    "answer": "B",
+    "explanation": "Homologous = same bones, different function, common ancestor. Whale flipper & human arm have same bone structure (humerus, radius, ulna)."
+  },
+  {
+    "text": "Analogous structures:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Have same structure but different functions",
+    "choiceB": "Have same function but different structures",
+    "choiceC": "Are vestigial",
+    "choiceD": "Are found only in fossils",
+    "answer": "B",
+    "explanation": "Analogous = same function, different structure, NO common ancestor. Bird wings (bones) vs. insect wings (chitin) both fly but different structure."
+  },
+  {
+    "text": "Which is a vestigial structure in humans?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Heart",
+    "choiceB": "Tail bone (coccyx)",
+    "choiceC": "Liver",
+    "choiceD": "Brain",
+    "answer": "B",
+    "explanation": "Coccyx (tail bone) is vestigial — remnant of ancestral tail. We don't have tails anymore, but still have the bone."
+  },
+  {
+    "text": "The principle of superposition states that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Older rock layers are on the bottom",
+    "choiceB": "Newer rock layers are on the bottom",
+    "choiceC": "All rock layers are the same age",
+    "choiceD": "Fossils can't be dated",
+    "answer": "A",
+    "explanation": "Superposition: bottom = oldest (deposited first). More primitive creatures in older (bottom) rock layers."
+  },
+  {
+    "text": "Which mechanism of evolution adds NEW alleles to the gene pool?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Migration",
+    "choiceC": "Genetic drift",
+    "choiceD": "Mutation",
+    "answer": "D",
+    "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, migration, drift only change frequencies of EXISTING alleles."
+  },
+  {
+    "text": "Stabilizing selection favors:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Extreme phenotypes",
+    "choiceB": "Intermediate phenotypes",
+    "choiceC": "Both extremes",
+    "choiceD": "All phenotypes equally",
+    "answer": "B",
+    "explanation": "Stabilizing = 'keeps the status quo.' Favors AVERAGE. Example: human birth weight (not too small, not too big)."
+  },
+  {
+    "text": "Peppered moths during Industrial Revolution are an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Stabilizing selection",
+    "choiceB": "Directional selection",
+    "choiceC": "Disruptive selection",
+    "choiceD": "Artificial selection",
+    "answer": "B",
+    "explanation": "Directional = shifts population toward one extreme. Pollution darkened trees → dark moths had advantage → population shifted toward dark."
+  },
+  {
+    "text": "Biogeography is the study of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Fossils",
+    "choiceB": "Embryos",
+    "choiceC": "Geographic distribution of species",
+    "choiceD": "Homologous structures",
+    "answer": "C",
+    "explanation": "Biogeography = where species live. Explains why similar environments (Antarctic vs. Arctic) have different species (penguins vs. polar bears)."
+  },
+  {
+    "text": "What does 'descent with modification' mean?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Offspring are identical to parents",
+    "choiceB": "Offspring share characteristics with ancestors but accumulate modifications",
+    "choiceC": "Only the strongest survive",
+    "choiceD": "",
+    "answer": "B",
+    "explanation": "Darwin's definition of evolution: organisms share common ancestor, but accumulate changes (adaptations) over generations."
+  },
+  {
+    "text": "The modern definition of evolution is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Survival of the fittest",
+    "choiceB": "Change in relative frequency of alleles in a population over time",
+    "choiceC": "Descent with modification",
+    "choiceD": "Inheritance of acquired traits",
+    "answer": "B",
+    "explanation": ""
+  },
+  {
+    "text": "A gene pool is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A swimming pool for genes",
+    "choiceB": "All alleles present in a population",
+    "choiceC": "Only the dominant alleles",
+    "choiceD": "The DNA of one individual",
+    "answer": "B",
+    "explanation": "Gene pool = all alleles in a population. Example: in a population of 100 flowers, gene pool includes all alleles for petal color."
+  },
+  {
+    "text": "Who proposed that Earth is very old (gradualism)?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Georges Cuvier",
+    "choiceB": "James Hutton",
+    "choiceC": "Charles Lyell",
+    "choiceD": "Thomas Malthus",
+    "answer": "B",
+    "explanation": "Hutton: geological forces operate SLOWLY over millions of years = gradualism. Earth must be very old for evolution to occur."
+  },
+  {
+    "text": "Who proposed uniformitarianism?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Georges Cuvier",
+    "choiceB": "James Hutton",
+    "choiceC": "Charles Lyell",
+    "choiceD": "Thomas Malthus",
+    "answer": "C",
+    "explanation": "Lyell: mechanisms of change are CONSTANT over time (same processes today as in past). Incorporated Hutton's gradualism."
+  },
+  {
+    "text": "Thomas Malthus influenced Darwin with his idea that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Population grows faster than food supply",
+    "choiceB": "Earth is very old",
+    "choiceC": "Species are fixed",
+    "choiceD": "Fossils are important",
+    "answer": "A",
+    "explanation": "Malthus: population grows exponentially, but food grows linearly. Limited by war, famine, disease → 'struggle for existence' in Darwin."
+  },
+  {
+    "text": "Lamarck's theory of evolution was based on:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Inheritance of acquired characteristics",
+    "choiceC": "Mutation",
+    "choiceD": "Genetic drift",
+    "answer": "B",
+    "explanation": "Lamarck was WRONG: he thought stretching your neck (acquired trait) would be passed to offspring. Acquired traits are NOT inherited."
+  },
+  {
+    "text": "Why was Lamarck wrong?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "1831",
+    "choiceB": "1859",
+    "choiceC": "1809",
+    "choiceD": "1871",
+    "answer": "B",
+    "explanation": "1859 — 28 years after his Beagle voyage. He delayed publishing because he didn't have enough evidence (no genetics yet)."
+  },
+  {
+    "text": "What are adaptations?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Characteristics that harm survival",
+    "choiceB": "Inherited characteristics that increase chance of survival",
+    "choiceC": "Acquired traits",
+    "choiceD": "Random mutations only",
+    "answer": "B",
+    "explanation": "Adaptation = inherited trait that increases fitness (survive + reproduce). Example: camouflage helps avoid predators."
+  },
+  {
+    "text": "Fossils are:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Living organisms",
+    "choiceB": "Remains or imprints of once-living organisms",
+    "choiceC": "Only dinosaur bones",
+    "choiceD": "Rocks that look like organisms",
+    "answer": "B",
+    "explanation": "Fossils = remains (bones, shells) or imprints (footprints, leaves) of once-living organisms found in rock layers."
+  },
+  {
+    "text": "Darwin's finches on Galapagos had different:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Feather colors",
+    "choiceB": "Beak sizes and shapes",
+    "choiceC": "Wing spans",
+    "choiceD": "Leg lengths",
+    "answer": "B",
+    "explanation": "Finch beaks varied by island → associated with diet. Different food sources → different beak adaptations."
+  },
+  {
+    "text": "What did Darwin conclude about finch evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Finches were created separately on each island",
+    "choiceB": "Original finches reached islands and changed over generations",
+    "choiceC": "Finches flew from Europe",
+    "choiceD": "Finches don't evolve",
+    "answer": "B",
+    "explanation": "Descent with modification: original finches from mainland dispersed to different islands, accumulated adaptations over generations."
+  },
+  {
+    "text": "Which of the following is direct evidence for evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Peppered moths",
+    "choiceB": "Soapberry bugs",
+    "choiceC": "Drug-resistant bacteria",
+    "choiceD": "All of the above",
+    "answer": "D",
+    "explanation": "All are direct observations of evolution happening NOW. Bacteria evolve quickly (fast reproduction + mutation) → drug resistance."
+  },
+  {
+    "text": "Homology provides evidence for:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Convergent evolution",
+    "choiceB": "Divergent evolution (common ancestry)",
+    "choiceC": "Spontaneous generation",
+    "choiceD": "Creationism",
+    "answer": "B",
+    "explanation": "Homologous structures = divergent evolution from common ancestor. Different species adapted same bones for different functions."
+  },
+  {
+    "text": "Vestigial structures provide evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They are useful",
+    "choiceB": "They show common ancestry with reduced function",
+    "choiceC": "They are brand new",
+    "choiceD": "They prove Lamarck was right",
+    "answer": "B",
+    "explanation": "Vestigial = reduced/nonfunctional structures from ancestor. Whale pelvic bones = ancestor had legs, whales don't need them anymore."
+  },
+  {
+    "text": "Embryology provides evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Embryos of vertebrates look similar",
+    "choiceB": "Embryos are completely different",
+    "choiceC": "Embryos don't matter",
+    "choiceD": "Only mammals have embryos",
+    "answer": "A",
+    "explanation": "Early embryos of fish, chickens, humans look very similar → evidence of common ancestry (vertebrate ancestor)."
+  },
+  {
+    "text": "Conserved genes (like cytochrome c) provide evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They change rapidly",
+    "choiceB": "They are highly similar across species",
+    "choiceC": "They don't exist",
+    "choiceD": "They only exist in bacteria",
+    "answer": "B",
+    "explanation": "Important genes DON'T change much over time (conserved). Similar cytochrome c across species → common ancestry."
+  },
+  {
+    "text": "The fossil record provides evidence for evolution by showing:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "No change over time",
+    "choiceB": "Simple to complex over millions of years",
+    "choiceC": "Only extinct species",
+    "choiceD": "Fossils are fake",
+    "answer": "B",
+    "explanation": "Fossil record: older layers (bottom) have simpler organisms; newer layers (top) have more complex organisms → evolution over time."
+  },
+  {
+    "text": "Biogeography explains why:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Similar environments have similar species",
+    "choiceB": "Similar environments can have different species",
+    "choiceC": "All islands have the same species",
+    "choiceD": "Continents don't move",
+    "answer": "B",
+    "explanation": "Penguins (Antarctic) vs. polar bears (Arctic) — similar cold environments, but different species because of different ancestors + continental drift."
+  },
+  {
+    "text": "Continental drift (Pangaea) explains:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Why all species are the same everywhere",
+    "choiceB": "Why species on islands resemble those on nearest mainland",
+    "choiceC": "Why fossils are fake",
+    "choiceD": "Why evolution doesn't happen",
+    "answer": "B",
+    "explanation": "Island biogeography: species on islands resemble nearest mainland because ancestors migrated from mainland."
+  },
+  {
+    "text": "Which is an example of convergent evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Whale flipper and human arm",
+    "choiceB": "Bird wings and insect wings",
+    "choiceC": "Fish fins and dolphin flippers",
+    "choiceD": "All of the above",
+    "answer": "B",
+    "explanation": "Convergent = unrelated species evolve similar traits. Bird wings + insect wings both for flying, but different structure (no common ancestor for wings)."
+  },
+  {
+    "text": "Which is an example of divergent evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Bird wings and insect wings",
+    "choiceB": "Whale flipper and human arm",
+    "choiceC": "Fish fins and dolphin flippers",
+    "choiceD": "All of the above",
+    "answer": "B",
+    "explanation": "Divergent = related species evolve different traits. Whale flipper + human arm have same bones (common ancestor), different function."
+  },
+  {
+    "text": "Mutation is the ultimate source of genetic variation because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "It creates new alleles",
+    "choiceB": "It removes alleles",
+    "choiceC": "It doesn't do anything",
+    "choiceD": "It only happens in plants",
+    "answer": "A",
+    "explanation": "Mutation = only mechanism that creates NEW alleles. Other mechanisms (selection, drift, migration) only change frequencies of existing alleles."
+  },
+  {
+    "text": "Migration (gene flow) changes allele frequencies by:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Creating new alleles",
+    "choiceB": "Transferring genes from one population to another",
+    "choiceC": "Removing alleles",
+    "choiceD": "Not doing anything",
+    "answer": "B",
+    "explanation": "Gene flow = movement of genes between populations. Example: pollen blows from one flower population to another → transfers alleles."
+  },
+  {
+    "text": "Genetic drift is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Selection based on fitness",
+    "choiceB": "Change in allele frequency due to chance events",
+    "choiceC": "Mutation",
+    "choiceD": "Migration",
+    "answer": "B",
+    "explanation": "Genetic drift = random chance. Important in SMALL populations. Example: natural disaster kills randomly → allele frequencies change by chance."
+  },
+  {
+    "text": "In directional selection, the population shifts toward:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Intermediate phenotypes",
+    "choiceB": "Both extremes",
+    "choiceC": "One extreme",
+    "choiceD": "No change",
+    "answer": "C",
+    "explanation": "Directional = shifts toward ONE extreme. Example: large beaks favored during drought (large seeds) → population shifts toward large beaks."
+  },
+  {
+    "text": "In disruptive selection, the population favors:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Intermediate phenotypes",
+    "choiceB": "Both extremes (NOT intermediate)",
+    "choiceC": "One extreme",
+    "choiceD": "No change",
+    "answer": "B",
+    "explanation": "Disruptive = favors BOTH extremes, eliminates intermediate. Example: small beaks for small seeds, large beaks for large seeds, medium beaks can't do either well."
+  },
+  {
+    "text": "Which of the following is NOT a mechanism of evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutation",
+    "choiceB": "Natural selection",
+    "choiceC": "Acquired characteristics",
+    "choiceD": "Genetic drift",
+    "answer": "C",
+    "explanation": "Acquired characteristics (Lamarck) are NOT inherited → NOT a mechanism of evolution. Only genetic changes matter."
+  },
+  {
+    "text": "An ecologist studies how wolves (predators) affect deer populations in a forest. This is a study of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Abiotic factors",
+    "choiceB": "Community interactions",
+    "choiceC": "Nutrient cycles only",
+    "choiceD": "Biogeography",
+    "answer": "B",
+    "explanation": "Predator-prey relationships are community interactions — how different species in a community affect each other."
+  },
+  {
+    "text": "Batesian mimicry occurs when:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A harmful species mimics a harmless one",
+    "choiceB": "A harmless species mimics a harmful one",
+    "choiceC": "Two harmful species look like each other",
+    "choiceD": "An organism blends in with the environment",
+    "answer": "B",
+    "explanation": "Batesian mimicry: HARMLESS species mimics HARMFUL one for protection. Example: harmless flies that look like wasps."
+  },
+  {
+    "text": "Mullerian mimicry occurs when:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A harmless species mimics a harmful one",
+    "choiceB": "Two or more harmful species resemble each other",
+    "choiceC": "An organism blends in with environment",
+    "choiceD": "A parasite mimics its host",
+    "answer": "B",
+    "explanation": "Mullerian: MULTIPLE harmful species evolve to look similar. Predators learn faster (one bad experience = avoid all of them)."
+  },
+  {
+    "text": "A walking stick insect looks like a twig. This is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mimicry",
+    "choiceB": "Camouflage",
+    "choiceC": "Mutualism",
+    "choiceD": "Batesian mimicry",
+    "answer": "B",
+    "explanation": "Camouflage = resembling the ENVIRONMENT (twigs, leaves, rocks). Mimicry = resembling ANOTHER ORGANISM."
+  },
+  {
+    "text": "Coevolution occurs because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "One species evolves in isolation",
+    "choiceB": "Two species evolve in response to each other",
+    "choiceC": "The environment changes randomly",
+    "choiceD": "Mutations always happen in pairs",
+    "answer": "B",
+    "explanation": "Coevolution: two species evolve together, each responding to changes in the other. Example: flowers evolve tube length → pollinators evolve tongue length."
+  },
+  {
+    "text": "Darwin's concept of 'descent with modification' means that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Offspring are exact copies of parents",
+    "choiceB": "Species are fixed and unchanging",
+    "choiceC": "Offspring share characteristics with ancestors but accumulate changes",
+    "choiceD": "Acquired traits are passed to offspring",
+    "answer": "C",
+    "explanation": "Descent with modification = common ancestry + accumulated changes over generations. Key insight: species change over time but share history."
+  },
+  {
+    "text": "The modern definition of evolution focuses on changes in:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Individual organisms",
+    "choiceB": "Physical environment only",
+    "choiceC": "Allele frequencies in a population",
+    "choiceD": "Number of species only",
+    "answer": "C",
+    "explanation": "Modern evolution = change in ALLELE FREQUENCIES in a population over time. NOT about individual change (individuals don't evolve, populations do)."
+  },
+  {
+    "text": "A gene pool includes:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only dominant alleles",
+    "choiceB": "Only recessive alleles",
+    "choiceC": "All alleles for all genes in a population",
+    "choiceD": "Only mutations",
+    "answer": "C",
+    "explanation": "Gene pool = ALL alleles for ALL genes in a population. Includes dominant, recessive, and everything in between."
+  },
+  {
+    "text": "Which statement about species is CORRECT?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All members of a species look identical",
+    "choiceB": "A species can only live in one habitat",
+    "choiceC": "Members of a species can interbreed and produce fertile offspring",
+    "choiceD": "A species never changes over time",
+    "answer": "C",
+    "explanation": "Biological species concept: can interbreed AND produce VIABLE (alive) + FERTILE (can reproduce) offspring. Sterile = different species."
+  },
+  {
+    "text": "James Hutton's idea of GRADUALISM proposed that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Earth is young (few thousand years)",
+    "choiceB": "Geological changes happen slowly over millions of years",
+    "choiceC": "Catastrophes shape Earth's surface",
+    "choiceD": "Fossils are fake",
+    "answer": "B",
+    "explanation": "Gradualism: slow, steady changes over LONG time. Implies Earth must be VERY OLD → important for Darwin (needs time for evolution)."
+  },
+  {
+    "text": "Charles Lyell's uniformitarianism built on Hutton's work by stating:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Catastrophes are the only mechanism of change",
+    "choiceB": "Mechanisms of change are CONSTANT over time",
+    "choiceC": "Earth is only 6000 years old",
+    "choiceD": "Fossils are irrelevant",
+    "answer": "B",
+    "explanation": "Uniformitarianism: SAME processes that shape Earth TODAY (erosion, volcanoes) also shaped Earth in the PAST. Mechanisms don't change."
+  },
+  {
+    "text": "Thomas Malthus influenced Darwin with his observation that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Populations grow faster than food supply",
+    "choiceB": "All organisms survive equally",
+    "choiceC": "Resources are unlimited",
+    "choiceD": "Predator-prey relationships don't matter",
+    "answer": "A",
+    "explanation": "Malthus: population grows EXPONENTIALLY, but food grows LINEARLY → limited resources → 'struggle for existence' (Darwin's term)."
+  },
+  {
+    "text": "Lamarck proposed that evolution occurs through:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Mutation",
+    "choiceC": "Inheritance of acquired characteristics",
+    "choiceD": "Genetic drift",
+    "answer": "C",
+    "explanation": "Lamarck was WRONG: he thought using a body part more → bigger/stronger → passed to offspring. Acquired traits (muscles from gym) are NOT inherited."
+  },
+  {
+    "text": "Why is Lamarck's theory incorrect?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "He didn't collect enough data",
+    "choiceB": "Acquired characteristics cannot be inherited",
+    "choiceC": "He didn't study fossils",
+    "choiceD": "He didn't travel enough",
+    "answer": "B",
+    "explanation": "Only GENETIC changes (in DNA/germline) are inherited. Body changes from use/disuse (acquired) don't affect DNA passed to offspring."
+  },
+  {
+    "text": "Darwin observed that finches on different Galapagos islands had different:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Feather colors",
+    "choiceB": "Beak sizes and shapes",
+    "choiceC": "Wing spans",
+    "choiceD": "Leg lengths",
+    "answer": "B",
+    "explanation": "Finch beaks = classic example. Different islands = different food sources → different beak adaptations (large for seeds, thin for insects, etc.)."
+  },
+  {
+    "text": "The number of finch species on the Galapagos Islands compared to the mainland is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "He didn't have enough evidence",
+    "choiceB": "He was afraid of backlash from the Church",
+    "choiceC": "Both A and B",
+    "choiceD": "He forgot about his theory",
+    "answer": "C",
+    "explanation": "Darwin knew his theory would be CONTROVERSIAL (conflicted with creationism). Also wanted MORE evidence before publishing."
+  },
+  {
+    "text": "Which of the following is NOT a line of evidence for evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Homologous structures",
+    "choiceB": "The fossil record",
+    "choiceC": "Astrology",
+    "choiceD": "Biogeography",
+    "answer": "C",
+    "explanation": "Astrology is NOT science. Homologous structures, fossils, biogeography, embryology, genetics = all evidence for evolution."
+  },
+  {
+    "text": "Analogous structures provide evidence for evolution because they show:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Common ancestry",
+    "choiceB": "Convergent evolution (similar solutions to similar problems)",
+    "choiceC": "Vestigial traits",
+    "choiceD": "Fossil connections",
+    "answer": "B",
+    "explanation": "Analogous = same function, different structure, NO common ancestor. Shows CONVERGENT evolution: similar environmental pressures → similar adaptations."
+  },
+  {
+    "text": "Vestigial structures are evidence for evolution because they:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Show how organisms will evolve in the future",
+    "choiceB": "Are remnants of structures that were functional in ancestors",
+    "choiceC": "Prove that evolution always leads to more complexity",
+    "choiceD": "Are found only in plants",
+    "answer": "B",
+    "explanation": "Vestigial = reduced, nonfunctional structures from ancestors. Whale pelvic bones = ancestor had legs, whales don't need them anymore."
+  },
+  {
+    "text": "Which of the following is an example of a vestigial structure in humans?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Heart",
+    "choiceB": "Wisdom teeth",
+    "choiceC": "Liver",
+    "choiceD": "Kidney",
+    "answer": "B",
+    "explanation": "Wisdom teeth = vestigial. Our ancestors had larger jaws (needed all teeth). Modern humans have smaller jaws → wisdom teeth often impacted (useless + problematic)."
+  },
+  {
+    "text": "Cytochrome c is a conserved protein found in:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only humans",
+    "choiceB": "Only animals",
+    "choiceC": "Almost all living organisms",
+    "choiceD": "Only plants",
+    "answer": "C",
+    "explanation": "Cytochrome c = electron transport chain protein. Found in almost ALL organisms (very important). Similar across species → common ancestry."
+  },
+  {
+    "text": "The fossil record shows that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Organisms have remained unchanged",
+    "choiceB": "Life has become more complex over time",
+    "choiceC": "Only large organisms fossilize",
+    "choiceD": "Fossils are irrelevant",
+    "answer": "B",
+    "explanation": "Fossil record: older rocks (bottom) = simpler organisms; newer rocks (top) = more complex organisms. Shows progression of life over billions of years."
+  },
+  {
+    "text": "Pangaea explains biogeographic patterns because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Continents have always been in the same place",
+    "choiceB": "All species evolved at the same time",
+    "choiceC": "Continents were once connected, allowing species to disperse before drifting apart",
+    "choiceD": "Fossils can't be explained by continental drift",
+    "answer": "C",
+    "explanation": "Pangaea: all continents connected → species could disperse. Then continents drifted apart → species isolated, evolved separately (biogeography evidence)."
+  },
+  {
+    "text": "Mutation is the ultimate source of genetic variation because it:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only removes alleles",
+    "choiceB": "Creates NEW alleles",
+    "choiceC": "Doesn't change DNA",
+    "choiceD": "Only happens in plants",
+    "answer": "B",
+    "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, drift, migration = only change frequencies of EXISTING alleles."
+  },
+  {
+    "text": "Genetic drift has the strongest effect on:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Large populations",
+    "choiceB": "Small populations",
+    "choiceC": "All populations equally",
+    "choiceD": "Only plant populations",
+    "answer": "B",
+    "explanation": "Genetic drift = random change in allele frequencies. STRONGER in small populations (chance events have bigger impact). Example: natural disaster wipes out most of small population."
+  },
+  {
+    "text": "The founder effect is a type of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Mutation",
+    "choiceC": "Genetic drift",
+    "choiceD": "Gene flow",
+    "answer": "C",
+    "explanation": "Founder effect = small group separates from main population → founds new population. Allele frequencies in new population = random (drift). Example: Amish populations (founder effect for certain genetic diseases)."
+  },
+  {
+    "text": "Stabilizing selection on human birth weight works because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Extremely large AND extremely small babies have higher mortality",
+    "choiceB": "Only large babies survive",
+    "choiceC": "Only small babies survive",
+    "choiceD": "Birth weight doesn't matter",
+    "answer": "A",
+    "explanation": "Stabilizing = favors INTERMEDIATE. Very small babies (premature) and very large babies (difficult birth) both have higher death rates → intermediate = favored."
+  },
+  {
+    "text": "Directional selection on beak size in finches would occur if:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All seed sizes are equally available",
+    "choiceB": "Only large seeds are available (drought year)",
+    "choiceC": "Only small seeds are available",
+    "choiceD": "Beak size doesn't affect survival",
+    "answer": "B",
+    "explanation": "Directional = shifts population toward ONE extreme. Large beak = better at cracking large seeds. Drought → only large seeds available → large beak favored → population shifts toward large beaks."
+  },
+  {
+    "text": "Disruptive selection on beak size in finches would occur if:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only medium seeds are available",
+    "choiceB": "Only large seeds AND only small seeds are available",
+    "choiceC": "All seed sizes are available",
+    "choiceD": "Beak size doesn't matter",
+    "answer": "B",
+    "explanation": "Disruptive = favors BOTH EXTREMES, eliminates intermediate. Large beaks for large seeds, small beaks for small seeds → medium beaks can't do either well → eliminated."
+  },
+  {
+    "text": "Peppered moth evolution during Industrial Revolution is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Stabilizing selection",
+    "choiceB": "Directional selection",
+    "choiceC": "Disruptive selection",
+    "choiceD": "No selection",
+    "answer": "B",
+    "explanation": "Directional: population shifted from mostly light → mostly dark. Pollution darkened tree bark → dark moths had camouflage advantage → population shifted toward dark."
+  },
+  {
+    "text": "Gene flow (migration) between populations tends to:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Increase genetic differences between populations",
+    "choiceB": "Decrease genetic differences between populations",
+    "choiceC": "Have no effect",
+    "choiceD": "Only affect plants",
+    "answer": "B",
+    "explanation": "Gene flow = transfer of alleles between populations. Makes populations MORE SIMILAR genetically. Without gene flow, populations diverge (become different)."
+  },
+  {
+    "text": "Which of the following is a requirement for natural selection to occur?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All individuals must be identical",
+    "choiceB": "Traits must be heritable",
+    "choiceC": "Environment must never change",
+    "choiceD": "Population must be very small",
+    "answer": "B",
+    "explanation": "Natural selection REQUIRES heritable variation. If traits aren't heritable, selection can't change allele frequencies across generations."
+  },
+  {
+    "text": "Fitness, in evolutionary terms, means:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Being the strongest",
+    "choiceB": "Being the fastest",
+    "choiceC": "Surviving AND reproducing at a higher rate than others",
+    "choiceD": "Living the longest",
+    "answer": "C",
+    "explanation": "Fitness = survive + reproduce. An organism that lives 100 years but has 0 offspring has ZERO fitness. An organism that lives 2 years but has 10 offspring has HIGH fitness."
+  },
+  {
+    "text": "Which of the following is NOT part of Darwin's theory of natural selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Traits are heritable",
+    "choiceB": "Offspring vary in their traits",
+    "choiceC": "Species produce more offspring than the environment can support",
+    "choiceD": "Acquired traits are inherited",
+    "answer": "D",
+    "explanation": "D = Lamarck (wrong). A, B, C = Darwin's observations. D is NOT part of Darwin's theory (acquired traits NOT inherited)."
+  },
+  {
+    "text": "The Hardy-Weinberg principle describes:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "How evolution always happens",
+    "choiceB": "Conditions under which evolution does NOT happen (no change in allele frequencies)",
+    "choiceC": "How to calculate mutation rates",
+    "choiceD": "How fossils form",
+    "answer": "B",
+    "explanation": "Hardy-Weinberg: describes conditions where NO EVOLUTION occurs (no mutation, no selection, no drift, no gene flow, large population, random mating). Real populations usually violate these → evolution happens."
+  },
+  {
+    "text": "A population that is NOT evolving (Hardy-Weinberg equilibrium) must have:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Small population size",
+    "choiceB": "No mutations",
+    "choiceC": "Strong selection",
+    "choiceD": "Non-random mating",
+    "answer": "B",
+    "explanation": "Hardy-Weinberg equilibrium requires: no mutation, no selection, no drift (large pop), no gene flow, random mating. B is correct. A, C, D all violate equilibrium."
+  },
+  {
+    "text": "Which of the following is an example of artificial selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Peppered moths evolving",
+    "choiceB": "Darwin's finches",
+    "choiceC": "Dog breeding (humans selecting for traits)",
+    "choiceD": "Antibiotic resistance",
+    "answer": "C",
+    "explanation": "Artificial selection = humans choose which individuals reproduce. Dog breeds, crops, livestock = artificial selection. Natural selection = NATURE chooses (survival + reproduction)."
+  },
+  {
+    "text": "The main difference between artificial and natural selection is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Artificial selection is faster",
+    "choiceB": "The SELECTING AGENT (humans vs. environment)",
+    "choiceC": "Artificial selection doesn't work",
+    "choiceD": "Natural selection only happens in the wild",
+    "answer": "B",
+    "explanation": "Artificial = humans decide who reproduces. Natural = environment (survival + reproduction) decides. Both change allele frequencies, but selecting agent is different."
+  }
+];
+
+// ====================
+// INIT
+// ====================
+checkRole();
+preload();
+renderSets();
+</script>
+</body>
+</html>
