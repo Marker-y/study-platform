@@ -1613,11 +1613,11 @@ function preload() {
     
     if (ecoQs&&ecoQs.length>0) {
         const qs=ecoQs.map(q=>({id:genId(),type:'MCQ',text:q.text,cA:q.choiceA,cB:q.choiceB,cC:q.choiceC,cD:q.choiceD,ans:q.answer,exp:q.explanation}));
-        shared.push({id:genId(),name:'🌍 Ecology — 生态学',subject:'生物',qs:ecoQs,created:new Date().toISOString(),updated:new Date().toISOString()});
+        shared.push({id:genId(),name:'🌍 Ecology — 生态学',subject:'生物',qs:qs,created:new Date().toISOString(),updated:new Date().toISOString()});
     }
     if (evoQs&&evoQs.length>0) {
         const qs=evoQs.map(q=>({id:genId(),type:'MCQ',text:q.text,cA:q.choiceA,cB:q.choiceB,cC:q.choiceC,cD:q.choiceD,ans:q.answer,exp:q.explanation}));
-        shared.push({id:genId(),name:'🧬 Evolution — 进化论',subject:'生物',qs:evoQs,created:new Date().toISOString(),updated:new Date().toISOString()});
+        shared.push({id:genId(),name:'🧬 Evolution — 进化论',subject:'生物',qs:qs,created:new Date().toISOString(),updated:new Date().toISOString()});
     }
     
     // Ecology study guide
