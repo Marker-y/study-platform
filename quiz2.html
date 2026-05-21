@@ -1627,7 +1627,7 @@ function showGuestToast(msg) {
 function preload() {
     const shared=getShared();
     if(!shared.find(s=>s.id==='set_evolution')) {
-        const evoQs=__INJECTED_SET1__;
+        const evoQs=[];
         evoQs.forEach((q,i)=>{ if(!q.id) q.id='evo_'+(i+1); });
         shared.push({id:'set_evolution',name:'Evolution (75 MCQ)',subject:'Biology',grade:'',tags:[],desc:'Based on Lecture - Evolution.pdf',qs:evoQs,updated:Date.now()});
         saveShared(shared);
