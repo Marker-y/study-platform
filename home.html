@@ -303,6 +303,7 @@
             <div class="page-actions" id="sets-actions"></div>
         </div>
         <div id="sets-stats"></div>
+        <div class="subject-filter" id="subject-filter"></div>
         <div class="shared-banner">
             <span class="shared-banner-icon">🌐</span>
             <span><strong>共享模式：</strong>这些习题集由管理员（01）创建，向所有用户开放。点击卡片开始练习！</span>
@@ -344,15 +345,13 @@
                     <label class="form-label">科目</label>
                     <select class="form-select" id="f-subject">
                         <option value="">选择科目</option>
-                        <option value="物理">🔬 物理</option>
-                        <option value="生物">🧬 生物</option>
-                        <option value="化学">⚗️ 化学</option>
                         <option value="数学">📐 数学</option>
-                        <option value="英语">📖 英语</option>
-                        <option value="中文">📝 中文</option>
+                        <option value="生物">🧬 生物</option>
                         <option value="经济">💹 经济</option>
-                        <option value="历史">🏛️ 历史</option>
-                        <option value="其他">📁 其他</option>
+                        <option value="语文">📝 语文</option>
+                        <option value="化学">⚗️ 化学</option>
+                        <option value="物理">🔬 物理</option>
+                        <option value="英语">📖 英语</option>
                     </select>
                 </div>
             </div>
@@ -813,8 +812,8 @@ function goHome() { showPage('sets'); }
 // ====================
 // SUBJECT HELPERS
 // ====================
-const SE = {'物理':'🔬','生物':'🧬','化学':'⚗️','数学':'📐','英语':'📖','中文':'📝','经济':'💹','历史':'🏛️','其他':'📁'};
-const SC = {'物理':'s-physics','生物':'s-biology','化学':'s-chemistry','数学':'s-math','英语':'s-english','中文':'s-chinese','经济':'s-economics','历史':'s-history','其他':'s-default','其他':'s-default'};
+const SE = {'数学':'📐','生物':'🧬','经济':'💹','语文':'📝','化学':'⚗️','物理':'🔬','英语':'📖'};
+const SC = {'数学':'s-math','生物':'s-biology','经济':'s-economics','语文':'s-chinese','化学':'s-chemistry','物理':'s-physics','英语':'s-english'};
 function subjE(s){return SE[s]||'📁';}
 function subjCls(s){return SC[s]||'s-default';}
 
@@ -834,6 +833,12 @@ function renderSets() {
         ? `<button class="btn btn-primary" onclick="showPage('create')">➕ 新建</button><button class="btn btn-secondary" onclick="showPage('import')">📥 导入</button>`
         : `<button class="btn btn-secondary" onclick="openLogin()" style="font-size:13px">🔐 我是 01</button>`;
 
+    const allSubjects = ['全部','数学','生物','经济','语文','化学','物理','英语'];
+    const filterEl = document.getElementById('subject-filter');
+    filterEl.innerHTML = allSubjects.map(subj =>
+        `<button class="subj-btn ${curSubjectFilter===subj?'active':''}" onclick="setSubjectFilter('${subj}')">${subj}</button>`
+    ).join('');
+
     let all = [];
     shared.forEach(s => all.push({...s, _type:'shared'}));
     if (isAdmin) my.forEach(s => all.push({...s, _type:'my'}));
@@ -842,14 +847,24 @@ function renderSets() {
         const tb = new Date(b.updated||b.created||0).getTime();
         return tb-ta;
     });
+    if (curSubjectFilter && curSubjectFilter !== '全部') {
+        all = all.filter(s => s.subject === curSubjectFilter);
+    }
 
     const el = document.getElementById('sets-grid');
     if (all.length===0) {
-        el.innerHTML=`<div class="empty"><div class="empty-icon">📚</div><div class="empty-title">还没有习题集</div>${isAdmin?'<button class="btn btn-primary" onclick="showPage(\'create\')">➕ 创建</button>':''}</div>`;
+        el.innerHTML=`<div class="empty"><div class="empty-icon">📚</div><div class="empty-title">${curSubjectFilter&&curSubjectFilter!=='全部'?'该科目暂无习题集':'还没有习题集'}</div>${isAdmin?'<button class="btn btn-primary" onclick="showPage(\'create\')">➕ 创建</button>':''}</div>`;
         return;
     }
     el.innerHTML = `<div class="sets-list">${all.map(s=>makeSetCard(s,s._type==='my')).join('')}</div>`;
 }
+
+let curSubjectFilter = '全部';
+function setSubjectFilter(subj) {
+    curSubjectFilter = subj;
+    renderSets();
+}
+
 
 function makeSetCard(s, isMy) {
     const count = (s.qs||[]).length;
