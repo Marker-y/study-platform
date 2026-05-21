@@ -1560,9 +1560,9 @@ function preload() {
         shared.push({id:genId(),name:'🧬 Biology MCQ Set 2',subject:'生物',qs,created:new Date().toISOString()});
     }
     
-    // Biology study guide
+    // Ecology study guide
     const guides=getGuides();
-    guides.push({id:genId(),name:'🧬 Biology Study Guide — Ecology & Evolution',subject:'生物',content:`## 🌍 ECOLOGY
+    guides.push({id:genId(),name:'🌍 Ecology Study Guide',subject:'生物',content:`## 🌍 ECOLOGY
 
 ### Biotic vs Abiotic Factors
 - **Biotic**: Living factors (plants, animals, bacteria, fungi)
@@ -1590,11 +1590,11 @@ function preload() {
 
 ### Coevolution
 - Two species evolve in RESPONSE to each other
-- Example: Flowers evolve tube length → pollinators evolve longer tongues
+- Example: Flowers evolve tube length → pollinators evolve longer tongues`,
+created:new Date().toISOString()});
 
----
-
-## 🧬 EVOLUTION
+    // Evolution study guide
+    guides.push({id:genId(),name:'🧬 Evolution Study Guide',subject:'生物',content:`## 🧬 EVOLUTION
 
 ### Darwin's Key Insights
 1. **Descent with modification**: Organisms share common ancestors but accumulate changes
@@ -1643,15 +1643,1074 @@ function preload() {
 | **Directional** | Favors ONE extreme |
 | **Disruptive** | Favors BOTH extremes, eliminates average |
 
-💡 **Remember**: Evolution = change in **allele frequencies** in a population over time. Individuals don't evolve — populations do!`,created:new Date().toISOString()});
-    
+💡 **Remember**: Evolution = change in **allele frequencies** in a population over time. Individuals don't evolve — populations do!`,
+created:new Date().toISOString()});
+
     saveShared(shared);
     saveGuides(guides);
     console.log('Preloaded biology data');
 }
 
-const __INJECTED_SET1__ = [{"text": "Which of the following is an abiotic factor?", "type": "MCQ", "id": "a5b09cf978bc", "choiceA": "Bacteria in soil", "choiceB": "Fallen leaves", "choiceC": "Temperature", "choiceD": "Fungus on a tree", "answer": "C", "explanation": "Abiotic factors are nonliving physical factors. Temperature is physical; the others are biotic (living or were once alive)."}, {"text": "What is the difference between habitat and niche?", "type": "MCQ", "id": "701c16489dd9", "choiceA": "Habitat is where an organism lives; niche is its role", "choiceB": "Habitat is the role; niche is the location", "choiceC": "They are the same thing", "choiceD": "Habitat is for plants; niche is for animals", "answer": "A", "explanation": "Habitat = 'address' (where it lives); Niche = 'profession' (what it does, how it survives)."}, {"text": "In a mutualistic relationship:", "type": "MCQ", "id": "2ca5ebd67776", "choiceA": "One organism benefits, the other is harmed", "choiceB": "Both organisms benefit", "choiceC": "One benefits, other is unaffected", "choiceD": "Both are harmed", "answer": "B", "explanation": "Mutualism = 'mutual' benefit. Example: bees get nectar, flowers get pollinated."}, {"text": "A remora fish attaches to a shark and gets food scraps while the shark is unaffected. This is:", "type": "MCQ", "id": "540ed4e3fa24", "choiceA": "Mutualism", "choiceB": "Commensalism", "choiceC": "Parasitism", "choiceD": "Predation", "answer": "B", "explanation": "Commensalism: one benefits (+), other is neither helped nor harmed (0). Remora gets food; shark doesn't care."}, {"text": "Which type of symbiosis involves one organism living on or inside another and harming it?", "type": "MCQ", "id": "9ec9fbf3cf6c", "choiceA": "Mutualism", "choiceB": "Commensalism", "choiceC": "Parasitism", "choiceD": "Coevolution", "answer": "C", "explanation": "Parasitism: parasite benefits (+), host is harmed (-). Example: tapeworm in human intestine."}, {"text": "Mimicry is:", "type": "MCQ", "id": "1eaad5c09a9a", "choiceA": "Blending in with the environment", "choiceB": "Resembling another species for protection", "choiceC": "Changing color with temperature", "choiceD": "Looking like a rock", "answer": "B", "explanation": "Mimicry = copying another species. Viceroy butterflies mimic Monarchs (both are toxic)."}, {"text": "Camouflage is essentially a form of:", "type": "MCQ", "id": "9992b4fb0a0b", "choiceA": "Mutualism", "choiceB": "Visual mimicry", "choiceC": "Parasitism", "choiceD": "Commensalism", "answer": "B", "explanation": "Camouflage = blending in with surroundings. It's visual mimicry of the environment (e.g., stone plants look like rocks)."}, {"text": "Darwin's voyage on the HMS Beagle took place in what year?", "type": "MCQ", "id": "f6b682d908b4", "choiceA": "1831", "choiceB": "1859", "choiceC": "1809", "choiceD": "1871", "answer": "A", "explanation": ""}, {"text": "Which is NOT one of Darwin's observations for natural selection?", "type": "MCQ", "id": "ac0ac1f1357c", "choiceA": "Traits are often heritable", "choiceB": "Offspring vary in their heritable traits", "choiceC": "Species produce more offspring than environment can support", "choiceD": "Poorly adapted individuals never produce offspring", "answer": "D", "explanation": "'Never' is too absolute. Poorly adapted individuals CAN produce some offspring, just fewer than well-adapted individuals."}, {"text": "According to natural selection, which individuals survive and reproduce most?", "type": "MCQ", "id": "28f0b93fa6b1", "choiceA": "The strongest", "choiceB": "The fastest", "choiceC": "Individuals with favorable heritable traits for their environment", "choiceD": "The oldest", "answer": "C", "explanation": "Fitness = survive AND reproduce. It's about having traits that work in YOUR specific environment."}, {"text": "What is a species?", "type": "MCQ", "id": "9a9c7354dbd8", "choiceA": "A group that lives in the same area", "choiceB": "A group that can interbreed and produce viable, fertile offspring", "choiceC": "A group that looks similar", "choiceD": "A group that eats the same food", "answer": "B", "explanation": "Species definition: can produce VIABLE (alive) + FERTILE (can reproduce) offspring. Mules are sterile → donkey + horse are different species."}, {"text": "Why are mules sterile?", "type": "MCQ", "id": "89d12e86ee69", "choiceA": "They have too many chromosomes", "choiceB": "They are hybrids of two different species", "choiceC": "They are genetically defective", "choiceD": "They don't live long enough", "answer": "B", "explanation": "Mule = male donkey + female horse. Different species → hybrid is sterile (can't produce offspring of its own)."}, {"text": "Which is an example of a homologous structure?", "type": "MCQ", "id": "c21e074379af", "choiceA": "Bird wing and insect wing", "choiceB": "Whale flipper and human arm", "choiceC": "Fish fin and dolphin flipper", "choiceD": "Eagle wing and bat wing", "answer": "B", "explanation": "Homologous = same bones, different function, common ancestor. Whale flipper & human arm have same bone structure (humerus, radius, ulna)."}, {"text": "Analogous structures:", "type": "MCQ", "id": "fb33c2f7c2a3", "choiceA": "Have same structure but different functions", "choiceB": "Have same function but different structures", "choiceC": "Are vestigial", "choiceD": "Are found only in fossils", "answer": "B", "explanation": "Analogous = same function, different structure, NO common ancestor. Bird wings (bones) vs. insect wings (chitin) both fly but different structure."}, {"text": "Which is a vestigial structure in humans?", "type": "MCQ", "id": "ea9693fd726a", "choiceA": "Heart", "choiceB": "Tail bone (coccyx)", "choiceC": "Liver", "choiceD": "Brain", "answer": "B", "explanation": "Coccyx (tail bone) is vestigial — remnant of ancestral tail. We don't have tails anymore, but still have the bone."}, {"text": "The principle of superposition states that:", "type": "MCQ", "id": "b9f210cb33ef", "choiceA": "Older rock layers are on the bottom", "choiceB": "Newer rock layers are on the bottom", "choiceC": "All rock layers are the same age", "choiceD": "Fossils can't be dated", "answer": "A", "explanation": "Superposition: bottom = oldest (deposited first). More primitive creatures in older (bottom) rock layers."}, {"text": "Which mechanism of evolution adds NEW alleles to the gene pool?", "type": "MCQ", "id": "371b33aa36f3", "choiceA": "Natural selection", "choiceB": "Migration", "choiceC": "Genetic drift", "choiceD": "Mutation", "answer": "D", "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, migration, drift only change frequencies of EXISTING alleles."}, {"text": "Stabilizing selection favors:", "type": "MCQ", "id": "804a53b7f5dc", "choiceA": "Extreme phenotypes", "choiceB": "Intermediate phenotypes", "choiceC": "Both extremes", "choiceD": "All phenotypes equally", "answer": "B", "explanation": "Stabilizing = 'keeps the status quo.' Favors AVERAGE. Example: human birth weight (not too small, not too big)."}, {"text": "Peppered moths during Industrial Revolution are an example of:", "type": "MCQ", "id": "ff28e72c6a23", "choiceA": "Stabilizing selection", "choiceB": "Directional selection", "choiceC": "Disruptive selection", "choiceD": "Artificial selection", "answer": "B", "explanation": "Directional = shifts population toward one extreme. Pollution darkened trees → dark moths had advantage → population shifted toward dark."}, {"text": "Biogeography is the study of:", "type": "MCQ", "id": "c4487eac8595", "choiceA": "Fossils", "choiceB": "Embryos", "choiceC": "Geographic distribution of species", "choiceD": "Homologous structures", "answer": "C", "explanation": "Biogeography = where species live. Explains why similar environments (Antarctic vs. Arctic) have different species (penguins vs. polar bears)."}, {"text": "What does 'descent with modification' mean?", "type": "MCQ", "id": "e44f3bcdbfb3", "choiceA": "Offspring are identical to parents", "choiceB": "Offspring share characteristics with ancestors but accumulate modifications", "choiceC": "Only the strongest survive", "choiceD": "", "answer": "B", "explanation": "Darwin's definition of evolution: organisms share common ancestor, but accumulate changes (adaptations) over generations."}, {"text": "The modern definition of evolution is:", "type": "MCQ", "id": "4ce95972a9a6", "choiceA": "Survival of the fittest", "choiceB": "Change in relative frequency of alleles in a population over time", "choiceC": "Descent with modification", "choiceD": "Inheritance of acquired traits", "answer": "B", "explanation": ""}, {"text": "A gene pool is:", "type": "MCQ", "id": "fbf9461c0963", "choiceA": "A swimming pool for genes", "choiceB": "All alleles present in a population", "choiceC": "Only the dominant alleles", "choiceD": "The DNA of one individual", "answer": "B", "explanation": "Gene pool = all alleles in a population. Example: in a population of 100 flowers, gene pool includes all alleles for petal color."}, {"text": "Who proposed that Earth is very old (gradualism)?", "type": "MCQ", "id": "3f0a7611e9f0", "choiceA": "Georges Cuvier", "choiceB": "James Hutton", "choiceC": "Charles Lyell", "choiceD": "Thomas Malthus", "answer": "B", "explanation": "Hutton: geological forces operate SLOWLY over millions of years = gradualism. Earth must be very old for evolution to occur."}, {"text": "Who proposed uniformitarianism?", "type": "MCQ", "id": "946b9f889efb", "choiceA": "Georges Cuvier", "choiceB": "James Hutton", "choiceC": "Charles Lyell", "choiceD": "Thomas Malthus", "answer": "C", "explanation": "Lyell: mechanisms of change are CONSTANT over time (same processes today as in past). Incorporated Hutton's gradualism."}, {"text": "Thomas Malthus influenced Darwin with his idea that:", "type": "MCQ", "id": "f9f43973956b", "choiceA": "Population grows faster than food supply", "choiceB": "Earth is very old", "choiceC": "Species are fixed", "choiceD": "Fossils are important", "answer": "A", "explanation": "Malthus: population grows exponentially, but food grows linearly. Limited by war, famine, disease → 'struggle for existence' in Darwin."}, {"text": "Lamarck's theory of evolution was based on:", "type": "MCQ", "id": "c42e7faa66ca", "choiceA": "Natural selection", "choiceB": "Inheritance of acquired characteristics", "choiceC": "Mutation", "choiceD": "Genetic drift", "answer": "B", "explanation": "Lamarck was WRONG: he thought stretching your neck (acquired trait) would be passed to offspring. Acquired traits are NOT inherited."}, {"text": "Why was Lamarck wrong?", "type": "MCQ", "id": "822f3cd665ff", "choiceA": "1831", "choiceB": "1859", "choiceC": "1809", "choiceD": "1871", "answer": "B", "explanation": "1859 — 28 years after his Beagle voyage. He delayed publishing because he didn't have enough evidence (no genetics yet)."}, {"text": "What are adaptations?", "type": "MCQ", "id": "2fe0bd742584", "choiceA": "Characteristics that harm survival", "choiceB": "Inherited characteristics that increase chance of survival", "choiceC": "Acquired traits", "choiceD": "Random mutations only", "answer": "B", "explanation": "Adaptation = inherited trait that increases fitness (survive + reproduce). Example: camouflage helps avoid predators."}, {"text": "Fossils are:", "type": "MCQ", "id": "df9895748222", "choiceA": "Living organisms", "choiceB": "Remains or imprints of once-living organisms", "choiceC": "Only dinosaur bones", "choiceD": "Rocks that look like organisms", "answer": "B", "explanation": "Fossils = remains (bones, shells) or imprints (footprints, leaves) of once-living organisms found in rock layers."}, {"text": "Darwin's finches on Galapagos had different:", "type": "MCQ", "id": "4c03fc7204c3", "choiceA": "Feather colors", "choiceB": "Beak sizes and shapes", "choiceC": "Wing spans", "choiceD": "Leg lengths", "answer": "B", "explanation": "Finch beaks varied by island → associated with diet. Different food sources → different beak adaptations."}, {"text": "How many species of finches did Darwin identify on Galapagos?", "type": "MCQ", "id": "d5a6076dcbfd", "choiceA": "1", "choiceB": "3", "choiceC": "13", "choiceD": "50", "answer": "C", "explanation": "Only 1 finch species on South American mainland, but 13 species on Galapagos (one island, many niches)."}, {"text": "What did Darwin conclude about finch evolution?", "type": "MCQ", "id": "fb257d70b44f", "choiceA": "Finches were created separately on each island", "choiceB": "Original finches reached islands and changed over generations", "choiceC": "Finches flew from Europe", "choiceD": "Finches don't evolve", "answer": "B", "explanation": "Descent with modification: original finches from mainland dispersed to different islands, accumulated adaptations over generations."}, {"text": "Which of the following is direct evidence for evolution?", "type": "MCQ", "id": "604f5c74530c", "choiceA": "Peppered moths", "choiceB": "Soapberry bugs", "choiceC": "Drug-resistant bacteria", "choiceD": "All of the above", "answer": "D", "explanation": "All are direct observations of evolution happening NOW. Bacteria evolve quickly (fast reproduction + mutation) → drug resistance."}, {"text": "Homology provides evidence for:", "type": "MCQ", "id": "b4620d4a7b99", "choiceA": "Convergent evolution", "choiceB": "Divergent evolution (common ancestry)", "choiceC": "Spontaneous generation", "choiceD": "Creationism", "answer": "B", "explanation": "Homologous structures = divergent evolution from common ancestor. Different species adapted same bones for different functions."}, {"text": "Vestigial structures provide evidence for evolution because:", "type": "MCQ", "id": "8821c33db478", "choiceA": "They are useful", "choiceB": "They show common ancestry with reduced function", "choiceC": "They are brand new", "choiceD": "They prove Lamarck was right", "answer": "B", "explanation": "Vestigial = reduced/nonfunctional structures from ancestor. Whale pelvic bones = ancestor had legs, whales don't need them anymore."}, {"text": "Embryology provides evidence for evolution because:", "type": "MCQ", "id": "f3de4ba9215b", "choiceA": "Embryos of vertebrates look similar", "choiceB": "Embryos are completely different", "choiceC": "Embryos don't matter", "choiceD": "Only mammals have embryos", "answer": "A", "explanation": "Early embryos of fish, chickens, humans look very similar → evidence of common ancestry (vertebrate ancestor)."}, {"text": "Conserved genes (like cytochrome c) provide evidence for evolution because:", "type": "MCQ", "id": "3a2083a9f306", "choiceA": "They change rapidly", "choiceB": "They are highly similar across species", "choiceC": "They don't exist", "choiceD": "They only exist in bacteria", "answer": "B", "explanation": "Important genes DON'T change much over time (conserved). Similar cytochrome c across species → common ancestry."}, {"text": "The fossil record provides evidence for evolution by showing:", "type": "MCQ", "id": "2d3391dd241a", "choiceA": "No change over time", "choiceB": "Simple to complex over millions of years", "choiceC": "Only extinct species", "choiceD": "Fossils are fake", "answer": "B", "explanation": "Fossil record: older layers (bottom) have simpler organisms; newer layers (top) have more complex organisms → evolution over time."}, {"text": "Biogeography explains why:", "type": "MCQ", "id": "7c6f234f2892", "choiceA": "Similar environments have similar species", "choiceB": "Similar environments can have different species", "choiceC": "All islands have the same species", "choiceD": "Continents don't move", "answer": "B", "explanation": "Penguins (Antarctic) vs. polar bears (Arctic) — similar cold environments, but different species because of different ancestors + continental drift."}, {"text": "Continental drift (Pangaea) explains:", "type": "MCQ", "id": "a9a2e7a764ae", "choiceA": "Why all species are the same everywhere", "choiceB": "Why species on islands resemble those on nearest mainland", "choiceC": "Why fossils are fake", "choiceD": "Why evolution doesn't happen", "answer": "B", "explanation": "Island biogeography: species on islands resemble nearest mainland because ancestors migrated from mainland."}, {"text": "Which is an example of convergent evolution?", "type": "MCQ", "id": "f7408594fedf", "choiceA": "Whale flipper and human arm", "choiceB": "Bird wings and insect wings", "choiceC": "Fish fins and dolphin flippers", "choiceD": "All of the above", "answer": "B", "explanation": "Convergent = unrelated species evolve similar traits. Bird wings + insect wings both for flying, but different structure (no common ancestor for wings)."}, {"text": "Which is an example of divergent evolution?", "type": "MCQ", "id": "440f73566047", "choiceA": "Bird wings and insect wings", "choiceB": "Whale flipper and human arm", "choiceC": "Fish fins and dolphin flippers", "choiceD": "All of the above", "answer": "B", "explanation": "Divergent = related species evolve different traits. Whale flipper + human arm have same bones (common ancestor), different function."}, {"text": "Mutation is the ultimate source of genetic variation because:", "type": "MCQ", "id": "4b79b080d2e8", "choiceA": "It creates new alleles", "choiceB": "It removes alleles", "choiceC": "It doesn't do anything", "choiceD": "It only happens in plants", "answer": "A", "explanation": "Mutation = only mechanism that creates NEW alleles. Other mechanisms (selection, drift, migration) only change frequencies of existing alleles."}, {"text": "Migration (gene flow) changes allele frequencies by:", "type": "MCQ", "id": "6f43fd17d641", "choiceA": "Creating new alleles", "choiceB": "Transferring genes from one population to another", "choiceC": "Removing alleles", "choiceD": "Not doing anything", "answer": "B", "explanation": "Gene flow = movement of genes between populations. Example: pollen blows from one flower population to another → transfers alleles."}, {"text": "Genetic drift is:", "type": "MCQ", "id": "2e1de6156ef6", "choiceA": "Selection based on fitness", "choiceB": "Change in allele frequency due to chance events", "choiceC": "Mutation", "choiceD": "Migration", "answer": "B", "explanation": "Genetic drift = random chance. Important in SMALL populations. Example: natural disaster kills randomly → allele frequencies change by chance."}, {"text": "In directional selection, the population shifts toward:", "type": "MCQ", "id": "1e52917683fc", "choiceA": "Intermediate phenotypes", "choiceB": "Both extremes", "choiceC": "One extreme", "choiceD": "No change", "answer": "C", "explanation": "Directional = shifts toward ONE extreme. Example: large beaks favored during drought (large seeds) → population shifts toward large beaks."}, {"text": "In disruptive selection, the population favors:", "type": "MCQ", "id": "2885eba07058", "choiceA": "Intermediate phenotypes", "choiceB": "Both extremes (NOT intermediate)", "choiceC": "One extreme", "choiceD": "No change", "answer": "B", "explanation": "Disruptive = favors BOTH extremes, eliminates intermediate. Example: small beaks for small seeds, large beaks for large seeds, medium beaks can't do either well."}, {"text": "Which of the following is NOT a mechanism of evolution?", "type": "MCQ", "id": "2b64f04110a9", "choiceA": "Mutation", "choiceB": "Natural selection", "choiceC": "Acquired characteristics", "choiceD": "Genetic drift", "answer": "C", "explanation": "Acquired characteristics (Lamarck) are NOT inherited → NOT a mechanism of evolution. Only genetic changes matter."}];
-const __INJECTED_SET2__ = [{"text": "Which of the following is a BIOTIC factor in a forest ecosystem?", "type": "MCQ", "id": "f90c8ae04ce3", "choiceA": "Sunlight filtering through leaves", "choiceB": "Fallen pine needles on the forest floor", "choiceC": "Moisture in the air", "choiceD": "Granite rock formations", "answer": "B", "explanation": "Fallen pine needles were once alive (part of a living organism) → biotic. Sunlight, moisture, and rocks are abiotic (never alive)."}, {"text": "An ecologist studies how wolves (predators) affect deer populations in a forest. This is a study of:", "type": "MCQ", "id": "b466b08ffaee", "choiceA": "Abiotic factors", "choiceB": "Community interactions", "choiceC": "Nutrient cycles only", "choiceD": "Biogeography", "answer": "B", "explanation": "Predator-prey relationships are community interactions — how different species in a community affect each other."}, {"text": "A species' niche includes all of the following EXCEPT:", "type": "MCQ", "id": "2f79169a4b3f", "choiceA": "What it eats", "choiceB": "Where it lives (habitat)", "choiceC": "How it obtains energy", "choiceD": "Its role in the ecosystem", "answer": "B", "explanation": "Habitat (where it lives) is separate from niche (what it DOES). Niche = role in ecosystem, not just location."}, {"text": "Two bird species eat the same type of seed in the same tree. This is an example of:", "type": "MCQ", "id": "ccd5a12dc239", "choiceA": "Predation", "choiceB": "Mutualism", "choiceC": "Competition", "choiceD": "Commensalism", "answer": "C", "explanation": "Competition = two species fighting for the SAME limited resource (seeds in this case)."}, {"text": "A tick feeding on a dog is an example of:", "type": "MCQ", "id": "200f4da8c499", "choiceA": "Mutualism", "choiceB": "Commensalism", "choiceC": "Parasitism", "choiceD": "Predation", "answer": "C", "explanation": "Tick benefits (+), dog is harmed (-) → parasitism. The tick is the parasite, the dog is the host."}, {"text": "Lichens (fungus + algae living together) are an example of:", "type": "MCQ", "id": "d01717f7947c", "choiceA": "Parasitism", "choiceB": "Commensalism", "choiceC": "Mutualism", "choiceD": "Competition", "answer": "C", "explanation": "Fungus provides structure/protection; algae do photosynthesis and feed the fungus. BOTH benefit → mutualism."}, {"text": "Batesian mimicry occurs when:", "type": "MCQ", "id": "bfbbf423b2ef", "choiceA": "A harmful species mimics a harmless one", "choiceB": "A harmless species mimics a harmful one", "choiceC": "Two harmful species look like each other", "choiceD": "An organism blends in with the environment", "answer": "B", "explanation": "Batesian mimicry: HARMLESS species mimics HARMFUL one for protection. Example: harmless flies that look like wasps."}, {"text": "Mullerian mimicry occurs when:", "type": "MCQ", "id": "65e7a3738ea7", "choiceA": "A harmless species mimics a harmful one", "choiceB": "Two or more harmful species resemble each other", "choiceC": "An organism blends in with environment", "choiceD": "A parasite mimics its host", "answer": "B", "explanation": "Mullerian: MULTIPLE harmful species evolve to look similar. Predators learn faster (one bad experience = avoid all of them)."}, {"text": "A walking stick insect looks like a twig. This is an example of:", "type": "MCQ", "id": "1732d2658f18", "choiceA": "Mimicry", "choiceB": "Camouflage", "choiceC": "Mutualism", "choiceD": "Batesian mimicry", "answer": "B", "explanation": "Camouflage = resembling the ENVIRONMENT (twigs, leaves, rocks). Mimicry = resembling ANOTHER ORGANISM."}, {"text": "Coevolution occurs because:", "type": "MCQ", "id": "913914516b8e", "choiceA": "One species evolves in isolation", "choiceB": "Two species evolve in response to each other", "choiceC": "The environment changes randomly", "choiceD": "Mutations always happen in pairs", "answer": "B", "explanation": "Coevolution: two species evolve together, each responding to changes in the other. Example: flowers evolve tube length → pollinators evolve tongue length."}, {"text": "Darwin's concept of 'descent with modification' means that:", "type": "MCQ", "id": "286f5d51bd1f", "choiceA": "Offspring are exact copies of parents", "choiceB": "Species are fixed and unchanging", "choiceC": "Offspring share characteristics with ancestors but accumulate changes", "choiceD": "Acquired traits are passed to offspring", "answer": "C", "explanation": "Descent with modification = common ancestry + accumulated changes over generations. Key insight: species change over time but share history."}, {"text": "The modern definition of evolution focuses on changes in:", "type": "MCQ", "id": "b836392e92a8", "choiceA": "Individual organisms", "choiceB": "Physical environment only", "choiceC": "Allele frequencies in a population", "choiceD": "Number of species only", "answer": "C", "explanation": "Modern evolution = change in ALLELE FREQUENCIES in a population over time. NOT about individual change (individuals don't evolve, populations do)."}, {"text": "A gene pool includes:", "type": "MCQ", "id": "e69b22beebf6", "choiceA": "Only dominant alleles", "choiceB": "Only recessive alleles", "choiceC": "All alleles for all genes in a population", "choiceD": "Only mutations", "answer": "C", "explanation": "Gene pool = ALL alleles for ALL genes in a population. Includes dominant, recessive, and everything in between."}, {"text": "Which statement about species is CORRECT?", "type": "MCQ", "id": "48d858755d81", "choiceA": "All members of a species look identical", "choiceB": "A species can only live in one habitat", "choiceC": "Members of a species can interbreed and produce fertile offspring", "choiceD": "A species never changes over time", "answer": "C", "explanation": "Biological species concept: can interbreed AND produce VIABLE (alive) + FERTILE (can reproduce) offspring. Sterile = different species."}, {"text": "Why are mules sterile?", "type": "MCQ", "id": "974c252d43eb", "choiceA": "They have too many chromosomes", "choiceB": "They have an odd number of chromosomes (63)", "choiceC": "They don't live long enough", "choiceD": "They are genetically defective", "answer": "B", "explanation": "Donkey (62 chromosomes) + horse (64 chromosomes) = mule (63 chromosomes). Odd number → can't do meiosis properly → sterile."}, {"text": "Georges Cuvier contributed to evolutionary theory by:", "type": "MCQ", "id": "c9dcb120e787", "choiceA": "Proving species are fixed", "choiceB": "Discovering natural selection", "choiceC": "Showing that extinctions have occurred (fossil evidence)", "choiceD": "Proving Lamarck was right", "answer": "C", "explanation": "Cuvier: studied fossils, proved extinctions happened. But he believed in CATASTROPHISM (sudden disasters), not evolution."}, {"text": "James Hutton's idea of GRADUALISM proposed that:", "type": "MCQ", "id": "1e9215e39d9a", "choiceA": "Earth is young (few thousand years)", "choiceB": "Geological changes happen slowly over millions of years", "choiceC": "Catastrophes shape Earth's surface", "choiceD": "Fossils are fake", "answer": "B", "explanation": "Gradualism: slow, steady changes over LONG time. Implies Earth must be VERY OLD → important for Darwin (needs time for evolution)."}, {"text": "Charles Lyell's uniformitarianism built on Hutton's work by stating:", "type": "MCQ", "id": "9859e3f8c674", "choiceA": "Catastrophes are the only mechanism of change", "choiceB": "Mechanisms of change are CONSTANT over time", "choiceC": "Earth is only 6000 years old", "choiceD": "Fossils are irrelevant", "answer": "B", "explanation": "Uniformitarianism: SAME processes that shape Earth TODAY (erosion, volcanoes) also shaped Earth in the PAST. Mechanisms don't change."}, {"text": "Thomas Malthus influenced Darwin with his observation that:", "type": "MCQ", "id": "1e459e45eb2e", "choiceA": "Populations grow faster than food supply", "choiceB": "All organisms survive equally", "choiceC": "Resources are unlimited", "choiceD": "Predator-prey relationships don't matter", "answer": "A", "explanation": "Malthus: population grows EXPONENTIALLY, but food grows LINEARLY → limited resources → 'struggle for existence' (Darwin's term)."}, {"text": "Lamarck proposed that evolution occurs through:", "type": "MCQ", "id": "1b643e611de8", "choiceA": "Natural selection", "choiceB": "Mutation", "choiceC": "Inheritance of acquired characteristics", "choiceD": "Genetic drift", "answer": "C", "explanation": "Lamarck was WRONG: he thought using a body part more → bigger/stronger → passed to offspring. Acquired traits (muscles from gym) are NOT inherited."}, {"text": "Why is Lamarck's theory incorrect?", "type": "MCQ", "id": "20fd0e7d86d4", "choiceA": "He didn't collect enough data", "choiceB": "Acquired characteristics cannot be inherited", "choiceC": "He didn't study fossils", "choiceD": "He didn't travel enough", "answer": "B", "explanation": "Only GENETIC changes (in DNA/germline) are inherited. Body changes from use/disuse (acquired) don't affect DNA passed to offspring."}, {"text": "Darwin observed that finches on different Galapagos islands had different:", "type": "MCQ", "id": "37fbe45b3bdb", "choiceA": "Feather colors", "choiceB": "Beak sizes and shapes", "choiceC": "Wing spans", "choiceD": "Leg lengths", "answer": "B", "explanation": "Finch beaks = classic example. Different islands = different food sources → different beak adaptations (large for seeds, thin for insects, etc.)."}, {"text": "The number of finch species on the Galapagos Islands compared to the mainland is:", "type": "MCQ", "id": "99e065a08eaf", "choiceA": "He didn't have enough evidence", "choiceB": "He was afraid of backlash from the Church", "choiceC": "Both A and B", "choiceD": "He forgot about his theory", "answer": "C", "explanation": "Darwin knew his theory would be CONTROVERSIAL (conflicted with creationism). Also wanted MORE evidence before publishing."}, {"text": "Which of the following is NOT a line of evidence for evolution?", "type": "MCQ", "id": "d7f96bfe553e", "choiceA": "Homologous structures", "choiceB": "The fossil record", "choiceC": "Astrology", "choiceD": "Biogeography", "answer": "C", "explanation": "Astrology is NOT science. Homologous structures, fossils, biogeography, embryology, genetics = all evidence for evolution."}, {"text": "Homologous structures provide evidence for evolution because they:", "type": "MCQ", "id": "16fa61329b0b", "choiceA": "Have the same function", "choiceB": "Have different structures", "choiceC": "Share a common ancestral structure but have different functions", "choiceD": "Are found only in fossils", "answer": "C", "explanation": "Homologous = same bones (common ancestor), different functions (adapted to different niches). Whale flipper vs. human arm = same bones, different uses."}, {"text": "Analogous structures provide evidence for evolution because they show:", "type": "MCQ", "id": "1b77231735f9", "choiceA": "Common ancestry", "choiceB": "Convergent evolution (similar solutions to similar problems)", "choiceC": "Vestigial traits", "choiceD": "Fossil connections", "answer": "B", "explanation": "Analogous = same function, different structure, NO common ancestor. Shows CONVERGENT evolution: similar environmental pressures → similar adaptations."}, {"text": "Vestigial structures are evidence for evolution because they:", "type": "MCQ", "id": "da9b843dbedf", "choiceA": "Show how organisms will evolve in the future", "choiceB": "Are remnants of structures that were functional in ancestors", "choiceC": "Prove that evolution always leads to more complexity", "choiceD": "Are found only in plants", "answer": "B", "explanation": "Vestigial = reduced, nonfunctional structures from ancestors. Whale pelvic bones = ancestor had legs, whales don't need them anymore."}, {"text": "Embryology provides evidence for evolution because:", "type": "MCQ", "id": "273510392052", "choiceA": "All vertebrate embryos look very similar in early stages", "choiceB": "Embryos are completely different across species", "choiceC": "Embryos don't develop in order", "choiceD": "Only mammals have embryos", "answer": "A", "explanation": "Early vertebrate embryos (fish, chicken, human) look VERY similar → evidence of common ancestry. Differences appear later in development."}, {"text": "Which of the following is an example of a vestigial structure in humans?", "type": "MCQ", "id": "988e58ce4cef", "choiceA": "Heart", "choiceB": "Wisdom teeth", "choiceC": "Liver", "choiceD": "Kidney", "answer": "B", "explanation": "Wisdom teeth = vestigial. Our ancestors had larger jaws (needed all teeth). Modern humans have smaller jaws → wisdom teeth often impacted (useless + problematic)."}, {"text": "Cytochrome c is a conserved protein found in:", "type": "MCQ", "id": "8182edde8a09", "choiceA": "Only humans", "choiceB": "Only animals", "choiceC": "Almost all living organisms", "choiceD": "Only plants", "answer": "C", "explanation": "Cytochrome c = electron transport chain protein. Found in almost ALL organisms (very important). Similar across species → common ancestry."}, {"text": "The fossil record shows that:", "type": "MCQ", "id": "9e8388dc54e0", "choiceA": "Organisms have remained unchanged", "choiceB": "Life has become more complex over time", "choiceC": "Only large organisms fossilize", "choiceD": "Fossils are irrelevant", "answer": "B", "explanation": "Fossil record: older rocks (bottom) = simpler organisms; newer rocks (top) = more complex organisms. Shows progression of life over billions of years."}, {"text": "Pangaea explains biogeographic patterns because:", "type": "MCQ", "id": "74c51d9d8ab8", "choiceA": "Continents have always been in the same place", "choiceB": "All species evolved at the same time", "choiceC": "Continents were once connected, allowing species to disperse before drifting apart", "choiceD": "Fossils can't be explained by continental drift", "answer": "C", "explanation": "Pangaea: all continents connected → species could disperse. Then continents drifted apart → species isolated, evolved separately (biogeography evidence)."}, {"text": "Mutation is the ultimate source of genetic variation because it:", "type": "MCQ", "id": "b41297253ee4", "choiceA": "Only removes alleles", "choiceB": "Creates NEW alleles", "choiceC": "Doesn't change DNA", "choiceD": "Only happens in plants", "answer": "B", "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, drift, migration = only change frequencies of EXISTING alleles."}, {"text": "Genetic drift has the strongest effect on:", "type": "MCQ", "id": "9fa6f136c402", "choiceA": "Large populations", "choiceB": "Small populations", "choiceC": "All populations equally", "choiceD": "Only plant populations", "answer": "B", "explanation": "Genetic drift = random change in allele frequencies. STRONGER in small populations (chance events have bigger impact). Example: natural disaster wipes out most of small population."}, {"text": "The founder effect is a type of:", "type": "MCQ", "id": "272edeb4637c", "choiceA": "Natural selection", "choiceB": "Mutation", "choiceC": "Genetic drift", "choiceD": "Gene flow", "answer": "C", "explanation": "Founder effect = small group separates from main population → founds new population. Allele frequencies in new population = random (drift). Example: Amish populations (founder effect for certain genetic diseases)."}, {"text": "Stabilizing selection on human birth weight works because:", "type": "MCQ", "id": "e55a3d81da0b", "choiceA": "Extremely large AND extremely small babies have higher mortality", "choiceB": "Only large babies survive", "choiceC": "Only small babies survive", "choiceD": "Birth weight doesn't matter", "answer": "A", "explanation": "Stabilizing = favors INTERMEDIATE. Very small babies (premature) and very large babies (difficult birth) both have higher death rates → intermediate = favored."}, {"text": "Directional selection on beak size in finches would occur if:", "type": "MCQ", "id": "db7d4b7a90e9", "choiceA": "All seed sizes are equally available", "choiceB": "Only large seeds are available (drought year)", "choiceC": "Only small seeds are available", "choiceD": "Beak size doesn't affect survival", "answer": "B", "explanation": "Directional = shifts population toward ONE extreme. Large beak = better at cracking large seeds. Drought → only large seeds available → large beak favored → population shifts toward large beaks."}, {"text": "Disruptive selection on beak size in finches would occur if:", "type": "MCQ", "id": "152a3aa16746", "choiceA": "Only medium seeds are available", "choiceB": "Only large seeds AND only small seeds are available", "choiceC": "All seed sizes are available", "choiceD": "Beak size doesn't matter", "answer": "B", "explanation": "Disruptive = favors BOTH EXTREMES, eliminates intermediate. Large beaks for large seeds, small beaks for small seeds → medium beaks can't do either well → eliminated."}, {"text": "Peppered moth evolution during Industrial Revolution is an example of:", "type": "MCQ", "id": "59a2ee36d042", "choiceA": "Stabilizing selection", "choiceB": "Directional selection", "choiceC": "Disruptive selection", "choiceD": "No selection", "answer": "B", "explanation": "Directional: population shifted from mostly light → mostly dark. Pollution darkened tree bark → dark moths had camouflage advantage → population shifted toward dark."}, {"text": "Antibiotic resistance in bacteria evolves through:", "type": "MCQ", "id": "20d74c34e82f", "choiceA": "Lamarckian inheritance", "choiceB": "Natural selection (mutation + reproduction)", "choiceC": "Only genetic drift", "choiceD": "Only migration", "answer": "B", "explanation": "Bacteria mutate randomly. Some mutations happen to confer antibiotic resistance. Antibiotic kills non-resistant bacteria → resistant bacteria reproduce → resistance spreads. Natural selection!"}, {"text": "Which of the following is an example of natural selection in action?", "type": "MCQ", "id": "34bc87a81b8d", "choiceA": "A giraffe stretches its neck and passes the longer neck to offspring", "choiceB": "Bacteria evolve resistance to antibiotics", "choiceC": "A bear learns to fish and teaches cubs", "choiceD": "A plant acquires a mutation and keeps it to itself", "answer": "B", "explanation": "Bacteria + antibiotic resistance = natural selection. Random mutation → survival advantage → reproduce more → allele frequency changes. A = Lamarck (wrong). C = learned behavior (not genetic). D = doesn't reproduce."}, {"text": "Gene flow (migration) between populations tends to:", "type": "MCQ", "id": "3c73decdaae7", "choiceA": "Increase genetic differences between populations", "choiceB": "Decrease genetic differences between populations", "choiceC": "Have no effect", "choiceD": "Only affect plants", "answer": "B", "explanation": "Gene flow = transfer of alleles between populations. Makes populations MORE SIMILAR genetically. Without gene flow, populations diverge (become different)."}, {"text": "Which of the following is a requirement for natural selection to occur?", "type": "MCQ", "id": "8b0f64fb83b5", "choiceA": "All individuals must be identical", "choiceB": "Traits must be heritable", "choiceC": "Environment must never change", "choiceD": "Population must be very small", "answer": "B", "explanation": "Natural selection REQUIRES heritable variation. If traits aren't heritable, selection can't change allele frequencies across generations."}, {"text": "Fitness, in evolutionary terms, means:", "type": "MCQ", "id": "8fa49378bc59", "choiceA": "Being the strongest", "choiceB": "Being the fastest", "choiceC": "Surviving AND reproducing at a higher rate than others", "choiceD": "Living the longest", "answer": "C", "explanation": "Fitness = survive + reproduce. An organism that lives 100 years but has 0 offspring has ZERO fitness. An organism that lives 2 years but has 10 offspring has HIGH fitness."}, {"text": "Which of the following is NOT part of Darwin's theory of natural selection?", "type": "MCQ", "id": "4e6268e24ec5", "choiceA": "Traits are heritable", "choiceB": "Offspring vary in their traits", "choiceC": "Species produce more offspring than the environment can support", "choiceD": "Acquired traits are inherited", "answer": "D", "explanation": "D = Lamarck (wrong). A, B, C = Darwin's observations. D is NOT part of Darwin's theory (acquired traits NOT inherited)."}, {"text": "The Hardy-Weinberg principle describes:", "type": "MCQ", "id": "9cb8a4c72e04", "choiceA": "How evolution always happens", "choiceB": "Conditions under which evolution does NOT happen (no change in allele frequencies)", "choiceC": "How to calculate mutation rates", "choiceD": "How fossils form", "answer": "B", "explanation": "Hardy-Weinberg: describes conditions where NO EVOLUTION occurs (no mutation, no selection, no drift, no gene flow, large population, random mating). Real populations usually violate these → evolution happens."}, {"text": "A population that is NOT evolving (Hardy-Weinberg equilibrium) must have:", "type": "MCQ", "id": "89e473d2e796", "choiceA": "Small population size", "choiceB": "No mutations", "choiceC": "Strong selection", "choiceD": "Non-random mating", "answer": "B", "explanation": "Hardy-Weinberg equilibrium requires: no mutation, no selection, no drift (large pop), no gene flow, random mating. B is correct. A, C, D all violate equilibrium."}, {"text": "Which of the following is an example of artificial selection?", "type": "MCQ", "id": "adf17c9bdaec", "choiceA": "Peppered moths evolving", "choiceB": "Darwin's finches", "choiceC": "Dog breeding (humans selecting for traits)", "choiceD": "Antibiotic resistance", "answer": "C", "explanation": "Artificial selection = humans choose which individuals reproduce. Dog breeds, crops, livestock = artificial selection. Natural selection = NATURE chooses (survival + reproduction)."}, {"text": "The main difference between artificial and natural selection is:", "type": "MCQ", "id": "ca02d248eead", "choiceA": "Artificial selection is faster", "choiceB": "The SELECTING AGENT (humans vs. environment)", "choiceC": "Artificial selection doesn't work", "choiceD": "Natural selection only happens in the wild", "answer": "B", "explanation": "Artificial = humans decide who reproduces. Natural = environment (survival + reproduction) decides. Both change allele frequencies, but selecting agent is different."}];
+const __INJECTED_SET1__ = [
+  {
+    "text": "Which of the following is an abiotic factor?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Bacteria in soil",
+    "choiceB": "Fallen leaves",
+    "choiceC": "Temperature",
+    "choiceD": "Fungus on a tree",
+    "answer": "C",
+    "explanation": "Abiotic factors are nonliving physical factors. Temperature is physical; the others are biotic (living or were once alive)."
+  },
+  {
+    "text": "What is the difference between habitat and niche?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Habitat is where an organism lives; niche is its role",
+    "choiceB": "Habitat is the role; niche is the location",
+    "choiceC": "They are the same thing",
+    "choiceD": "Habitat is for plants; niche is for animals",
+    "answer": "A",
+    "explanation": "Habitat = 'address' (where it lives); Niche = 'profession' (what it does, how it survives)."
+  },
+  {
+    "text": "In a mutualistic relationship:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "One organism benefits, the other is harmed",
+    "choiceB": "Both organisms benefit",
+    "choiceC": "One benefits, other is unaffected",
+    "choiceD": "Both are harmed",
+    "answer": "B",
+    "explanation": "Mutualism = 'mutual' benefit. Example: bees get nectar, flowers get pollinated."
+  },
+  {
+    "text": "A remora fish attaches to a shark and gets food scraps while the shark is unaffected. This is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutualism",
+    "choiceB": "Commensalism",
+    "choiceC": "Parasitism",
+    "choiceD": "Predation",
+    "answer": "B",
+    "explanation": "Commensalism: one benefits (+), other is neither helped nor harmed (0). Remora gets food; shark doesn't care."
+  },
+  {
+    "text": "Which type of symbiosis involves one organism living on or inside another and harming it?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutualism",
+    "choiceB": "Commensalism",
+    "choiceC": "Parasitism",
+    "choiceD": "Coevolution",
+    "answer": "C",
+    "explanation": "Parasitism: parasite benefits (+), host is harmed (-). Example: tapeworm in human intestine."
+  },
+  {
+    "text": "Which of the following is a BIOTIC factor in a forest ecosystem?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Sunlight filtering through leaves",
+    "choiceB": "Fallen pine needles on the forest floor",
+    "choiceC": "Moisture in the air",
+    "choiceD": "Granite rock formations",
+    "answer": "B",
+    "explanation": "Fallen pine needles were once alive (part of a living organism) → biotic. Sunlight, moisture, and rocks are abiotic (never alive)."
+  },
+  {
+    "text": "A species' niche includes all of the following EXCEPT:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "What it eats",
+    "choiceB": "Where it lives (habitat)",
+    "choiceC": "How it obtains energy",
+    "choiceD": "Its role in the ecosystem",
+    "answer": "B",
+    "explanation": "Habitat (where it lives) is separate from niche (what it DOES). Niche = role in ecosystem, not just location."
+  },
+  {
+    "text": "Two bird species eat the same type of seed in the same tree. This is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Predation",
+    "choiceB": "Mutualism",
+    "choiceC": "Competition",
+    "choiceD": "Commensalism",
+    "answer": "C",
+    "explanation": "Competition = two species fighting for the SAME limited resource (seeds in this case)."
+  },
+  {
+    "text": "A tick feeding on a dog is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutualism",
+    "choiceB": "Commensalism",
+    "choiceC": "Parasitism",
+    "choiceD": "Predation",
+    "answer": "C",
+    "explanation": "Tick benefits (+), dog is harmed (-) → parasitism. The tick is the parasite, the dog is the host."
+  },
+  {
+    "text": "Lichens (fungus + algae living together) are an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Parasitism",
+    "choiceB": "Commensalism",
+    "choiceC": "Mutualism",
+    "choiceD": "Competition",
+    "answer": "C",
+    "explanation": "Fungus provides structure/protection; algae do photosynthesis and feed the fungus. BOTH benefit → mutualism."
+  },
+  {
+    "text": "Georges Cuvier contributed to evolutionary theory by:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Proving species are fixed",
+    "choiceB": "Discovering natural selection",
+    "choiceC": "Showing that extinctions have occurred (fossil evidence)",
+    "choiceD": "Proving Lamarck was right",
+    "answer": "C",
+    "explanation": "Cuvier: studied fossils, proved extinctions happened. But he believed in CATASTROPHISM (sudden disasters), not evolution."
+  },
+  {
+    "text": "Homologous structures provide evidence for evolution because they:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Have the same function",
+    "choiceB": "Have different structures",
+    "choiceC": "Share a common ancestral structure but have different functions",
+    "choiceD": "Are found only in fossils",
+    "answer": "C",
+    "explanation": "Homologous = same bones (common ancestor), different functions (adapted to different niches). Whale flipper vs. human arm = same bones, different uses."
+  },
+  {
+    "text": "Which of the following is an example of natural selection in action?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A giraffe stretches its neck and passes the longer neck to offspring",
+    "choiceB": "Bacteria evolve resistance to antibiotics",
+    "choiceC": "A bear learns to fish and teaches cubs",
+    "choiceD": "A plant acquires a mutation and keeps it to itself",
+    "answer": "B",
+    "explanation": "Bacteria + antibiotic resistance = natural selection. Random mutation → survival advantage → reproduce more → allele frequency changes. A = Lamarck (wrong). C = learned behavior (not genetic). D = doesn't reproduce."
+  },
+  {
+    "text": "How many species of finches did Darwin identify on Galapagos?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "1",
+    "choiceB": "3",
+    "choiceC": "13",
+    "choiceD": "50",
+    "answer": "C",
+    "explanation": "Only 1 finch species on South American mainland, but 13 species on Galapagos (one island, many niches)."
+  },
+  {
+    "text": "Antibiotic resistance in bacteria evolves through:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Lamarckian inheritance",
+    "choiceB": "Natural selection (mutation + reproduction)",
+    "choiceC": "Only genetic drift",
+    "choiceD": "Only migration",
+    "answer": "B",
+    "explanation": "Bacteria mutate randomly. Some mutations happen to confer antibiotic resistance. Antibiotic kills non-resistant bacteria → resistant bacteria reproduce → resistance spreads. Natural selection!"
+  }
+];
+const __INJECTED_SET2__ = [
+  {
+    "text": "Mimicry is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Blending in with the environment",
+    "choiceB": "Resembling another species for protection",
+    "choiceC": "Changing color with temperature",
+    "choiceD": "Looking like a rock",
+    "answer": "B",
+    "explanation": "Mimicry = copying another species. Viceroy butterflies mimic Monarchs (both are toxic)."
+  },
+  {
+    "text": "Camouflage is essentially a form of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutualism",
+    "choiceB": "Visual mimicry",
+    "choiceC": "Parasitism",
+    "choiceD": "Commensalism",
+    "answer": "B",
+    "explanation": "Camouflage = blending in with surroundings. It's visual mimicry of the environment (e.g., stone plants look like rocks)."
+  },
+  {
+    "text": "Darwin's voyage on the HMS Beagle took place in what year?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "1831",
+    "choiceB": "1859",
+    "choiceC": "1809",
+    "choiceD": "1871",
+    "answer": "A",
+    "explanation": ""
+  },
+  {
+    "text": "Which is NOT one of Darwin's observations for natural selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Traits are often heritable",
+    "choiceB": "Offspring vary in their heritable traits",
+    "choiceC": "Species produce more offspring than environment can support",
+    "choiceD": "Poorly adapted individuals never produce offspring",
+    "answer": "D",
+    "explanation": "'Never' is too absolute. Poorly adapted individuals CAN produce some offspring, just fewer than well-adapted individuals."
+  },
+  {
+    "text": "According to natural selection, which individuals survive and reproduce most?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "The strongest",
+    "choiceB": "The fastest",
+    "choiceC": "Individuals with favorable heritable traits for their environment",
+    "choiceD": "The oldest",
+    "answer": "C",
+    "explanation": "Fitness = survive AND reproduce. It's about having traits that work in YOUR specific environment."
+  },
+  {
+    "text": "What is a species?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A group that lives in the same area",
+    "choiceB": "A group that can interbreed and produce viable, fertile offspring",
+    "choiceC": "A group that looks similar",
+    "choiceD": "A group that eats the same food",
+    "answer": "B",
+    "explanation": "Species definition: can produce VIABLE (alive) + FERTILE (can reproduce) offspring. Mules are sterile → donkey + horse are different species."
+  },
+  {
+    "text": "Why are mules sterile?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They have too many chromosomes",
+    "choiceB": "They are hybrids of two different species",
+    "choiceC": "They are genetically defective",
+    "choiceD": "They don't live long enough",
+    "answer": "B",
+    "explanation": "Mule = male donkey + female horse. Different species → hybrid is sterile (can't produce offspring of its own)."
+  },
+  {
+    "text": "Which is an example of a homologous structure?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Bird wing and insect wing",
+    "choiceB": "Whale flipper and human arm",
+    "choiceC": "Fish fin and dolphin flipper",
+    "choiceD": "Eagle wing and bat wing",
+    "answer": "B",
+    "explanation": "Homologous = same bones, different function, common ancestor. Whale flipper & human arm have same bone structure (humerus, radius, ulna)."
+  },
+  {
+    "text": "Analogous structures:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Have same structure but different functions",
+    "choiceB": "Have same function but different structures",
+    "choiceC": "Are vestigial",
+    "choiceD": "Are found only in fossils",
+    "answer": "B",
+    "explanation": "Analogous = same function, different structure, NO common ancestor. Bird wings (bones) vs. insect wings (chitin) both fly but different structure."
+  },
+  {
+    "text": "Which is a vestigial structure in humans?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Heart",
+    "choiceB": "Tail bone (coccyx)",
+    "choiceC": "Liver",
+    "choiceD": "Brain",
+    "answer": "B",
+    "explanation": "Coccyx (tail bone) is vestigial — remnant of ancestral tail. We don't have tails anymore, but still have the bone."
+  },
+  {
+    "text": "The principle of superposition states that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Older rock layers are on the bottom",
+    "choiceB": "Newer rock layers are on the bottom",
+    "choiceC": "All rock layers are the same age",
+    "choiceD": "Fossils can't be dated",
+    "answer": "A",
+    "explanation": "Superposition: bottom = oldest (deposited first). More primitive creatures in older (bottom) rock layers."
+  },
+  {
+    "text": "Which mechanism of evolution adds NEW alleles to the gene pool?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Migration",
+    "choiceC": "Genetic drift",
+    "choiceD": "Mutation",
+    "answer": "D",
+    "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, migration, drift only change frequencies of EXISTING alleles."
+  },
+  {
+    "text": "Stabilizing selection favors:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Extreme phenotypes",
+    "choiceB": "Intermediate phenotypes",
+    "choiceC": "Both extremes",
+    "choiceD": "All phenotypes equally",
+    "answer": "B",
+    "explanation": "Stabilizing = 'keeps the status quo.' Favors AVERAGE. Example: human birth weight (not too small, not too big)."
+  },
+  {
+    "text": "Peppered moths during Industrial Revolution are an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Stabilizing selection",
+    "choiceB": "Directional selection",
+    "choiceC": "Disruptive selection",
+    "choiceD": "Artificial selection",
+    "answer": "B",
+    "explanation": "Directional = shifts population toward one extreme. Pollution darkened trees → dark moths had advantage → population shifted toward dark."
+  },
+  {
+    "text": "Biogeography is the study of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Fossils",
+    "choiceB": "Embryos",
+    "choiceC": "Geographic distribution of species",
+    "choiceD": "Homologous structures",
+    "answer": "C",
+    "explanation": "Biogeography = where species live. Explains why similar environments (Antarctic vs. Arctic) have different species (penguins vs. polar bears)."
+  },
+  {
+    "text": "What does 'descent with modification' mean?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Offspring are identical to parents",
+    "choiceB": "Offspring share characteristics with ancestors but accumulate modifications",
+    "choiceC": "Only the strongest survive",
+    "choiceD": "",
+    "answer": "B",
+    "explanation": "Darwin's definition of evolution: organisms share common ancestor, but accumulate changes (adaptations) over generations."
+  },
+  {
+    "text": "The modern definition of evolution is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Survival of the fittest",
+    "choiceB": "Change in relative frequency of alleles in a population over time",
+    "choiceC": "Descent with modification",
+    "choiceD": "Inheritance of acquired traits",
+    "answer": "B",
+    "explanation": ""
+  },
+  {
+    "text": "A gene pool is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A swimming pool for genes",
+    "choiceB": "All alleles present in a population",
+    "choiceC": "Only the dominant alleles",
+    "choiceD": "The DNA of one individual",
+    "answer": "B",
+    "explanation": "Gene pool = all alleles in a population. Example: in a population of 100 flowers, gene pool includes all alleles for petal color."
+  },
+  {
+    "text": "Who proposed that Earth is very old (gradualism)?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Georges Cuvier",
+    "choiceB": "James Hutton",
+    "choiceC": "Charles Lyell",
+    "choiceD": "Thomas Malthus",
+    "answer": "B",
+    "explanation": "Hutton: geological forces operate SLOWLY over millions of years = gradualism. Earth must be very old for evolution to occur."
+  },
+  {
+    "text": "Who proposed uniformitarianism?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Georges Cuvier",
+    "choiceB": "James Hutton",
+    "choiceC": "Charles Lyell",
+    "choiceD": "Thomas Malthus",
+    "answer": "C",
+    "explanation": "Lyell: mechanisms of change are CONSTANT over time (same processes today as in past). Incorporated Hutton's gradualism."
+  },
+  {
+    "text": "Thomas Malthus influenced Darwin with his idea that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Population grows faster than food supply",
+    "choiceB": "Earth is very old",
+    "choiceC": "Species are fixed",
+    "choiceD": "Fossils are important",
+    "answer": "A",
+    "explanation": "Malthus: population grows exponentially, but food grows linearly. Limited by war, famine, disease → 'struggle for existence' in Darwin."
+  },
+  {
+    "text": "Lamarck's theory of evolution was based on:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Inheritance of acquired characteristics",
+    "choiceC": "Mutation",
+    "choiceD": "Genetic drift",
+    "answer": "B",
+    "explanation": "Lamarck was WRONG: he thought stretching your neck (acquired trait) would be passed to offspring. Acquired traits are NOT inherited."
+  },
+  {
+    "text": "Why was Lamarck wrong?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "1831",
+    "choiceB": "1859",
+    "choiceC": "1809",
+    "choiceD": "1871",
+    "answer": "B",
+    "explanation": "1859 — 28 years after his Beagle voyage. He delayed publishing because he didn't have enough evidence (no genetics yet)."
+  },
+  {
+    "text": "What are adaptations?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Characteristics that harm survival",
+    "choiceB": "Inherited characteristics that increase chance of survival",
+    "choiceC": "Acquired traits",
+    "choiceD": "Random mutations only",
+    "answer": "B",
+    "explanation": "Adaptation = inherited trait that increases fitness (survive + reproduce). Example: camouflage helps avoid predators."
+  },
+  {
+    "text": "Fossils are:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Living organisms",
+    "choiceB": "Remains or imprints of once-living organisms",
+    "choiceC": "Only dinosaur bones",
+    "choiceD": "Rocks that look like organisms",
+    "answer": "B",
+    "explanation": "Fossils = remains (bones, shells) or imprints (footprints, leaves) of once-living organisms found in rock layers."
+  },
+  {
+    "text": "Darwin's finches on Galapagos had different:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Feather colors",
+    "choiceB": "Beak sizes and shapes",
+    "choiceC": "Wing spans",
+    "choiceD": "Leg lengths",
+    "answer": "B",
+    "explanation": "Finch beaks varied by island → associated with diet. Different food sources → different beak adaptations."
+  },
+  {
+    "text": "What did Darwin conclude about finch evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Finches were created separately on each island",
+    "choiceB": "Original finches reached islands and changed over generations",
+    "choiceC": "Finches flew from Europe",
+    "choiceD": "Finches don't evolve",
+    "answer": "B",
+    "explanation": "Descent with modification: original finches from mainland dispersed to different islands, accumulated adaptations over generations."
+  },
+  {
+    "text": "Which of the following is direct evidence for evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Peppered moths",
+    "choiceB": "Soapberry bugs",
+    "choiceC": "Drug-resistant bacteria",
+    "choiceD": "All of the above",
+    "answer": "D",
+    "explanation": "All are direct observations of evolution happening NOW. Bacteria evolve quickly (fast reproduction + mutation) → drug resistance."
+  },
+  {
+    "text": "Homology provides evidence for:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Convergent evolution",
+    "choiceB": "Divergent evolution (common ancestry)",
+    "choiceC": "Spontaneous generation",
+    "choiceD": "Creationism",
+    "answer": "B",
+    "explanation": "Homologous structures = divergent evolution from common ancestor. Different species adapted same bones for different functions."
+  },
+  {
+    "text": "Vestigial structures provide evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They are useful",
+    "choiceB": "They show common ancestry with reduced function",
+    "choiceC": "They are brand new",
+    "choiceD": "They prove Lamarck was right",
+    "answer": "B",
+    "explanation": "Vestigial = reduced/nonfunctional structures from ancestor. Whale pelvic bones = ancestor had legs, whales don't need them anymore."
+  },
+  {
+    "text": "Embryology provides evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Embryos of vertebrates look similar",
+    "choiceB": "Embryos are completely different",
+    "choiceC": "Embryos don't matter",
+    "choiceD": "Only mammals have embryos",
+    "answer": "A",
+    "explanation": "Early embryos of fish, chickens, humans look very similar → evidence of common ancestry (vertebrate ancestor)."
+  },
+  {
+    "text": "Conserved genes (like cytochrome c) provide evidence for evolution because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "They change rapidly",
+    "choiceB": "They are highly similar across species",
+    "choiceC": "They don't exist",
+    "choiceD": "They only exist in bacteria",
+    "answer": "B",
+    "explanation": "Important genes DON'T change much over time (conserved). Similar cytochrome c across species → common ancestry."
+  },
+  {
+    "text": "The fossil record provides evidence for evolution by showing:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "No change over time",
+    "choiceB": "Simple to complex over millions of years",
+    "choiceC": "Only extinct species",
+    "choiceD": "Fossils are fake",
+    "answer": "B",
+    "explanation": "Fossil record: older layers (bottom) have simpler organisms; newer layers (top) have more complex organisms → evolution over time."
+  },
+  {
+    "text": "Biogeography explains why:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Similar environments have similar species",
+    "choiceB": "Similar environments can have different species",
+    "choiceC": "All islands have the same species",
+    "choiceD": "Continents don't move",
+    "answer": "B",
+    "explanation": "Penguins (Antarctic) vs. polar bears (Arctic) — similar cold environments, but different species because of different ancestors + continental drift."
+  },
+  {
+    "text": "Continental drift (Pangaea) explains:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Why all species are the same everywhere",
+    "choiceB": "Why species on islands resemble those on nearest mainland",
+    "choiceC": "Why fossils are fake",
+    "choiceD": "Why evolution doesn't happen",
+    "answer": "B",
+    "explanation": "Island biogeography: species on islands resemble nearest mainland because ancestors migrated from mainland."
+  },
+  {
+    "text": "Which is an example of convergent evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Whale flipper and human arm",
+    "choiceB": "Bird wings and insect wings",
+    "choiceC": "Fish fins and dolphin flippers",
+    "choiceD": "All of the above",
+    "answer": "B",
+    "explanation": "Convergent = unrelated species evolve similar traits. Bird wings + insect wings both for flying, but different structure (no common ancestor for wings)."
+  },
+  {
+    "text": "Which is an example of divergent evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Bird wings and insect wings",
+    "choiceB": "Whale flipper and human arm",
+    "choiceC": "Fish fins and dolphin flippers",
+    "choiceD": "All of the above",
+    "answer": "B",
+    "explanation": "Divergent = related species evolve different traits. Whale flipper + human arm have same bones (common ancestor), different function."
+  },
+  {
+    "text": "Mutation is the ultimate source of genetic variation because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "It creates new alleles",
+    "choiceB": "It removes alleles",
+    "choiceC": "It doesn't do anything",
+    "choiceD": "It only happens in plants",
+    "answer": "A",
+    "explanation": "Mutation = only mechanism that creates NEW alleles. Other mechanisms (selection, drift, migration) only change frequencies of existing alleles."
+  },
+  {
+    "text": "Migration (gene flow) changes allele frequencies by:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Creating new alleles",
+    "choiceB": "Transferring genes from one population to another",
+    "choiceC": "Removing alleles",
+    "choiceD": "Not doing anything",
+    "answer": "B",
+    "explanation": "Gene flow = movement of genes between populations. Example: pollen blows from one flower population to another → transfers alleles."
+  },
+  {
+    "text": "Genetic drift is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Selection based on fitness",
+    "choiceB": "Change in allele frequency due to chance events",
+    "choiceC": "Mutation",
+    "choiceD": "Migration",
+    "answer": "B",
+    "explanation": "Genetic drift = random chance. Important in SMALL populations. Example: natural disaster kills randomly → allele frequencies change by chance."
+  },
+  {
+    "text": "In directional selection, the population shifts toward:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Intermediate phenotypes",
+    "choiceB": "Both extremes",
+    "choiceC": "One extreme",
+    "choiceD": "No change",
+    "answer": "C",
+    "explanation": "Directional = shifts toward ONE extreme. Example: large beaks favored during drought (large seeds) → population shifts toward large beaks."
+  },
+  {
+    "text": "In disruptive selection, the population favors:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Intermediate phenotypes",
+    "choiceB": "Both extremes (NOT intermediate)",
+    "choiceC": "One extreme",
+    "choiceD": "No change",
+    "answer": "B",
+    "explanation": "Disruptive = favors BOTH extremes, eliminates intermediate. Example: small beaks for small seeds, large beaks for large seeds, medium beaks can't do either well."
+  },
+  {
+    "text": "Which of the following is NOT a mechanism of evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mutation",
+    "choiceB": "Natural selection",
+    "choiceC": "Acquired characteristics",
+    "choiceD": "Genetic drift",
+    "answer": "C",
+    "explanation": "Acquired characteristics (Lamarck) are NOT inherited → NOT a mechanism of evolution. Only genetic changes matter."
+  },
+  {
+    "text": "An ecologist studies how wolves (predators) affect deer populations in a forest. This is a study of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Abiotic factors",
+    "choiceB": "Community interactions",
+    "choiceC": "Nutrient cycles only",
+    "choiceD": "Biogeography",
+    "answer": "B",
+    "explanation": "Predator-prey relationships are community interactions — how different species in a community affect each other."
+  },
+  {
+    "text": "Batesian mimicry occurs when:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A harmful species mimics a harmless one",
+    "choiceB": "A harmless species mimics a harmful one",
+    "choiceC": "Two harmful species look like each other",
+    "choiceD": "An organism blends in with the environment",
+    "answer": "B",
+    "explanation": "Batesian mimicry: HARMLESS species mimics HARMFUL one for protection. Example: harmless flies that look like wasps."
+  },
+  {
+    "text": "Mullerian mimicry occurs when:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "A harmless species mimics a harmful one",
+    "choiceB": "Two or more harmful species resemble each other",
+    "choiceC": "An organism blends in with environment",
+    "choiceD": "A parasite mimics its host",
+    "answer": "B",
+    "explanation": "Mullerian: MULTIPLE harmful species evolve to look similar. Predators learn faster (one bad experience = avoid all of them)."
+  },
+  {
+    "text": "A walking stick insect looks like a twig. This is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Mimicry",
+    "choiceB": "Camouflage",
+    "choiceC": "Mutualism",
+    "choiceD": "Batesian mimicry",
+    "answer": "B",
+    "explanation": "Camouflage = resembling the ENVIRONMENT (twigs, leaves, rocks). Mimicry = resembling ANOTHER ORGANISM."
+  },
+  {
+    "text": "Coevolution occurs because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "One species evolves in isolation",
+    "choiceB": "Two species evolve in response to each other",
+    "choiceC": "The environment changes randomly",
+    "choiceD": "Mutations always happen in pairs",
+    "answer": "B",
+    "explanation": "Coevolution: two species evolve together, each responding to changes in the other. Example: flowers evolve tube length → pollinators evolve tongue length."
+  },
+  {
+    "text": "Darwin's concept of 'descent with modification' means that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Offspring are exact copies of parents",
+    "choiceB": "Species are fixed and unchanging",
+    "choiceC": "Offspring share characteristics with ancestors but accumulate changes",
+    "choiceD": "Acquired traits are passed to offspring",
+    "answer": "C",
+    "explanation": "Descent with modification = common ancestry + accumulated changes over generations. Key insight: species change over time but share history."
+  },
+  {
+    "text": "The modern definition of evolution focuses on changes in:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Individual organisms",
+    "choiceB": "Physical environment only",
+    "choiceC": "Allele frequencies in a population",
+    "choiceD": "Number of species only",
+    "answer": "C",
+    "explanation": "Modern evolution = change in ALLELE FREQUENCIES in a population over time. NOT about individual change (individuals don't evolve, populations do)."
+  },
+  {
+    "text": "A gene pool includes:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only dominant alleles",
+    "choiceB": "Only recessive alleles",
+    "choiceC": "All alleles for all genes in a population",
+    "choiceD": "Only mutations",
+    "answer": "C",
+    "explanation": "Gene pool = ALL alleles for ALL genes in a population. Includes dominant, recessive, and everything in between."
+  },
+  {
+    "text": "Which statement about species is CORRECT?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All members of a species look identical",
+    "choiceB": "A species can only live in one habitat",
+    "choiceC": "Members of a species can interbreed and produce fertile offspring",
+    "choiceD": "A species never changes over time",
+    "answer": "C",
+    "explanation": "Biological species concept: can interbreed AND produce VIABLE (alive) + FERTILE (can reproduce) offspring. Sterile = different species."
+  },
+  {
+    "text": "James Hutton's idea of GRADUALISM proposed that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Earth is young (few thousand years)",
+    "choiceB": "Geological changes happen slowly over millions of years",
+    "choiceC": "Catastrophes shape Earth's surface",
+    "choiceD": "Fossils are fake",
+    "answer": "B",
+    "explanation": "Gradualism: slow, steady changes over LONG time. Implies Earth must be VERY OLD → important for Darwin (needs time for evolution)."
+  },
+  {
+    "text": "Charles Lyell's uniformitarianism built on Hutton's work by stating:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Catastrophes are the only mechanism of change",
+    "choiceB": "Mechanisms of change are CONSTANT over time",
+    "choiceC": "Earth is only 6000 years old",
+    "choiceD": "Fossils are irrelevant",
+    "answer": "B",
+    "explanation": "Uniformitarianism: SAME processes that shape Earth TODAY (erosion, volcanoes) also shaped Earth in the PAST. Mechanisms don't change."
+  },
+  {
+    "text": "Thomas Malthus influenced Darwin with his observation that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Populations grow faster than food supply",
+    "choiceB": "All organisms survive equally",
+    "choiceC": "Resources are unlimited",
+    "choiceD": "Predator-prey relationships don't matter",
+    "answer": "A",
+    "explanation": "Malthus: population grows EXPONENTIALLY, but food grows LINEARLY → limited resources → 'struggle for existence' (Darwin's term)."
+  },
+  {
+    "text": "Lamarck proposed that evolution occurs through:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Mutation",
+    "choiceC": "Inheritance of acquired characteristics",
+    "choiceD": "Genetic drift",
+    "answer": "C",
+    "explanation": "Lamarck was WRONG: he thought using a body part more → bigger/stronger → passed to offspring. Acquired traits (muscles from gym) are NOT inherited."
+  },
+  {
+    "text": "Why is Lamarck's theory incorrect?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "He didn't collect enough data",
+    "choiceB": "Acquired characteristics cannot be inherited",
+    "choiceC": "He didn't study fossils",
+    "choiceD": "He didn't travel enough",
+    "answer": "B",
+    "explanation": "Only GENETIC changes (in DNA/germline) are inherited. Body changes from use/disuse (acquired) don't affect DNA passed to offspring."
+  },
+  {
+    "text": "Darwin observed that finches on different Galapagos islands had different:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Feather colors",
+    "choiceB": "Beak sizes and shapes",
+    "choiceC": "Wing spans",
+    "choiceD": "Leg lengths",
+    "answer": "B",
+    "explanation": "Finch beaks = classic example. Different islands = different food sources → different beak adaptations (large for seeds, thin for insects, etc.)."
+  },
+  {
+    "text": "The number of finch species on the Galapagos Islands compared to the mainland is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "He didn't have enough evidence",
+    "choiceB": "He was afraid of backlash from the Church",
+    "choiceC": "Both A and B",
+    "choiceD": "He forgot about his theory",
+    "answer": "C",
+    "explanation": "Darwin knew his theory would be CONTROVERSIAL (conflicted with creationism). Also wanted MORE evidence before publishing."
+  },
+  {
+    "text": "Which of the following is NOT a line of evidence for evolution?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Homologous structures",
+    "choiceB": "The fossil record",
+    "choiceC": "Astrology",
+    "choiceD": "Biogeography",
+    "answer": "C",
+    "explanation": "Astrology is NOT science. Homologous structures, fossils, biogeography, embryology, genetics = all evidence for evolution."
+  },
+  {
+    "text": "Analogous structures provide evidence for evolution because they show:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Common ancestry",
+    "choiceB": "Convergent evolution (similar solutions to similar problems)",
+    "choiceC": "Vestigial traits",
+    "choiceD": "Fossil connections",
+    "answer": "B",
+    "explanation": "Analogous = same function, different structure, NO common ancestor. Shows CONVERGENT evolution: similar environmental pressures → similar adaptations."
+  },
+  {
+    "text": "Vestigial structures are evidence for evolution because they:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Show how organisms will evolve in the future",
+    "choiceB": "Are remnants of structures that were functional in ancestors",
+    "choiceC": "Prove that evolution always leads to more complexity",
+    "choiceD": "Are found only in plants",
+    "answer": "B",
+    "explanation": "Vestigial = reduced, nonfunctional structures from ancestors. Whale pelvic bones = ancestor had legs, whales don't need them anymore."
+  },
+  {
+    "text": "Which of the following is an example of a vestigial structure in humans?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Heart",
+    "choiceB": "Wisdom teeth",
+    "choiceC": "Liver",
+    "choiceD": "Kidney",
+    "answer": "B",
+    "explanation": "Wisdom teeth = vestigial. Our ancestors had larger jaws (needed all teeth). Modern humans have smaller jaws → wisdom teeth often impacted (useless + problematic)."
+  },
+  {
+    "text": "Cytochrome c is a conserved protein found in:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only humans",
+    "choiceB": "Only animals",
+    "choiceC": "Almost all living organisms",
+    "choiceD": "Only plants",
+    "answer": "C",
+    "explanation": "Cytochrome c = electron transport chain protein. Found in almost ALL organisms (very important). Similar across species → common ancestry."
+  },
+  {
+    "text": "The fossil record shows that:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Organisms have remained unchanged",
+    "choiceB": "Life has become more complex over time",
+    "choiceC": "Only large organisms fossilize",
+    "choiceD": "Fossils are irrelevant",
+    "answer": "B",
+    "explanation": "Fossil record: older rocks (bottom) = simpler organisms; newer rocks (top) = more complex organisms. Shows progression of life over billions of years."
+  },
+  {
+    "text": "Pangaea explains biogeographic patterns because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Continents have always been in the same place",
+    "choiceB": "All species evolved at the same time",
+    "choiceC": "Continents were once connected, allowing species to disperse before drifting apart",
+    "choiceD": "Fossils can't be explained by continental drift",
+    "answer": "C",
+    "explanation": "Pangaea: all continents connected → species could disperse. Then continents drifted apart → species isolated, evolved separately (biogeography evidence)."
+  },
+  {
+    "text": "Mutation is the ultimate source of genetic variation because it:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only removes alleles",
+    "choiceB": "Creates NEW alleles",
+    "choiceC": "Doesn't change DNA",
+    "choiceD": "Only happens in plants",
+    "answer": "B",
+    "explanation": "Only mutation creates NEW alleles (new genetic variations). Natural selection, drift, migration = only change frequencies of EXISTING alleles."
+  },
+  {
+    "text": "Genetic drift has the strongest effect on:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Large populations",
+    "choiceB": "Small populations",
+    "choiceC": "All populations equally",
+    "choiceD": "Only plant populations",
+    "answer": "B",
+    "explanation": "Genetic drift = random change in allele frequencies. STRONGER in small populations (chance events have bigger impact). Example: natural disaster wipes out most of small population."
+  },
+  {
+    "text": "The founder effect is a type of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Natural selection",
+    "choiceB": "Mutation",
+    "choiceC": "Genetic drift",
+    "choiceD": "Gene flow",
+    "answer": "C",
+    "explanation": "Founder effect = small group separates from main population → founds new population. Allele frequencies in new population = random (drift). Example: Amish populations (founder effect for certain genetic diseases)."
+  },
+  {
+    "text": "Stabilizing selection on human birth weight works because:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Extremely large AND extremely small babies have higher mortality",
+    "choiceB": "Only large babies survive",
+    "choiceC": "Only small babies survive",
+    "choiceD": "Birth weight doesn't matter",
+    "answer": "A",
+    "explanation": "Stabilizing = favors INTERMEDIATE. Very small babies (premature) and very large babies (difficult birth) both have higher death rates → intermediate = favored."
+  },
+  {
+    "text": "Directional selection on beak size in finches would occur if:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All seed sizes are equally available",
+    "choiceB": "Only large seeds are available (drought year)",
+    "choiceC": "Only small seeds are available",
+    "choiceD": "Beak size doesn't affect survival",
+    "answer": "B",
+    "explanation": "Directional = shifts population toward ONE extreme. Large beak = better at cracking large seeds. Drought → only large seeds available → large beak favored → population shifts toward large beaks."
+  },
+  {
+    "text": "Disruptive selection on beak size in finches would occur if:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Only medium seeds are available",
+    "choiceB": "Only large seeds AND only small seeds are available",
+    "choiceC": "All seed sizes are available",
+    "choiceD": "Beak size doesn't matter",
+    "answer": "B",
+    "explanation": "Disruptive = favors BOTH EXTREMES, eliminates intermediate. Large beaks for large seeds, small beaks for small seeds → medium beaks can't do either well → eliminated."
+  },
+  {
+    "text": "Peppered moth evolution during Industrial Revolution is an example of:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Stabilizing selection",
+    "choiceB": "Directional selection",
+    "choiceC": "Disruptive selection",
+    "choiceD": "No selection",
+    "answer": "B",
+    "explanation": "Directional: population shifted from mostly light → mostly dark. Pollution darkened tree bark → dark moths had camouflage advantage → population shifted toward dark."
+  },
+  {
+    "text": "Gene flow (migration) between populations tends to:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Increase genetic differences between populations",
+    "choiceB": "Decrease genetic differences between populations",
+    "choiceC": "Have no effect",
+    "choiceD": "Only affect plants",
+    "answer": "B",
+    "explanation": "Gene flow = transfer of alleles between populations. Makes populations MORE SIMILAR genetically. Without gene flow, populations diverge (become different)."
+  },
+  {
+    "text": "Which of the following is a requirement for natural selection to occur?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "All individuals must be identical",
+    "choiceB": "Traits must be heritable",
+    "choiceC": "Environment must never change",
+    "choiceD": "Population must be very small",
+    "answer": "B",
+    "explanation": "Natural selection REQUIRES heritable variation. If traits aren't heritable, selection can't change allele frequencies across generations."
+  },
+  {
+    "text": "Fitness, in evolutionary terms, means:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Being the strongest",
+    "choiceB": "Being the fastest",
+    "choiceC": "Surviving AND reproducing at a higher rate than others",
+    "choiceD": "Living the longest",
+    "answer": "C",
+    "explanation": "Fitness = survive + reproduce. An organism that lives 100 years but has 0 offspring has ZERO fitness. An organism that lives 2 years but has 10 offspring has HIGH fitness."
+  },
+  {
+    "text": "Which of the following is NOT part of Darwin's theory of natural selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Traits are heritable",
+    "choiceB": "Offspring vary in their traits",
+    "choiceC": "Species produce more offspring than the environment can support",
+    "choiceD": "Acquired traits are inherited",
+    "answer": "D",
+    "explanation": "D = Lamarck (wrong). A, B, C = Darwin's observations. D is NOT part of Darwin's theory (acquired traits NOT inherited)."
+  },
+  {
+    "text": "The Hardy-Weinberg principle describes:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "How evolution always happens",
+    "choiceB": "Conditions under which evolution does NOT happen (no change in allele frequencies)",
+    "choiceC": "How to calculate mutation rates",
+    "choiceD": "How fossils form",
+    "answer": "B",
+    "explanation": "Hardy-Weinberg: describes conditions where NO EVOLUTION occurs (no mutation, no selection, no drift, no gene flow, large population, random mating). Real populations usually violate these → evolution happens."
+  },
+  {
+    "text": "A population that is NOT evolving (Hardy-Weinberg equilibrium) must have:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Small population size",
+    "choiceB": "No mutations",
+    "choiceC": "Strong selection",
+    "choiceD": "Non-random mating",
+    "answer": "B",
+    "explanation": "Hardy-Weinberg equilibrium requires: no mutation, no selection, no drift (large pop), no gene flow, random mating. B is correct. A, C, D all violate equilibrium."
+  },
+  {
+    "text": "Which of the following is an example of artificial selection?",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Peppered moths evolving",
+    "choiceB": "Darwin's finches",
+    "choiceC": "Dog breeding (humans selecting for traits)",
+    "choiceD": "Antibiotic resistance",
+    "answer": "C",
+    "explanation": "Artificial selection = humans choose which individuals reproduce. Dog breeds, crops, livestock = artificial selection. Natural selection = NATURE chooses (survival + reproduction)."
+  },
+  {
+    "text": "The main difference between artificial and natural selection is:",
+    "type": "MCQ",
+    "id": "",
+    "choiceA": "Artificial selection is faster",
+    "choiceB": "The SELECTING AGENT (humans vs. environment)",
+    "choiceC": "Artificial selection doesn't work",
+    "choiceD": "Natural selection only happens in the wild",
+    "answer": "B",
+    "explanation": "Artificial = humans decide who reproduces. Natural = environment (survival + reproduction) decides. Both change allele frequencies, but selecting agent is different."
+  }
+];
 
 // ====================
 // INIT
