@@ -854,7 +854,7 @@ function makeSetCard(s, isMy) {
         <div class="card-actions">
             <button class="btn btn-success btn-sm" onclick="startQuiz('${s.id}','${isMy?'my':'shared'}')">🎯 练习</button>
             <button class="btn btn-secondary btn-sm" onclick="viewSet('${s.id}','${isMy?'my':'shared'}')">📖 查看</button>
-            ${isAdmin&&isMy?`<button class="btn btn-ghost btn-sm" onclick="delSet('${s.id}')">🗑️</button>`:''}
+            ${isAdmin?`<button class="btn btn-ghost btn-sm" onclick="editSetById('${s.id}','${isMy?'my':'shared'}')">✏️</button><button class="btn btn-ghost btn-sm" onclick="delSetByType('${s.id}','${isMy?'my':'shared'}')">🗑️</button>`:''}
         </div>
     </div>`;
 }
@@ -886,7 +886,7 @@ function viewSet(id, type) {
         <div class="detail-header">
             <div class="card-actions">
                 <button class="btn btn-success" onclick="startQuiz('${id}','${type}')">🎯 开始练习</button>
-                ${isAdmin&&type==='my'?`<button class="btn btn-secondary" onclick="editSet('${id}')">✏️ 编辑</button><button class="btn btn-ghost" onclick="delSet('${id}')">🗑️ 删除</button>`:''}
+                ${isAdmin?`<button class="btn btn-secondary" onclick="editSetById('${id}','${type}')">✏️ 编辑</button><button class="btn btn-ghost" onclick="delSetByType('${id}','${type}')">🗑️ 删除</button>`:''}
             </div>
         </div>
         ${qHtml}`;
@@ -961,7 +961,7 @@ function renderMd(text) {
 // ====================
 let curSetType = null;
 function initCreate() {
-    curSetId = null; editingSet = false;
+    curSetId = null; editingSet = false; curSetType = null; editingQId = null;
     document.getElementById('f-name').value='';
     document.getElementById('f-subject').value='';
     document.getElementById('f-grade').value='';
@@ -972,10 +972,13 @@ function initCreate() {
 }
 
 function editSet(id) {
-    const my = getMy();
-    const s = my.find(x=>x.id===id);
+    editSetById(id,'my');
+}
+function editSetById(id, type) {
+    const sets = type==='shared'?getShared():getMy();
+    const s = sets.find(x=>x.id===id);
     if (!s) return;
-    curSetId=id; editingSet=true;
+    curSetId=id; editingSet=true; curSetType=type;
     document.getElementById('f-name').value=s.name;
     document.getElementById('f-subject').value=s.subject||'';
     document.getElementById('f-grade').value=s.grade||'';
@@ -985,37 +988,53 @@ function editSet(id) {
     renderQLocal(s.qs||[]);
     showPage('create');
 }
+function delSetByType(id, type) {
+    delId=id; delType=type;
+    document.getElementById('del-msg').textContent='确定要删除这个习题集吗？此操作无法撤销。';
+    document.getElementById('modal-del').classList.add('show');
+}
 
 function saveSet() {
     const name = document.getElementById('f-name').value.trim();
     if (!name) { toast('请输入习题集名称','err'); return; }
-    const my = getMy();
     if (editingSet && curSetId) {
-        const s = my.find(x=>x.id===curSetId);
-        if (s) { Object.assign(s,{name,subject:document.getElementById('f-subject').value,grade:document.getElementById('f-grade').value,tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:document.getElementById('f-desc').value}); saveMy(my); toast('习题集已更新'); }
+        const sets = curSetType==='shared'?getShared():getMy();
+        const s = sets.find(x=>x.id===curSetId);
+        if (s) {
+            Object.assign(s,{name,subject:document.getElementById('f-subject').value,grade:document.getElementById('f-grade').value,tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:document.getElementById('f-desc').value});
+            if (curSetType==='shared') saveShared(sets); else saveMy(sets);
+            toast('习题集已更新');
+        }
     } else {
+        const my = getMy();
         const id = genId();
         my.unshift({id,name,subject:document.getElementById('f-subject').value,grade:document.getElementById('f-grade').value,tags:document.getElementById('f-tags').value.split(',').map(t=>t.trim()).filter(Boolean),desc:document.getElementById('f-desc').value,qs:[],isMy:true,created:new Date().toISOString()});
         saveMy(my);
-        curSetId=id; editingSet=true;
+        curSetId=id; editingSet=true; curSetType='my';
         document.getElementById('btn-save-set').textContent='💾 保存修改';
         toast('习题集已创建！现在添加题目');
     }
-    renderQLocal(curSetId ? (getMy().find(x=>x.id===curSetId)||{qs:[]}).qs||[] : []);
+    renderQLocal(curSetId ? ((curSetType==='shared'?getShared():getMy()).find(x=>x.id===curSetId)||{qs:[]}).qs||[] : []);
 }
 
 function renderQLocal(qs) {
     const el = document.getElementById('q-list');
     if (!qs||qs.length===0) { el.innerHTML=''; return; }
     el.innerHTML = '<div style="font-weight:700;margin-bottom:12px;">已添加题目：</div>' +
-        qs.map((q,i)=>`<div class="q-item"><div class="q-header"><span class="q-num">Q${i+1}</span><span class="card-badge s-default">${q.type==='MCQ'?'📋':'✍️'}</span></div><div class="q-text">${q.text.substring(0,80)}${q.text.length>80?'...':''}</div><div class="card-actions"><button class="btn btn-danger btn-sm" onclick="delQLocal('${q.id}')">🗑️ 删除</button></div></div>`).join('');
+        qs.map((q,i)=>{
+            let detail = q.text.substring(0,80)+(q.text.length>80?'...':'');
+            if(q.type==='MCQ') detail += `<div style="font-size:12px;color:var(--text-light);margin-top:4px;">${['A','B','C','D'].filter(l=>q['c'+l]).map(l=>l+(q.ans===l?'✓':'')+': '+q['c'+l]).join(' | ')}</div>`;
+            else if(q.ans) detail += `<div style="font-size:12px;color:var(--text-light);margin-top:4px;">答: ${q.ans}</div>`;
+            return `<div class="q-item"><div class="q-header"><span class="q-num">Q${i+1}</span><span class="card-badge s-default">${q.type==='MCQ'?'📋':'✍️'}</span></div><div class="q-text">${detail}</div>${q.exp?`<div class="q-exp">💡 ${q.exp}</div>`:''}<div class="card-actions"><button class="btn btn-secondary btn-sm" onclick="editQLocal('${q.id}')">✏️ 编辑</button><button class="btn btn-danger btn-sm" onclick="delQLocal('${q.id}')">🗑️ 删除</button></div></div>`;
+        }).join('');
 }
 
 function delQLocal(qId) {
-    const my=getMy(); const s=my.find(x=>x.id===curSetId);
+    const sets = curSetType==='shared'?getShared():getMy();
+    const s=sets.find(x=>x.id===curSetId);
     if (!s) return;
     s.qs=(s.qs||[]).filter(q=>q.id!==qId);
-    saveMy(my);
+    if (curSetType==='shared') saveShared(sets); else saveMy(sets);
     renderQLocal(s.qs);
 }
 
@@ -1023,6 +1042,7 @@ function delQLocal(qId) {
 // ADD QUESTION
 // ====================
 function openAddQ() {
+    editingQId=null;
     if (!curSetId) {
         saveSet();
         if (!curSetId) { toast('请先保存习题集名称','err'); return; }
@@ -1031,10 +1051,11 @@ function openAddQ() {
     document.getElementById('q-ans').value='A';
     document.getElementById('q-type').value='MCQ';
     toggleQType();
+    document.querySelector('#modal-q .modal-title').textContent='➕ 添加题目';
     document.getElementById('modal-q').classList.add('show');
 }
 
-function closeQModal() { document.getElementById('modal-q').classList.remove('show'); }
+function closeQModal() { editingQId=null; document.querySelector('#modal-q .modal-title').textContent='➕ 添加题目'; document.getElementById('modal-q').classList.remove('show'); }
 function toggleQType() {
     const t=document.getElementById('q-type').value;
     document.getElementById('mcq-f').style.display=t==='MCQ'?'block':'none';
@@ -1156,6 +1177,7 @@ function openAddGuide() {
     document.getElementById('g-name').value='';
     document.getElementById('g-subject').value='生物';
     document.getElementById('g-content').value='';
+    document.querySelector('#modal-guide .modal-title').textContent='📝 新建学习资料';
     document.getElementById('modal-guide').classList.add('show');
 }
 function editGuide(id) {
@@ -1165,9 +1187,10 @@ function editGuide(id) {
     document.getElementById('g-name').value=g.name;
     document.getElementById('g-subject').value=g.subject||'生物';
     document.getElementById('g-content').value=g.content||'';
+    document.querySelector('#modal-guide .modal-title').textContent='✏️ 编辑学习资料';
     document.getElementById('modal-guide').classList.add('show');
 }
-function closeGuideModal() { document.getElementById('modal-guide').classList.remove('show'); }
+function closeGuideModal() { document.querySelector('#modal-guide .modal-title').textContent='📝 新建学习资料'; document.getElementById('modal-guide').classList.remove('show'); }
 function addGuide() {
     const name=document.getElementById('g-name').value.trim();
     if (!name){toast('请输入资料名称','err');return;}
