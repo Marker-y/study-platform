@@ -144,6 +144,36 @@
         .quiz-feedback.right { background: rgba(16,185,129,0.1); border: 1px solid var(--success); color: #065F46; }
         .quiz-feedback.wrong { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); color: #991B1B; }
         .quiz-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+        /* Timer */
+        .timer-bar { display: flex; align-items: center; gap: 10px; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+        .timer-icon { font-size: 20px; }
+        .timer-display { font-size: 22px; font-weight: 900; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 72px; text-align: center; }
+        .timer-display.urgent { color: var(--danger); animation: timerpulse 0.6s ease-in-out infinite alternate; }
+        @keyframes timerpulse { from { opacity: 1; } to { opacity: 0.4; } }
+        .timer-fill-wrap { flex: 1; }
+        .timer-fill { height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+        .timer-fill-inner { height: 100%; background: var(--accent); border-radius: 3px; transition: width 1s linear; }
+        .timer-fill-inner.urgent { background: var(--danger); }
+        .timer-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 4px 6px; border-radius: 6px; }
+        .timer-btn:hover { background: var(--bg); }
+        /* Timer setup modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 300; }
+        .modal-overlay.hide { display: none; }
+        .modal-box { background: white; border-radius: 18px; padding: 30px; width: 400px; max-width: 95vw; box-shadow: 0 24px 64px rgba(0,0,0,0.2); }
+        .modal-title { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+        .modal-desc { font-size: 13px; color: var(--text-light); margin-bottom: 20px; line-height: 1.5; }
+        .timer-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+        .timer-preset { padding: 10px 6px; border: 2px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; font-size: 13px; font-weight: 700; transition: all 0.15s; }
+        .timer-preset:hover { border-color: var(--primary); color: var(--primary); }
+        .timer-preset.sel { border-color: var(--primary); background: rgba(37,99,235,0.08); color: var(--primary); }
+        .timer-custom { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 13px; color: var(--text-light); flex-wrap: wrap; }
+        .timer-custom input { width: 60px; padding: 7px 8px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; text-align: center; }
+        .timer-custom input:focus { outline: none; border-color: var(--primary); }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .progress-resume { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; display: flex; align-items: center; gap: 12px; }
+        .progress-resume-icon { font-size: 22px; }
+        .progress-resume-text { flex: 1; color: #047857; font-weight: 700; }
+        .no-timer-note { font-size: 12px; color: var(--text-light); text-align: center; margin-top: 8px; }
 
         /* Quiz result */
         .result-page { text-align: center; padding: 50px 20px; }
@@ -500,6 +530,37 @@ Answer: A" style="min-height:220px;font-family:'Consolas',monospace;font-size:13
             </div>
         </div>
         <div id="quiz-body"></div>
+    </div>
+
+    <!-- TIMER SETUP MODAL -->
+    <div class="modal-overlay hide" id="modal-timer">
+        <div class="modal-box">
+            <div class="modal-title">⏱️ 设置练习计时器</div>
+            <div class="modal-desc">设置答题时限，到时自动提交。也可以跳过计时器自由练习。</div>
+            <div class="progress-resume hide" id="resume-bar">
+                <div class="progress-resume-icon">📌</div>
+                <div class="progress-resume-text" id="resume-text"></div>
+                <button class="btn btn-success btn-sm" onclick="resumeFromSaved()">继续</button>
+            </div>
+            <div class="timer-presets">
+                <button class="timer-preset sel" onclick="setPreset(5, this)">5 分钟</button>
+                <button class="timer-preset" onclick="setPreset(10, this)">10 分钟</button>
+                <button class="timer-preset" onclick="setPreset(15, this)">15 分钟</button>
+                <button class="timer-preset" onclick="setPreset(30, this)">30 分钟</button>
+                <button class="timer-preset" onclick="setPreset(60, this)">1 小时</button>
+                <button class="timer-preset" onclick="setPreset(120, this)">2 小时</button>
+            </div>
+            <div class="timer-custom">
+                <span>自定义：</span>
+                <input type="number" id="timer-custom-min" min="1" max="120" placeholder="分钟" value="" oninput="clearPresets()">
+                <span>分钟（1-120）</span>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="startNoTimer()">⏭️ 跳过计时器</button>
+                <button class="btn btn-primary" onclick="confirmTimer()">▶️ 开始练习</button>
+            </div>
+            <div class="no-timer-note">提示：关闭计时器后可随时暂停，不会自动提交</div>
+        </div>
     </div>
 
 </div>
@@ -1155,24 +1216,171 @@ function confirmDel() {
 // QUIZ MODE
 // ====================
 let QZ={};
+let timerInterval=null;
+let pendingQuiz={};
+let selectedTimerMin=15;
+
 function startQuiz(id, type) {
     const sets=type==='shared'?getShared():getMy();
     const s=sets.find(x=>x.id===id);
     if (!s||!(s.qs&&s.qs.length>0)){toast('此习题集暂无题目','err');return;}
-    QZ={id,type,title:s.name,qs:s.qs,shuffled:[...s.qs].sort(()=>Math.random()-0.5),idx:0,score:0,wrong:0,done:false,answered:false};
+    pendingQuiz={id,type,name:s.name,subject:s.subject,qs:s.qs,total:s.qs.length};
+
+    // Check for saved progress
+    const savedProg=getQuizProgress(id);
+    const resumeBar=document.getElementById('resume-bar');
+    if (savedProg && savedProg.idx < s.qs.length) {
+        document.getElementById('resume-text').textContent=`上次练习到第 ${savedProg.idx+1}/${s.qs.length} 题，正确率 ${savedProg.score} 分`;
+        resumeBar.classList.remove('hide');
+    } else {
+        resumeBar.classList.add('hide');
+    }
+
+    // Reset preset selection
+    selectedTimerMin=15;
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    document.querySelector('.timer-preset')&&document.querySelector('.timer-preset').classList.add('sel');
+    document.getElementById('timer-custom-min').value='';
+    document.getElementById('modal-timer').classList.remove('hide');
+}
+
+function setPreset(min, btn) {
+    selectedTimerMin=min;
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    btn.classList.add('sel');
+    document.getElementById('timer-custom-min').value='';
+}
+function clearPresets() {
+    document.querySelectorAll('.timer-preset').forEach(b=>b.classList.remove('sel'));
+    const val=parseInt(document.getElementById('timer-custom-min').value)||0;
+    if (val>0&&val<=120) selectedTimerMin=val;
+}
+
+function resumeFromSaved() {
+    const saved=getQuizProgress(pendingQuiz.id);
+    if (!saved) { confirmTimer(); return; }
+    // Restore saved progress
+    pendingQuiz.shuffledOrder=saved.shuffledOrder;
+    pendingQuiz.savedIdx=saved.idx;
+    pendingQuiz.savedScore=saved.score;
+    pendingQuiz.savedWrong=saved.wrong;
+    pendingQuiz.savedTimerLeft=saved.timerLeft||null;
+    confirmTimer();
+}
+
+function confirmTimer() {
+    document.getElementById('modal-timer').classList.add('hide');
+    const s=pendingQuiz;
+    const total=s.qs.length;
+
+    let shuffled;
+    if (s.shuffledOrder) {
+        // Restore from saved order
+        shuffled=s.shuffledOrder.map(i=>s.qs[i]);
+    } else {
+        shuffled=[...s.qs].sort(()=>Math.random()-0.5);
+    }
+
+    QZ={
+        id:s.id, type:s.type,
+        title:s.name, subject:s.subject,
+        qs:s.qs, shuffled,
+        idx:s.savedIdx||0,
+        score:s.savedScore||0,
+        wrong:s.savedWrong||0,
+        done:false, answered:false,
+        timerMin:selectedTimerMin,
+        timerLeft:selectedTimerMin*60,
+        timerIntervalId:null
+    };
+
     document.getElementById('quiz-title').textContent='🎯 '+s.name;
-    document.getElementById('quiz-meta').textContent=`${subjE(s.subject)} ${s.subject||''} · ${s.qs.length} 题`;
+    document.getElementById('quiz-meta').textContent=`${subjE(s.subject)} ${s.subject||''} · ${total} 题`;
     showPage('quiz');
     renderQuiz();
+    if (selectedTimerMin>0) startTimer();
+}
+
+function startNoTimer() {
+    document.getElementById('modal-timer').classList.add('hide');
+    selectedTimerMin=0;
+    confirmTimer();
+}
+
+function startTimer() {
+    clearInterval(QZ.timerIntervalId||null);
+    QZ.timerIntervalId=null;
+    if (!QZ.timerLeft||QZ.timerLeft<=0) return;
+    QZ.timerIntervalId=setInterval(()=>{
+        if (!QZ||!QZ.timerLeft) { clearInterval(QZ.timerIntervalId); return; }
+        QZ.timerLeft--;
+        updateTimerDisplay();
+        saveQuizProgress();
+        if (QZ.timerLeft<=0) {
+            clearInterval(QZ.timerIntervalId);
+            QZ.done=true;
+            showResult();
+            toast('⏱️ 时间到！自动提交');
+        }
+    },1000);
+}
+
+function updateTimerDisplay() {
+    const el=document.getElementById('timer-disp');
+    const fill=document.getElementById('timer-fill-inner');
+    if (!el||!QZ) return;
+    const m=Math.floor(QZ.timerLeft/60);
+    const s=QZ.timerLeft%60;
+    el.textContent=`${m}:${s.toString().padStart(2,'0')}`;
+    const urgent=QZ.timerLeft<=60;
+    el.className='timer-display'+(urgent?' urgent':'');
+    if (fill) {
+        const pct=(QZ.timerLeft/(QZ.timerMin*60))*100;
+        fill.style.width=pct+'%';
+        fill.className='timer-fill-inner'+(urgent?' urgent':'');
+    }
+    const bar=document.getElementById('timer-bar-wrap');
+    if (bar) bar.style.display=QZ.timerLeft>0?'block':'none';
+}
+
+function toggleTimer() {
+    if (!QZ) return;
+    if (QZ.timerIntervalId) {
+        // Pause
+        clearInterval(QZ.timerIntervalId);
+        QZ.timerIntervalId=null;
+        document.getElementById('timer-pause-btn').textContent='▶';
+        document.getElementById('timer-pause-btn').title='继续计时';
+        toast('计时已暂停');
+    } else {
+        if (QZ.timerLeft>0) {
+            startTimer();
+            document.getElementById('timer-pause-btn').textContent='⏸';
+            document.getElementById('timer-pause-btn').title='暂停计时';
+            toast('计时继续');
+        }
+    }
 }
 
 function renderQuiz() {
-    const {shuffled,idx,score}=QZ;
+    const {shuffled,idx,score,timerMin,timerLeft}=QZ;
     if (idx>=shuffled.length){showResult();return;}
     const q=shuffled[idx];
     const total=shuffled.length;
+
+    const timerBar=QZ.timerMin>0?`
+        <div class="timer-bar" id="timer-bar-wrap">
+            <div class="timer-icon">⏱️</div>
+            <div class="timer-display" id="timer-disp">${Math.floor((timerLeft||0)/60)}:${((timerLeft||0)%60).toString().padStart(2,'0')}</div>
+            <div class="timer-fill-wrap">
+                <div class="timer-fill"><div class="timer-fill-inner" id="timer-fill-inner" style="width:${((timerLeft||0)/(timerMin*60))*100}%"></div></div>
+            </div>
+            <button class="timer-btn" id="timer-pause-btn" onclick="toggleTimer()" title="暂停计时">⏸</button>
+        </div>`:'';
+
     document.getElementById('quiz-body').innerHTML=`
         <div class="quiz-box">
+            ${timerBar}
             <div class="quiz-progress">
                 <div class="prog-bar"><div class="prog-fill" style="width:${(idx/total)*100}%"></div></div>
                 <span style="font-size:14px;color:var(--text-light);">${idx+1}/${total}</span>
@@ -1184,9 +1392,16 @@ function renderQuiz() {
                     ${['A','B','C','D'].filter(l=>q['c'+l]).map(l=>`<div class="quiz-choice" onclick="selAns('${l}')" id="ch-${l}"><div class="letter">${l}</div><div>${q['c'+l]}</div></div>`).join('')}
                 </div>
                 <div class="quiz-feedback" id="qfb"></div>
-                <div class="quiz-nav"><div></div><button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none;">下一题 →</button></div>
-            `:`<div class="quiz-nav"><div></div><button class="btn btn-primary" onclick="nextQ()">下一题 →</button></div>`}
+                <div class="quiz-nav">
+                    <button class="btn btn-ghost btn-sm" onclick="saveProgressAndQuit()">💾 保存进度</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none;">下一题 →</button>
+                </div>
+            `:`<div class="quiz-nav">
+                <button class="btn btn-ghost btn-sm" onclick="saveProgressAndQuit()">💾 保存进度</button>
+                <button class="btn btn-primary" onclick="nextQ()">下一题 →</button>
+            </div>`}
         </div>`;
+    updateTimerDisplay();
 }
 
 function selAns(l) {
@@ -1202,14 +1417,18 @@ function selAns(l) {
     fb.innerHTML=ok?`✅ 正确！${q.exp?`<br><br>💡 ${q.exp}`:''}`:`❌ 错误！正确答案是 ${q.ans}<br>${q.exp?`<br>💡 ${q.exp}`:''}`;
     document.getElementById('nextBtn').style.display='inline-flex';
     document.querySelector('.quiz-score-display').textContent=QZ.score+' 分';
+    saveQuizProgress();
 }
 
 function nextQ() {
     QZ.idx++; QZ.answered=false;
+    saveQuizProgress();
     renderQuiz();
 }
 
 function showResult() {
+    clearInterval(QZ.timerIntervalId||null);
+    clearQuizProgress(QZ.id);
     const {score,shuffled}=QZ;
     const total=shuffled.length;
     const pct=Math.round((score/total)*100);
@@ -1236,8 +1455,51 @@ function showResult() {
 }
 
 function quitQuiz() {
-    if (QZ.idx>0&&QZ.idx<QZ.shuffled.length&&!confirm('确定要退出吗？')) return;
+    if (QZ&&QZ.idx>0&&QZ.idx<QZ.shuffled.length&&!confirm('确定要退出吗？当前进度已自动保存。')) return;
+    if (QZ&&QZ.idx>0) saveQuizProgress();
+    clearInterval(QZ&&QZ.timerIntervalId||null);
     showPage('sets');
+}
+function saveProgressAndQuit() {
+    if (QZ&&QZ.idx>=0) {
+        saveQuizProgress();
+        clearInterval(QZ.timerIntervalId||null);
+        toast('进度已保存！下次打开可继续');
+    }
+    showPage('sets');
+}
+
+// ====================
+// PROGRESS SAVE/LOAD
+// ====================
+function getQuizProgress(setId) {
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        return all[setId]||null;
+    } catch(e) { return null; }
+}
+function saveQuizProgress() {
+    if (!QZ||QZ.idx===undefined) return;
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        all[QZ.id]={};
+        const prog=all[QZ.id];
+        prog.idx=QZ.idx;
+        prog.score=QZ.score;
+        prog.wrong=QZ.wrong||0;
+        prog.timerLeft=QZ.timerLeft||null;
+        prog.savedAt=Date.now();
+        // Save which questions are answered (by index in original qs)
+        prog.shuffledOrder=QZ.shuffled.map((q,i)=>({q,i})).map(({q,i})=>QZ.qs.findIndex(qq=>qq.id===q.id));
+        localStorage.setItem('quiz_progress',JSON.stringify(all));
+    } catch(e) {}
+}
+function clearQuizProgress(setId) {
+    try {
+        const all=JSON.parse(localStorage.getItem('quiz_progress')||'{}');
+        delete all[setId];
+        localStorage.setItem('quiz_progress',JSON.stringify(all));
+    } catch(e) {}
 }
 
 // ====================
