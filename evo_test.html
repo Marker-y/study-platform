@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolution MCQ - Test</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f7fa;
+    color: #333;
+}
+h1 { text-align: center; margin-bottom: 20px; color: #4a90d9; }
+.box {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 20px 0;
+}
+#qText {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+.choice {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border: 2px solid #e1e5eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+.choice:hover { background: #f0f4ff; border-color: #4a90d9; }
+.choice.correct { border-color: #27ae60; background: #e8f8f0; }
+.choice.wrong { border-color: #e74c3c; background: #fdf0ef; }
+.letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #4a90d9;
+    color: white;
+    font-weight: bold;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+#feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    display: none;
+}
+#feedback.right { display: block; background: #e8f8f0; color: #27ae60; border: 1px solid #27ae60; }
+#feedback.wrong { display: block; background: #fdf0ef; color: #e74c3c; border: 1px solid #e74c3c; }
+.nav { display: flex; justify-content: space-between; margin-top: 20px; }
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-primary { background: #4a90d9; color: white; }
+.btn-ghost { background: transparent; color: #666; border: 1px solid #ddd; }
+#scoreBar { font-size: 16px; color: #666; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<h1>Evolution MCQ Practice</h1>
+<div class="box">
+  <div id="scoreBar">Progress: 0/3 | Score: 0</div>
+  <div id="qText"></div>
+  <div id="choices"></div>
+  <div id="feedback"></div>
+  <div class="nav">
+    <button class="btn btn-ghost" id="prevBtn" onclick="prevQ()" disabled>Previous</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQ()" style="display:none">Next</button>
+  </div>
+</div>
+
+<script>
+const QS = [
+  {
+    "text": "Who proposed 'descent with modification'?",
+    "cA": "Jean-Baptiste Lamarck",
+    "cB": "Charles Darwin",
+    "cC": "Gregor Mendel",
+    "cD": "Alfred Russel Wallace",
+    "ans": "B",
+    "exp": "Darwin described evolution as descent with modification."
+  },
+  {
+    "text": "Evolution is defined as:",
+    "cA": "Change in an individual during its lifetime",
+    "cB": "Change in relative frequency of alleles in a population over time",
+    "cC": "Acquired characteristics passed to offspring",
+    "cD": "Sudden mutation in a single individual",
+    "ans": "B",
+    "exp": "Modern definition: evolution is change in allele frequencies in a population over generations."
+  },
+  {
+    "text": "What is a scientific theory?",
+    "cA": "A guess based on limited evidence",
+    "cB": "A well-substantiated explanation confirmed through observation and experimentation",
+    "cC": "An untestable hypothesis",
+    "cD": "A personal opinion",
+    "ans": "B",
+    "exp": "A scientific theory is acquired through the scientific method and repeatedly confirmed."
+  }
+];
+
+let idx = 0;
+let score = 0;
+let answered = false;
+
+function render() {
+    answered = false;
+    const q = QS[idx];
+    document.getElementById("qText").textContent = (idx + 1) + ". " + q.text;
+    
+    const choicesDiv = document.getElementById("choices");
+    choicesDiv.innerHTML = "";
+    
+    ["A", "B", "C", "D"].forEach(function(l) {
+        const c = q["c" + l];
+        if (!c) return;
+        
+        const div = document.createElement("div");
+        div.className = "choice";
+        div.id = "ch-" + l;
+        
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "letter";
+        letterSpan.textContent = l;
+        
+        const textSpan = document.createElement("span");
+        textSpan.textContent = c;
+        
+        div.appendChild(letterSpan);
+        div.appendChild(textSpan);
+        
+        div.onclick = function() { sel(l); };
+        choicesDiv.appendChild(div);
+    });
+    
+    document.getElementById("feedback").className = "feedback";
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("prevBtn").disabled = (idx === 0);
+    document.getElementById("scoreBar").textContent = "Progress: " + (idx + 1) + "/" + QS.length + " | Score: " + score;
+}
+
+function sel(l) {
+    if (answered) return;
+    answered = true;
+    const q = QS[idx];
+    const ok = (l === q.ans);
+    if (ok) score++;
+    
+    document.getElementById("ch-" + l).classList.add(ok ? "correct" : "wrong");
+    if (!ok && q.ans) {
+        const correctDiv = document.getElementById("ch-" + q.ans);
+        if (correctDiv) correctDiv.classList.add("correct");
+    }
+    
+    const fb = document.getElementById("feedback");
+    fb.className = "feedback " + (ok ? "right" : "wrong");
+    fb.innerHTML = (ok ? "✅ Correct! " : "❌ Wrong! Answer: " + q.ans + "<br>") + (q.exp ? ("💡 " + q.exp) : "");
+    
+    document.getElementById("nextBtn").style.display = "inline-block";
+}
+
+function nextQ() {
+    if (idx >= QS.length - 1) { finish(); return; }
+    idx++;
+    render();
+}
+
+function prevQ() {
+    if (idx <= 0) return;
+    idx--;
+    render();
+}
+
+function finish() {
+    document.querySelector(".box").innerHTML = "<h2>🎉 Quiz Complete!</h2><p>Final Score: <b>" + score + "/" + QS.length + "</b> (" + Math.round(score / QS.length * 100) + "%)</p><button class='btn btn-primary' onclick='location.reload()'>Retry</button>";
+}
+
+render();
+</script>
+</body>
+</html>
