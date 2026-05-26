@@ -1710,7 +1710,433 @@ function preload() {
         evoQs.forEach((q,i)=>{ if(!q.id) q.id='evo_'+(i+1); });
         shared.push({id:'set_evolution',name:'Evolution (75 MCQ)',subject:'Biology',grade:'',tags:[],desc:'Based on Lecture - Evolution.pdf',qs:evoQs,updated:Date.now()});
         saveShared(shared);
+    // === Preload Study Guides ===
+    (function(){
+        var gd=JSON.parse(localStorage.getItem('01_guides')||'[]');
+        if(!gd.find(function(g){return g.id==='guide_evolution';})){
+            gd.push({id:'guide_evolution',name:'Evolution Study Guide',subject:'Biology',content:`<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution Study Guide - 01 学习平台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --purple: #8B5CF6;
+            --bg: #F0F4F8;
+            --card: #FFFFFF;
+            --text: #1E293B;
+            --text-light: #64748B;
+            --border: #E2E8F0;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; }
+        
+        .header { background: linear-gradient(135deg, #1E40AF, #3B82F6); color: white; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 12px rgba(0,0,0,0.15); position: sticky; top: 0; z-index: 100; }
+        .header-brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; cursor: pointer; text-decoration: none; color: white; }
+        .header-brand .logo { background: white; color: var(--primary); width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; }
+        
+        .main { max-width: 900px; margin: 0 auto; padding: 28px 20px; }
+        
+        .hero { background: linear-gradient(135deg, #1E40AF, #3B82F6); color: white; padding: 40px 30px; border-radius: 16px; margin-bottom: 28px; text-align: center; }
+        .hero h1 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+        .hero p { font-size: 16px; opacity: 0.9; }
+        
+        .toc { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
+        .toc h2 { font-size: 18px; font-weight: 800; margin-bottom: 16px; color: var(--primary); }
+        .toc ul { list-style: none; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: var(--text); text-decoration: none; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+        .toc a:hover { color: var(--primary); }
+        .toc a::before { content: "→"; color: var(--primary); font-weight: bold; }
+        
+        .section { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px; box-shadow: var(--shadow); }
+        .section h2 { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--primary); }
+        .section h3 { font-size: 17px; font-weight: 700; color: var(--text); margin: 24px 0 12px; }
+        .section h4 { font-size: 15px; font-weight: 700; color: var(--purple); margin: 16px 0 8px; }
+        
+        .section p { font-size: 14px; margin-bottom: 12px; }
+        .section ul, .section ol { margin: 12px 0 12px 24px; font-size: 14px; }
+        .section li { margin-bottom: 6px; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+        th { background: var(--primary); color: white; padding: 12px; text-align: left; font-weight: 600; }
+        td { padding: 10px 12px; border: 1px solid var(--border); }
+        tr:nth-child(even) { background: var(--bg); }
+        
+        .memory-trick { background: #FEF9C3; border: 1px solid #FDE047; border-radius: 10px; padding: 14px 18px; margin: 16px 0; }
+        .memory-trick strong { color: #92400E; }
+        .memory-trick::before { content: "💡 "; }
+        
+        .example-box { background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; padding: 14px 18px; margin: 16px 0; }
+        .example-box strong { color: #065F46; }
+        .example-box::before { content: "📌 "; }
+        
+        .warning-box { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 10px; padding: 14px 18px; margin: 16px 0; }
+        .warning-box strong { color: #991B1B; }
+        .warning-box::before { content: "⚠️ "; }
+        
+        .key-term { background: #EFF6FF; border-left: 4px solid var(--primary); padding: 12px 16px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+        .key-term strong { color: var(--primary); }
+        
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-bottom: 20px; }
+        .back-btn:hover { background: var(--primary-dark); }
+        
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 24px; }
+            .section { padding: 20px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="quiz2.html" class="header-brand">
+            <div class="logo">01</div>
+            <span>学习平台</span>
+        </a>
+    </header>
     
+    <main class="main">
+        <a href="quiz2.html" class="back-btn">← 返回主页</a>
+        
+        <div class="hero">
+            <h1>🧬 Evolution Study Guide</h1>
+            <p>Complete study guide based on Lecture - Evolution.pdf</p>
+        </div>
+        
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#sec1">1. Definition of Evolution</a></li>
+                <li><a href="#sec2">2. Key Terms (Population, Species, Gene Pool)</a></li>
+                <li><a href="#sec3">3. Charles Darwin & HMS Beagle</a></li>
+                <li><a href="#sec4">4. Darwin's Observations</a></li>
+                <li><a href="#sec5">5. Influences on Darwin</a></li>
+                <li><a href="#sec6">6. Lamarck's Theory (and Why It's Wrong)</a></li>
+                <li><a href="#sec7">7. Darwin's Big Ideas</a></li>
+                <li><a href="#sec8">8. Evidence for Evolution</a></li>
+                <li><a href="#sec9">9. Mechanisms of Evolution</a></li>
+                <li><a href="#sec10">10. Types of Natural Selection</a></li>
+                <li><a href="#sec11">11. Important People</a></li>
+                <li><a href="#sec12">12. Key Vocabulary</a></li>
+                <li><a href="#sec13">13. Quick Review Questions</a></li>
+            </ul>
+        </div>
+        
+        <div class="section" id="sec1">
+            <h2>1. Definition of Evolution</h2>
+            <p><strong>Two definitions:</strong></p>
+            <ol>
+                <li><strong>Darwin:</strong> "Descent with modification"</li>
+                <li><strong>Modern:</strong> Change in relative frequency of alleles in a population over time</li>
+            </ol>
+        </div>
+        
+        <div class="section" id="sec2">
+            <h2>2. Key Terms</h2>
+            <table>
+                <tr><th>Term</th><th>Definition</th></tr>
+                <tr><td><strong>Population</strong></td><td>Group of organisms of same species that live in particular area at same time</td></tr>
+                <tr><td><strong>Species</strong></td><td>Group of organisms that have potential to interbreed in nature and produce <strong>viable, fertile offspring</strong></td></tr>
+                <tr><td><strong>Gene Pool</strong></td><td>All alleles present in a population</td></tr>
+                <tr><td><strong>Allele Frequency</strong></td><td>Number of times an allele occurs in gene pool compared to other alleles</td></tr>
+            </table>
+            
+            <div class="warning-box">
+                <strong>Important:</strong> Sterile offspring = different species
+                <ul>
+                    <li><strong>Mule</strong> (male donkey + female horse) = sterile → donkey and horse are different species</li>
+                    <li><strong>Zedonk</strong> (zebra + donkey)</li>
+                    <li><strong>Zebroid</strong> (zebra + horse)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section" id="sec3">
+            <h2>3. Charles Darwin & the HMS Beagle (1831)</h2>
+            <h3>Darwin's Voyage</h3>
+            <ul>
+                <li><strong>1831:</strong> Set sail on HMS Beagle</li>
+                <li>Collected plant and animal specimens</li>
+                <li>Key observations led to theory of evolution by natural selection</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="sec4">
+            <h2>4. Darwin's Observations</h2>
+            
+            <h3>A. Adaptations</h3>
+            <ul>
+                <li>Many plants/animals well-suited to their environments</li>
+                <li>Even in harsh environments, organisms survived and reproduced</li>
+                <li><strong>Adaptation:</strong> Inherited characteristics that increase organism's chance for survival</li>
+            </ul>
+            
+            <h3>B. Fossils</h3>
+            <ul>
+                <li><strong>Fossils:</strong> Remains or imprints of once-living organisms found in rock layers</li>
+                <li>Some fossils resembled living organisms; others did not</li>
+            </ul>
+            <div class="example-box">
+                <strong>Example:</strong> Armadillo (living) vs. Glyptodon (extinct) — similar structures!
+            </div>
+            
+            <h3>C. Galápagos Islands</h3>
+            <ul>
+                <li>Islands close together but have different climates</li>
+                <li>Characteristics of animals/plants varied among islands</li>
+            </ul>
+            
+            <h4>Finches:</h4>
+            <ul>
+                <li>Only 1 species of finch on South American mainland</li>
+                <li>Darwin identified <strong>13 species</strong> on Galápagos</li>
+                <li>Species differed in <strong>beak size and shape</strong></li>
+                <li>Beak size/shape associated with <strong>diet</strong></li>
+            </ul>
+            <div class="key-term">
+                <strong>Conclusion:</strong> Original finches reached islands, dispersed to different environments, changed over generations
+            </div>
+        </div>
+        
+        <div class="section" id="sec5">
+            <h2>5. Influences on Darwin</h2>
+            <table>
+                <tr><th>Person</th><th>Key Idea</th><th>Influence on Darwin</th></tr>
+                <tr><td><strong>Georges Cuvier</strong></td><td>Catastrophism: boundaries between rock strata = catastrophes that destroyed species</td><td>Fossils show extinction</td></tr>
+                <tr><td><strong>James Hutton</strong></td><td><strong>Gradualism:</strong> geological forces operate slowly over millions of years</td><td>Earth must be very old</td></tr>
+                <tr><td><strong>Charles Lyell</strong></td><td><strong>Uniformitarianism:</strong> mechanisms of change are constant over time</td><td>Same processes shaped Earth in past as today</td></tr>
+                <tr><td><strong>Thomas Malthus</strong></td><td>Population grows faster than food supply; limited by war, famine, disease</td><td>Inspired "struggle for existence"</td></tr>
+                <tr><td><strong>Jean-Baptiste Lamarck</strong></td><td>Species change over time; inheritance of acquired characteristics</td><td>Wrong mechanism, but right idea that species change</td></tr>
+            </table>
+        </div>
+        
+        <div class="section" id="sec6">
+            <h2>6. Lamarck's Theory (and Why It's Wrong)</h2>
+            
+            <h3>Lamarck's 3 Ideas:</h3>
+            <ol>
+                <li><strong>Tendency Toward Perfection</strong></li>
+                <li><strong>Use and Disuse</strong> (use it or lose it)</li>
+                <li><strong>Inheritance of Acquired Traits</strong> (stretch your neck → pass long neck to offspring)</li>
+            </ol>
+            
+            <h3>Why It's Wrong:</h3>
+            <ol>
+                <li>Evolution is NOT predetermined; NOT about being "better"</li>
+                <li><strong>Acquired characteristics are NOT inherited</strong> (only genetic traits are inherited)</li>
+            </ol>
+            
+            <div class="memory-trick">
+                <strong>Memory trick:</strong> Lamarck thought if you work out and get big muscles, your kids will be born muscular. Wrong! Only DNA changes are inherited.
+            </div>
+            
+            <h3>Positive Contributions:</h3>
+            <ol>
+                <li>Recognized species change</li>
+                <li>Established link between environment and organism's body structures</li>
+            </ol>
+        </div>
+        
+        <div class="section" id="sec7">
+            <h2>7. Darwin's Big Ideas (1859)</h2>
+            
+            <h3>A. Descent with Modification</h3>
+            <ul>
+                <li>Organisms share characteristics → had common ancestor in remote past</li>
+                <li>Over time, organisms accumulated diverse modifications/adaptations</li>
+                <li>Adapted to their specific environments</li>
+            </ul>
+            
+            <h3>B. Natural Selection (The Mechanism)</h3>
+            
+            <h4>Darwin's 3 Observations:</h4>
+            <ol>
+                <li>Traits are often <strong>heritable</strong></li>
+                <li>Offspring <strong>vary</strong> in their heritable traits</li>
+                <li>Species produce <strong>more offspring</strong> than environment can support → many fail to survive and reproduce</li>
+            </ol>
+            
+            <h4>Darwin's 2 Inferences:</h4>
+            <ol>
+                <li>Individuals with <strong>favorable characteristics</strong> tend to leave more offspring (fitness = survive AND reproduce)</li>
+                <li>This unequal ability leads to <strong>accumulation of favorable traits</strong> in population over generations</li>
+            </ol>
+            
+            <div class="key-term">
+                <strong>Natural Selection Definition:</strong> Process where individuals with certain heritable traits survive and produce at higher rate because of those favorable traits.
+            </div>
+        </div>
+        
+        <div class="section" id="sec8">
+            <h2>8. Evidence for Evolution</h2>
+            
+            <h3>A. Direct Observation</h3>
+            <ul>
+                <li><strong>Peppered moths:</strong> Industrial melanism (light vs. dark moths)</li>
+                <li><strong>Soapberry bugs:</strong> Beak length evolution</li>
+                <li><strong>Drug-resistant bacteria:</strong> Evolve quickly due to fast reproduction + mutation</li>
+            </ul>
+            
+            <h3>B. Homology</h3>
+            <div class="key-term">
+                <strong>Homologous Structures:</strong> Same structure (common ancestry), different function → Evidence for <strong>divergent evolution</strong>
+            </div>
+            <div class="example-box">
+                <strong>Example:</strong> Turtle, alligator, bird, mammal limb bones — same bone pattern, different uses!
+            </div>
+            
+            <div class="key-term">
+                <strong>Analogous Structures:</strong> Same function, different structure (NO common ancestry) → Evidence for <strong>convergent evolution</strong>
+            </div>
+            <div class="example-box">
+                <strong>Example:</strong> Bird wings vs. insect wings — both fly, but completely different structure!
+            </div>
+            
+            <div class="key-term">
+                <strong>Vestigial Structures:</strong> Reduced in size, no longer serve important function → Evidence of evolution from ancestors
+            </div>
+            <div class="example-box">
+                <strong>Examples:</strong> Whale pelvic bones, snake pelvic bones/spurs, human tail bone
+            </div>
+            
+            <h3>C. Embryology</h3>
+            <ul>
+                <li>Early stages (embryos) of many vertebrates are very similar</li>
+                <li>Same groups of embryonic cells develop in same order → produce tissues/organs</li>
+            </ul>
+            
+            <h3>D. Conserved Genes/Proteins</h3>
+            <ul>
+                <li>Important genes are highly <strong>conserved</strong> (don't change much over time)</li>
+                <li><strong>Example:</strong> Cytochrome c (protein in electron transport chain) similar across species</li>
+            </ul>
+            
+            <h3>E. Fossil Record</h3>
+            <ul>
+                <li><strong>Paleontology:</strong> Study of fossils</li>
+                <li>Documents pattern of evolution over millions of years</li>
+            </ul>
+            <div class="key-term">
+                <strong>Principle of Superposition:</strong> Bottom rock layers are older (contain more primitive creatures)
+            </div>
+            
+            <h3>F. Biogeography</h3>
+            <ul>
+                <li><strong>Biogeography:</strong> Study of geographic distribution of species</li>
+                <li>Similar environments don't always have similar organisms (penguins in Antarctica vs. polar bears in Arctic)</li>
+            </ul>
+            <div class="key-term">
+                <strong>Reason:</strong> Evolution can only work with what's present
+            </div>
+            <div class="example-box">
+                <strong>Continental drift/Pangaea:</strong> Explains why organisms on islands resemble those on nearest mainland
+            </div>
+        </div>
+        
+        <div class="section" id="sec9">
+            <h2>9. Mechanisms That Change Allele Frequencies (Causes of Evolution)</h2>
+            <ol>
+                <li><strong>Mutation:</strong> Adds new alleles to gene pool</li>
+                <li><strong>Natural Selection:</strong> Favorable traits increase in frequency</li>
+                <li><strong>Migration (Gene Flow):</strong> Transfer of genes from one population to another</li>
+                <li><strong>Genetic Drift:</strong> Change in allele frequency due to chance events (small populations)</li>
+            </ol>
+        </div>
+        
+        <div class="section" id="sec10">
+            <h2>10. Types of Natural Selection</h2>
+            <p>Natural selection affects distribution of phenotypes in 3 ways:</p>
+            
+            <table>
+                <tr><th>Type</th><th>What It Favors</th><th>Effect on Population</th><th>Example</th></tr>
+                <tr><td><strong>Stabilizing</strong></td><td>Intermediate phenotypes</td><td>Reduces variation; favors "average"</td><td>Human birth weight (not too small, not too big)</td></tr>
+                <tr><td><strong>Directional</strong></td><td>One phenotypic extreme</td><td>Shifts population toward one extreme</td><td>Peppered moths (dark favored during industrial revolution)</td></tr>
+                <tr><td><strong>Disruptive</strong></td><td>Both extremes (NOT intermediate)</td><td>Creates two distinct phenotypes</td><td>Beak size in finches (small for seeds, large for nuts)</td></tr>
+            </table>
+            
+            <div class="memory-trick">
+                <strong>Memory tricks:</strong><br>
+                • <strong>Stabilizing</strong> = "keeps the status quo" (favors average)<br>
+                • <strong>Directional</strong> = "moves in one direction" (shifts population)<br>
+                • <strong>Disruptive</strong> = "breaks apart" (favors both extremes)
+            </div>
+        </div>
+        
+        <div class="section" id="sec11">
+            <h2>11. Important People to Know</h2>
+            <table>
+                <tr><th>Person</th><th>Contribution</th></tr>
+                <tr><td><strong>Darwin</strong></td><td>Natural selection, descent with modification, Galápagos finches</td></tr>
+                <tr><td><strong>Wallace</strong></td><td>Independent discovery of natural selection</td></tr>
+                <tr><td><strong>Cuvier</strong></td><td>Fossils, catastrophism</td></tr>
+                <tr><td><strong>Hutton</strong></td><td>Gradualism (slow geological change)</td></tr>
+                <tr><td><strong>Lyell</strong></td><td>Uniformitarianism (constant mechanisms of change)</td></tr>
+                <tr><td><strong>Malthus</strong></td><td>Population growth limited by resources</td></tr>
+                <tr><td><strong>Lamarck</strong></td><td>Inheritance of acquired characteristics (wrong, but influential)</td></tr>
+                <tr><td><strong>Mendel</strong></td><td>Genetics (unknown to Darwin)</td></tr>
+            </table>
+        </div>
+        
+        <div class="section" id="sec12">
+            <h2>12. Key Vocabulary</h2>
+            <table>
+                <tr><th>Term</th><th>Definition</th></tr>
+                <tr><td><strong>Adaptation</strong></td><td>Inherited characteristic that increases survival chance</td></tr>
+                <tr><td><strong>Allele frequency</strong></td><td>How often an allele appears in gene pool</td></tr>
+                <tr><td><strong>Biogeography</strong></td><td>Study of geographic distribution of species</td></tr>
+                <tr><td><strong>Catastrophism</strong></td><td>Theory that extinctions caused by sudden disasters</td></tr>
+                <tr><td><strong>Convergent evolution</strong></td><td>Unrelated species evolve similar traits</td></tr>
+                <tr><td><strong>Divergent evolution</strong></td><td>Related species evolve different traits</td></tr>
+                <tr><td><strong>Fitness</strong></td><td>Ability to survive AND reproduce</td></tr>
+                <tr><td><strong>Fossil</strong></td><td>Remains/imprints of once-living organisms</td></tr>
+                <tr><td><strong>Gene pool</strong></td><td>All alleles in a population</td></tr>
+                <tr><td><strong>Gradualism</strong></td><td>Slow, steady evolutionary change</td></tr>
+                <tr><td><strong>Homologous</strong></td><td>Same structure, different function (common ancestry)</td></tr>
+                <tr><td><strong>Analogous</strong></td><td>Same function, different structure (no common ancestry)</td></tr>
+                <tr><td><strong>Vestigial</strong></td><td>Reduced/nonfunctional structures from ancestor</td></tr>
+                <tr><td><strong>Uniformitarianism</strong></td><td>Geological processes constant over time</td></tr>
+                <tr><td><strong>Natural selection</strong></td><td>Differential survival/reproduction based on heritable traits</td></tr>
+            </table>
+        </div>
+        
+        <div class="section" id="sec13">
+            <h2>13. Quick Review Questions</h2>
+            <p><strong>Test yourself before the test!</strong></p>
+            <ol>
+                <li>What's the difference between homologous and analogous structures?</li>
+                <li>What are the 3 types of natural selection? Give an example of each.</li>
+                <li>Why was Lamarck wrong?</li>
+                <li>What are the 4 mechanisms that change allele frequencies?</li>
+                <li>What's the difference between gradualism and uniformitarianism?</li>
+                <li>Give an example of biogeography that supports evolution.</li>
+                <li>What's the principle of superposition?</li>
+                <li>Why don't similar environments always have similar species?</li>
+                <li>What was Darwin's key observation about Galápagos finches?</li>
+                <li>How does natural selection actually work (3 observations + 2 inferences)?</li>
+            </ol>
+            
+            <div style="text-align: center; margin-top: 32px; padding: 24px; background: linear-gradient(135deg, #1E40AF, #3B82F6); color: white; border-radius: 12px;">
+                <h3 style="margin-bottom: 8px;">🎉 Good luck on your test!</h3>
+                <p style="opacity: 0.9;">You've got this! Practice with the MCQ sets on the main page.</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>`,updated:Date.now()});
+            localStorage.setItem('01_guides',JSON.stringify(gd));
+        }
+    })();
+
+}
 
 const __INJECTED_SET2__ = [];
 
